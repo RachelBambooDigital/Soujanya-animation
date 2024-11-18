@@ -1,0 +1,155 @@
+
+.cls-1{
+  fill: none;
+  stroke: url(#paint0_angular_2834_2821);
+  stroke-miterlimit: 10;
+  stroke-width: 28px;
+}
+/*this animation layer is the one you need to copy into the project*/
+
+@layer Animations {
+    /*
+        add class .tracePath to the path that needs to be animated
+    */
+    .tracePath {
+        --pathLength: var(--L, 300);
+        stroke-dasharray: var(--pathLength);
+        stroke-dashoffset: 0;
+        transition: var(--time, 1s);
+    }
+
+    .delayed {
+        transition-delay: var(--delay, 1s);
+        animation-delay: var(--delay, 1s);
+    }
+
+    /*
+        add class "pendulum" to to make element swing and then come to a halt
+
+        add class "inactive" to ensure the animation is only running when it enters the viewport either to the elment itself or a aprent element.
+
+        default starts swinging from right. to make it swing from right add direction="right" as an attribute to the element
+
+    */
+
+    .pendulum {
+        animation-name: pendulum;
+        animation-delay: var(--delay, 0s);
+        animation-duration: var(--time, 1s);
+        animation-fill-mode: both;
+        animation-timing-function: ease-in-out;
+        animation-iteration-count: 1;
+        --direction: 1;
+        transform: rotate(calc(45deg * var(--direction)));
+        transform-origin: top;
+    }
+
+    @keyframes pendulum {
+        0% {
+            transform: rotate(calc(88deg * var(--direction)));
+        }
+        15% {
+            transform: rotate(calc(-70deg * var(--direction)));
+        }
+        30% {
+            transform: rotate(calc(55deg * var(--direction)));
+        }
+        45% {
+            transform: rotate(calc(-40deg * var(--direction)));
+        }
+
+        60% {
+            transform: rotate(calc(20deg * var(--direction)));
+        }
+
+        75% {
+            transform: rotate(calc(-10deg * var(--direction)));
+        }
+
+        90% {
+            transform: rotate(calc(5deg * var(--direction)));
+        }
+
+        100% {
+            transform: rotate(0);
+        }
+    }
+
+    /*
+    add class inactive to the animations that shall be triggered once they scroll into the viewport 
+    
+    these declarations must remain at the bottom of the animation layer!!!!!!!!!!!
+
+    the declarion of inactive ensures the animations are added to the observer and get toggled with the active state once in the viewport
+    
+    */
+
+    .inactive .tracePath {
+        stroke-dashoffset: var(--pathLength);
+        transition-delay: unset;
+    }
+
+    .inactive,
+    .inactive * {
+        animation: unset;
+        transition: none;
+    }
+}
+
+
+/*
+
+add class scrollPath to start using the scrollbased animation
+
+*/
+
+.scrollContainer, .scrollContainerCommunity, .scrollContainerShocker {
+    width: 100%;
+    position: relative;
+    top: 0;
+    transition: top 1s ease;
+}
+:not(.active) svg.scrollPath {
+    stroke-dashoffset: 6000;
+    stroke-dasharray: 6000;
+    transition: 1s ease;
+}
+
+.opacityTransition {
+    transition: opacity 1s ease;
+}
+/* .scrollPath {
+    stroke-dashoffset: 3876;
+    stroke-dasharray: 3876;
+} */
+.absolute {
+    position: absolute;
+}
+
+@keyframes paths {
+    0%,
+    50%,
+    100% {
+        d: path(
+            'M-125 461 C137.395 113.119 852.749 -373.915 1615 461H-125Z'
+        );
+    }
+    25% {
+        d: path(
+            'M-125 461 C137 113.119 1200 373.915 1615 461H-125Z'
+        );
+    }
+
+    75% {
+        d: path(
+            'M-125 461 C137.395 113.119 800 873.915 1615 461H-125Z'
+        );
+    }
+}
+
+@media screen and (max-width: 868px) {
+    .scrollPath {
+        stroke-dashoffset: 3910;
+        stroke-dasharray: 3910;
+    }
+}
