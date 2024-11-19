@@ -5,6 +5,24 @@
   stroke-miterlimit: 10;
   stroke-width: 28px;
 }
+.cls-2{
+    fill: none;
+    stroke: url(#paint0_angular_2834_3935);
+    stroke-miterlimit: 10;
+    stroke-width: 28px;
+  }
+  .cls-3{
+    fill: none;
+    stroke: url(#paint0_angular_2834_4236);
+    stroke-miterlimit: 10;
+    stroke-width: 28px;
+  }
+  .cls-4{
+    fill: none;
+    stroke: url(#paint0_angular_2834_4224);
+    stroke-miterlimit: 10;
+    stroke-width: 28px;
+  }
 /*this animation layer is the one you need to copy into the project*/
 
 @layer Animations {
@@ -105,6 +123,7 @@ add class scrollPath to start using the scrollbased animation
 
 .scrollContainer, .scrollContainerCommunity, .scrollContainerShocker {
     width: 100%;
+    height: 100%;
     position: relative;
     top: 0;
     transition: top 1s ease;
