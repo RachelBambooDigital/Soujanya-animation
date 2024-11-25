@@ -3,6 +3,8 @@ import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import React, { useEffect, useState } from 'react';
 import '../index.css';
 
+//checking
+
 const LifeSciencesAPI = () => {
   const [metaFields, setMetaFields] = useState([]); // Initialize as an empty array
   const [bannerVideo, setBannerVideo] = useState(''); // State for the banner video URL
@@ -155,6 +157,7 @@ const LifeSciencesAPI = () => {
           <source src={bannerVideo} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
+        
 
         <div className='absolute inset-0 flex flex-col gap-[27px] lg:gap-10 justify-end text-white font-medium p-5 xl:p-10 bg-black/30'>
           <h1 className='w-full lg:w-[650px] text-[32px] leading-10 lg:text-[62px] lg:leading-[70px] font-heading'>
