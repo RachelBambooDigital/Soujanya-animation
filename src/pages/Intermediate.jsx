@@ -6,6 +6,7 @@ import '../index.css';
 const Intermediate = () => {
   const [metaFields, setMetaFields] = useState([]); // Initialize as an empty array
   const [bannerVideo, setBannerVideo] = useState(''); // State for the banner video URL
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const fetchIntermediate = async () => {
@@ -66,10 +67,11 @@ const Intermediate = () => {
         } else {
           console.error("Metaobjects not found in the response");
         }
-
-        console.log('Metaobjects response:', result);
+        setLoading(false); // Set loading to false when the data has been fetched
+        // console.log('Metaobjects response:', result);
       } catch (error) {
         console.error("Error fetching homepage meta fields:", error);
+        setLoading(false); // Set loading to false even if there's an error
       }
     };
 
@@ -129,6 +131,48 @@ const Intermediate = () => {
   const product1Molecular = metaFields.find(field => field.key === 'product_1_molecular')?.value || '';
   const product1Desc = metaFields.find(field => field.key === 'product_1_desc')?.value || '';
 
+  const product2Title = metaFields.find(field => field.key === 'product_2_title')?.value || '';
+  const product2Empirical = metaFields.find(field => field.key === 'product_2_empirical')?.value || '';
+  const product2Cas = metaFields.find(field => field.key === 'product_2_cas')?.value || '';
+  const product2Molecular = metaFields.find(field => field.key === 'product_2_molecular')?.value || '';
+  const product2Desc = metaFields.find(field => field.key === 'product_2_desc')?.value || '';
+
+  const product3Title = metaFields.find(field => field.key === 'product_3_title')?.value || '';
+  const product3Empirical = metaFields.find(field => field.key === 'product_3_empirical')?.value || '';
+  const product3Cas = metaFields.find(field => field.key === 'product_3_cas')?.value || '';
+  const product3Molecular = metaFields.find(field => field.key === 'product_3_molecular')?.value || '';
+  const product3Desc = metaFields.find(field => field.key === 'product_3_desc')?.value || '';
+
+  const product4Title = metaFields.find(field => field.key === 'product_4_title')?.value || '';
+  const product4Empirical = metaFields.find(field => field.key === 'product_4_empirical')?.value || '';
+  const product4Cas = metaFields.find(field => field.key === 'product_4_cas')?.value || '';
+  const product4Molecular = metaFields.find(field => field.key === 'product_4_molecular')?.value || '';
+  const product4Desc = metaFields.find(field => field.key === 'product_4_desc')?.value || '';
+
+  const product5Title = metaFields.find(field => field.key === 'product_2_title')?.value || '';
+  const product5Empirical = metaFields.find(field => field.key === 'product_2_empirical')?.value || '';
+  const product5Cas = metaFields.find(field => field.key === 'product_2_cas')?.value || '';
+  const product5Molecular = metaFields.find(field => field.key === 'product_2_molecular')?.value || '';
+  const product5Desc = metaFields.find(field => field.key === 'product_2_desc')?.value || '';
+
+  const product6Title = metaFields.find(field => field.key === 'product_3_title')?.value || '';
+  const product6Empirical = metaFields.find(field => field.key === 'product_3_empirical')?.value || '';
+  const product6Cas = metaFields.find(field => field.key === 'product_3_cas')?.value || '';
+  const product6Molecular = metaFields.find(field => field.key === 'product_3_molecular')?.value || '';
+  const product6Desc = metaFields.find(field => field.key === 'product_3_desc')?.value || '';
+
+  const product7Title = metaFields.find(field => field.key === 'product_4_title')?.value || '';
+  const product7Empirical = metaFields.find(field => field.key === 'product_4_empirical')?.value || '';
+  const product7Cas = metaFields.find(field => field.key === 'product_4_cas')?.value || '';
+  const product7Molecular = metaFields.find(field => field.key === 'product_4_molecular')?.value || '';
+  const product7Desc = metaFields.find(field => field.key === 'product_4_desc')?.value || '';
+
+  const product8Title = metaFields.find(field => field.key === 'product_4_title')?.value || '';
+  const product8Empirical = metaFields.find(field => field.key === 'product_4_empirical')?.value || '';
+  const product8Cas = metaFields.find(field => field.key === 'product_4_cas')?.value || '';
+  const product8Molecular = metaFields.find(field => field.key === 'product_4_molecular')?.value || '';
+  const product8Desc = metaFields.find(field => field.key === 'product_4_desc')?.value || '';
+
   return (
     <div className='w-full bg-cover bg-center bg-white relative' style={{ backgroundImage: `url("/pipe.png")` }}>
       <div className='w-full h-[100dvh] lg:h-screen bg-cover bg-center relative'>
@@ -158,6 +202,48 @@ const Intermediate = () => {
         product1Cas={product1Cas}
         product1Molecular={product1Molecular}
         product1Desc={product1Desc}
+
+        product2Title={product2Title}
+        product2Empirical={product2Empirical}
+        product2Cas={product2Cas}
+        product2Molecular={product2Molecular}
+        product2Desc={product2Desc}
+
+        product3Title={product3Title}
+        product3Empirical={product3Empirical}
+        product3Cas={product3Cas}
+        product3Molecular={product3Molecular}
+        product3Desc={product3Desc}
+
+        product4Title={product4Title}
+        product4Empirical={product4Empirical}
+        product4Cas={product4Cas}
+        product4Molecular={product4Molecular}
+        product4Desc={product4Desc}
+
+        product5Title={product5Title}
+        product5Empirical={product5Empirical}
+        product5Cas={product5Cas}
+        product5Molecular={product5Molecular}
+        product5Desc={product5Desc}
+
+        product6Title={product6Title}
+        product6Empirical={product6Empirical}
+        product6Cas={product6Cas}
+        product6Molecular={product6Molecular}
+        product6Desc={product6Desc}
+
+        product7Title={product7Title}
+        product7Empirical={product7Empirical}
+        product7Cas={product7Cas}
+        product7Molecular={product7Molecular}
+        product7Desc={product7Desc}
+
+        product8Title={product8Title}
+        product8Empirical={product8Empirical}
+        product8Cas={product8Cas}
+        product8Molecular={product8Molecular}
+        product8Desc={product8Desc}
       />
       <OurGlobalPresence />
     </div>

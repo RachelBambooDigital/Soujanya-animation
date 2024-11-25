@@ -4,10 +4,12 @@ import Sidebar from "./Sidebar";
 import Sidebar2 from "./Sidebar2";
 import ApplicationDropdown from "./ApplicationDropdown";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebar2Open, setIsSidebar2Open] = useState(false);
+  const navigate = useNavigate();  
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -15,6 +17,11 @@ const Header = () => {
 
   const toggleSidebar2 = () => {
     setIsSidebar2Open(!isSidebar2Open);
+  };
+
+  // Redirect functions
+  const handleContactUs = () => {
+    navigate('/contact-us');
   };
 
   return (
@@ -32,16 +39,16 @@ const Header = () => {
             </Link>
           </div>
           <div className="lg:flex gap-5 items-center hidden">
-            <div className="flex relative border border-white rounded-md">
+              {/* <div className="flex relative border border-white rounded-md">
                 <ApplicationDropdown color="white" />
-              </div>
+              </div> */}
               <div className="flex relative border border-white rounded-md">
                 <button className={`text-xs font-semibold py-2 px-4 border-r border-white h-full text-white`}>
                   Eng
                 </button>
               </div>
               <div className="flex relative border border-white rounded-md">
-                <button className={`text-xs font-semibold py-2 px-4 border-r border-white h-full text-white`}>
+                <button className={`text-xs font-semibold py-2 px-4 border-r border-white h-full text-white`} onClick={handleContactUs}>
                   Contact
                 </button>
               </div>
