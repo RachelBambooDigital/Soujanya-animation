@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import { apiBaseUrl } from "../config";
+import Footer from "../components/Footer";
 
 const ContactUs = () => {
     // State to store form data
@@ -202,6 +203,7 @@ const ContactUs = () => {
                 </div>
             </div>
             <OurGlobalPresence />
+            <Footer />
         </div>
             
     );

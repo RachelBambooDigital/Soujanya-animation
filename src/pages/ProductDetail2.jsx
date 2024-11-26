@@ -4,6 +4,7 @@ import OurGlobalPresence from '@/sections/OurGlobalPresence';
 import { benefitImg, useCaseImg, guideImg } from '../lib/images';
 import ButtonSlider from '../sections/ButtonSlider';
 import '../index.css';
+import Footer from "../components/Footer";
 
 const ProductDetail2 = () => {
     const { productId } = useParams();
@@ -466,6 +467,7 @@ const ProductDetail2 = () => {
             </div>
 
             <OurGlobalPresence />
+            <Footer />
         </div>
     );
 };

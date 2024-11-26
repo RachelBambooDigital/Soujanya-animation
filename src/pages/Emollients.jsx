@@ -2,6 +2,7 @@ import EmollientsProducts from "@/sections/EmollientsProducts";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import React, { useEffect, useState } from 'react';
 import '../index.css';
+import Footer from "../components/Footer";
 
 const Emollients = () => {
   const [metaFields, setMetaFields] = useState([]); // Initialize as an empty array
@@ -150,7 +151,7 @@ const Emollients = () => {
   const product4Desc = metaFields.find(field => field.key === 'product_4_desc')?.value || '';
 
   return (
-    <div className='w-full bg-cover bg-center bg-white relative' style={{ backgroundImage: `url("/pipe.png")` }}>
+    <div className='w-full bg-cover bg-center bg-white relative'>
       <div className='w-full h-[100dvh] lg:h-screen bg-cover bg-center relative'>
         <video
           className='w-full h-[100dvh] xl:h-full object-cover '
@@ -198,6 +199,7 @@ const Emollients = () => {
         product4Desc={product4Desc}
       />
       <OurGlobalPresence />
+      <Footer />
     </div>
   );
 };

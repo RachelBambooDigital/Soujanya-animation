@@ -7,6 +7,7 @@ import OurGlobalPresence from '@/sections/OurGlobalPresence'
 import { lifeSciImgs, lifeSciImg1, lifeSciImg2 } from '../lib/images'
 import '../index.css';
 import { useNavigate } from 'react-router-dom';
+import Footer from "../components/Footer";
 
 const LifeSciences = () => {
   const [metaFields, setMetaFields] = useState(null);
@@ -360,6 +361,7 @@ const LifeSciences = () => {
 
             {/* Our Global presence */}
             <OurGlobalPresence />
+            <Footer />
           </div>
         </div>
       </div>

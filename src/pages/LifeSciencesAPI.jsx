@@ -2,6 +2,7 @@ import LifeSciencesAPIProducts from "@/sections/LifeSciencesAPIProducts";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import React, { useEffect, useState } from 'react';
 import '../index.css';
+import Footer from "../components/Footer";
 
 //checking
 
@@ -121,7 +122,7 @@ const LifeSciencesAPI = () => {
         </div>
     );
   }  
-  console.log("Video URL set check:", bannerVideo);
+  // console.log("Video URL set check:", bannerVideo);
   // Access the values using the correct keys
   const bannerTitle = metaFields.find(field => field.key === 'banner_title')?.value || '';
   const bannerDesc = metaFields.find(field => field.key === 'banner_desc')?.value || '';
@@ -190,6 +191,7 @@ const LifeSciencesAPI = () => {
         product3Desc={product3Desc}
       />
       <OurGlobalPresence />
+      <Footer />
     </div>
   );
 };

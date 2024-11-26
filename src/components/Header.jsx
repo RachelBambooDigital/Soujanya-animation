@@ -26,7 +26,6 @@ const Header = () => {
 
   return (
     <>
-
       <header
         className={`fixed w-full px-5 lg:px-10 h-[62px] z-40 bg-opacity-90 backdrop-blur-lg transition-all duration-300`}>
         <div className="w-full flex items-center justify-between h-full">
@@ -42,19 +41,19 @@ const Header = () => {
               {/* <div className="flex relative border border-white rounded-md">
                 <ApplicationDropdown color="white" />
               </div> */}
-              <div className="flex relative border border-white rounded-md">
-                <button className={`text-xs font-semibold py-2 px-4 border-r border-white h-full text-white`}>
+              <div className="flex relative border border-white  rounded-md">
+                <button className={`text-xs font-semibold py-2 px-4 h-full text-white`}>
                   Eng
                 </button>
               </div>
-              <div className="flex relative border border-white rounded-md">
-                <button className={`text-xs font-semibold py-2 px-4 border-r border-white h-full text-white`} onClick={handleContactUs}>
+              <div className="flex relative border border-white  rounded-md">
+                <button className={`text-xs font-semibold py-2 px-4 h-full text-white`} onClick={handleContactUs}>
                   Contact
                 </button>
               </div>
               <div className="flex relative border border-white rounded-md">
               <button
-                className={`text-xs font-semibold py-2 px-4 border-r border-white h-full text-white`}  
+                className={`text-xs font-semibold py-2 px-4 h-full text-white`}  
                 onClick={toggleSidebar2}>
                 <CiSearch className="text-white text-lg" />
               </button>
@@ -70,7 +69,13 @@ const Header = () => {
         </div>
       )}
 
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-md z-40">
+          <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+        </div>
+      )}
+
+      {/* <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} /> */}
     </>
   );
 };

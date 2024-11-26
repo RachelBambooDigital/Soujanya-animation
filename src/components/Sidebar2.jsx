@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
+import { Link } from "react-router-dom";
 
 const Sidebar2 = ({ isOpen, toggleSidebar2 }) => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -72,7 +73,9 @@ const Sidebar2 = ({ isOpen, toggleSidebar2 }) => {
                             <button className="w-5" onClick={toggleSidebar2}>
                                 <img src="/logos/close.png" alt="close" />
                             </button>
-                            <img src="/logos/NavLogoBlack.svg" className="w-40" alt="logo" />
+                            <Link to="/">
+                                <img src="/logos/NavLogoBlack.svg" className="w-40" alt="logo" />
+                            </Link>
                         </div>
                     </div>
                 </div>

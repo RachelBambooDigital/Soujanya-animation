@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowDown, MdAdd, MdRemove } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
@@ -31,7 +31,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                             <button className="w-5" onClick={toggleSidebar}>
                                 <img src="/logos/close.png" alt="close" />
                             </button>
-                            <img src="/logos/NavLogoBlack.svg" className="w-40" alt="logo" />
+                            <Link to="/">
+                                <img src="/logos/NavLogoBlack.svg" className="w-40" alt="logo" />
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -52,7 +54,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                             <div onClick={() => handleMenuClick("offer")} className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
                                 <p>What we offer</p>
                                 {activeMenu === "offer" ? (
-                                    <MdOutlineKeyboardArrowDown className="text-2xl" />
+                                    <MdOutlineKeyboardArrowRight className="text-2xl" />
                                 ) : (
                                     <MdOutlineKeyboardArrowRight className="text-2xl" />
                                 )}
@@ -65,9 +67,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                     <div onClick={() => handleSubMenuClick("coatings")} className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
                                         <p>Coatings and Inks</p>
                                         {activeSubMenu === "coatings" ? (
-                                            <MdOutlineKeyboardArrowDown className="text-2xl" />
+                                            <MdRemove className="text-2xl" />
                                         ) : (
-                                            <MdOutlineKeyboardArrowRight className="text-2xl" />
+                                            <MdAdd className="text-2xl" />
                                         )}
                                     </div>
                                     {activeSubMenu === "coatings" && (
@@ -123,9 +125,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                     <div onClick={() => handleSubMenuClick("personalCare")} className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
                                         <p>Home, Personal Care & Cosmetics</p>
                                         {activeSubMenu === "personalCare" ? (
-                                            <MdOutlineKeyboardArrowDown className="text-2xl" />
+                                            <MdRemove className="text-2xl" />
                                         ) : (
-                                            <MdOutlineKeyboardArrowRight className="text-2xl" />
+                                            <MdAdd className="text-2xl" />
                                         )}
                                     </div>
                                     {activeSubMenu === "personalCare" && (
@@ -145,7 +147,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                                     <p>Aurablush 6600</p>
                                                 </div>
                                             </Link>
-                                            <Link to="productDet/7376147218498" onClick={toggleSidebar}>
+                                            <Link to="/productDet/7376147218498" onClick={toggleSidebar}>
                                                 <div className="py-2 px-5 border-b border-black">
                                                     <p>Aurablush 6650</p>
                                                 </div>
@@ -172,9 +174,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                     <div onClick={() => handleSubMenuClick("lifeSciences")} className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
                                         <p>Life Sciences</p>
                                         {activeSubMenu === "lifeSciences" ? (
-                                            <MdOutlineKeyboardArrowDown className="text-2xl" />
+                                            <MdRemove className="text-2xl" />
                                         ) : (
-                                            <MdOutlineKeyboardArrowRight className="text-2xl" />
+                                            <MdAdd className="text-2xl" />
                                         )}
                                     </div>
                                     {activeSubMenu === "lifeSciences" && (
@@ -220,9 +222,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                 <h1 className="font-heading text-[32px] leading-[40px] lg:text-[33px] lg:leading-[45px]">
                                     Asia’s largest Color Manufacturing unit, located in Navi Mumbai
                                 </h1>
-                                <p className="font-subHeading text-[14px] leading-5 lg:text-[18px] lg:leading-[26px] mt-5">
+                                {/* <p className="font-subHeading text-[14px] leading-5 lg:text-[18px] lg:leading-[26px] mt-5">
                                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis esse quo excepturi labore et itaque
-                                </p>
+                                </p> */}
                             </div>
                         </div>
                     </div>
@@ -235,7 +237,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                 <div onClick={() => handleSubMenuClick("coatings")} className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
                                     <p>Coatings and Inks</p>
                                     {activeSubMenu === "coatings" ? (
-                                        <MdOutlineKeyboardArrowDown className="text-2xl" />
+                                        <MdOutlineKeyboardArrowRight className="text-2xl" />
                                     ) : (
                                         <MdOutlineKeyboardArrowRight className="text-2xl" />
                                     )}
@@ -245,7 +247,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                 <div onClick={() => handleSubMenuClick("personalCare")} className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
                                     <p>Home, Personal Care & Cosmetics</p>
                                     {activeSubMenu === "personalCare" ? (
-                                        <MdOutlineKeyboardArrowDown className="text-2xl" />
+                                        <MdOutlineKeyboardArrowRight className="text-2xl" />
                                     ) : (
                                         <MdOutlineKeyboardArrowRight className="text-2xl" />
                                     )}
@@ -255,7 +257,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                 <div onClick={() => handleSubMenuClick("lifeSciences")} className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
                                     <p>Life Sciences</p>
                                     {activeSubMenu === "lifeSciences" ? (
-                                        <MdOutlineKeyboardArrowDown className="text-2xl" />
+                                        <MdOutlineKeyboardArrowRight className="text-2xl" />
                                     ) : (
                                         <MdOutlineKeyboardArrowRight className="text-2xl" />
                                     )}

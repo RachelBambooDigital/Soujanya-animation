@@ -7,6 +7,7 @@ import { descImage1, descImage2, descImage3, descImage4 } from '../lib/images';
 import ButtonSlider from '../sections/ButtonSlider';
 import { useNavigate } from 'react-router-dom';
 import '../index.css';
+import Footer from "../components/Footer";
 
 const HomeCareCosmetics = () => {
   // State to manage selected category
@@ -579,6 +580,7 @@ const HomeCareCosmetics = () => {
 
             {/* Our Global presence */}
             <OurGlobalPresence />
+            <Footer />
           </div>
         </div>
       </div>
