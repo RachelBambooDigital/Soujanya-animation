@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { CiSearch } from "react-icons/ci";
 import { Link } from "react-router-dom";
 
@@ -10,6 +10,8 @@ const Sidebar2 = ({ isOpen, toggleSidebar2 }) => {
     });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const sidebarRef = useRef(null);  // Reference for the sidebar
 
     useEffect(() => {
         if (searchQuery) {
@@ -64,8 +66,27 @@ const Sidebar2 = ({ isOpen, toggleSidebar2 }) => {
         }
     };
 
+    // Effect to handle clicks outside the sidebar
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+        if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+            toggleSidebar2();  // Close the sidebar if the click is outside
+        }
+        };
+
+        // Add event listener
+        if (isOpen) {
+        document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        // Cleanup the event listener
+        return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen, toggleSidebar2]);
+
     return (
-        <div className={`fixed top-0 left-0 w-[30%] h-full bg-white z-50 transform ${isOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out overflow-y-scroll custom-scroll`}>
+        <div ref={sidebarRef} className={`fixed top-0 left-0 w-[30%] h-full bg-white z-50 transform ${isOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out overflow-y-scroll custom-scroll`}>
             <div className="w-full h-full flex flex-col gap-16">
                 <div className="w-full px-5 lg:px-10 h-[62px] z-40 bg-opacity-90 transition-all duration-300">
                     <div className="w-full flex items-center justify-between h-full py-10">

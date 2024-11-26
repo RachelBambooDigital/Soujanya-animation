@@ -92,7 +92,7 @@ const ContactUs = () => {
 
     return (
         <div>
-            <div className="w-full h-[1200px] lg:h-[880px] bg-cover bg-center bg-white relative py-20">
+            <div className="w-full h-[1200px] lg:h-[880px] bg-cover bg-center bg-white relative py-20 ">
                 <div className="hidden lg:flex inset-x-0 top-0 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8">
                     <span>Home</span>
                     <span className="text-gray-400"> &gt; </span>
@@ -100,9 +100,9 @@ const ContactUs = () => {
                 </div>
 
                 <div className='w-full flex h-full lg:h-[800px] relative bg-white'>
-                    <div className='absolute inset-0 flex lg:flex-row flex-col-reverse gap-24 lg:justify-between w-full lg:w-auto items-end lg:items-center px-5 lg:px-10'>
+                    <div className='absolute inset-0 flex lg:flex-row flex-col-reverse gap-24 lg:justify-between w-full lg:w-auto items-end lg:items-center px-10 lg:px-10'>
                         <div className='flex flex-col gap-6 text-black font-medium'>
-                            <h1 className='text-[32px] lg:text-[40px] font-subHeading text-black leading-[40px] lg:leading-[45px]'>
+                            <h1 className='text-[32px] lg:text-[40px] font-subHeading text-black leading-[40px] lg:leading-[45px] pl-14'>
                                 Be the first to know about <br />
                                 our events and product updates. <span className="text-red">#nospam</span>
                             </h1>
