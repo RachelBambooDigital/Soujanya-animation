@@ -1,18 +1,30 @@
-import { useEffect, useState } from "react";
-// import { CiSearch } from "react-icons/ci";
+import React, { useEffect, useState } from "react";
+import { CiSearch } from "react-icons/ci";
 import Sidebar from "./Sidebar";
-import ProductsDropdown from "./ProductsDropdown";
+import Sidebar2 from "./Sidebar2";
 import ApplicationDropdown from "./ApplicationDropdown";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Header1 = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Track sidebar state
+  const [isSidebar2Open, setIsSidebar2Open] = useState(false);
   const [isVisible, setIsVisible] = useState(true); // Track header visibility
   const [lastScrollY, setLastScrollY] = useState(0); // Track last scroll position
   const [isHoveringTop, setIsHoveringTop] = useState(false); // Detect hover on top of page
+  const navigate = useNavigate(); 
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar visibility
+  };
+  
+  const toggleSidebar2 = () => {
+    setIsSidebar2Open(!isSidebar2Open);
+  };
+
+  // Redirect functions
+  const handleContactUs = () => {
+    navigate('/contact-us');
   };
 
   const controlHeaderVisibility = () => {
@@ -69,24 +81,45 @@ const Header1 = () => {
               />
             </Link>
           </div>
-          <div className="lg:flex gap-12 items-center hidden">
-            <div className="flex relative border border-black rounded-md ">
+          <div className="lg:flex gap-5 items-center hidden">
+              {/* <div className="flex relative border border-white rounded-md">
+                <ApplicationDropdown color="white" />
+              </div> */}
+              <div className="flex relative border rounded-md">
+                <button className={`text-xs font-semibold py-2 px-4 h-full text-black`}>
+                  Eng
+                </button>
+              </div>
+              <div className="flex relative border rounded-md">
+                <button className={`text-xs font-semibold py-2 px-4 h-full text-black`} onClick={handleContactUs}>
+                  Contact
+                </button>
+              </div>
+              <div className="flex relative border rounded-md">
               <button
-                className={`text-xs font-semibold py-2 px-8 border-r border-black h-full text-black`}
-              >
-                Browse By Applications
+                className={`text-xs font-semibold py-2 px-4 h-full text-black`}  
+                onClick={toggleSidebar2}>
+                <CiSearch className="text-black text-lg" />
               </button>
-              <ApplicationDropdown color="black" />
             </div>
-            {/* <div className="cursor-pointer">
-              <CiSearch className="text-black text-lg" />
-            </div> */}
           </div>
         </div>
       </header>
 
-      {/* Sidebar component */}
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      {/* Sidebar Overlay */}
+      {isSidebar2Open && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-md z-40">
+          <Sidebar2 isOpen={isSidebar2Open} toggleSidebar2={toggleSidebar2} />
+        </div>
+      )}
+
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-md z-40">
+          <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+        </div>
+      )}
+
+      {/* <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} /> */}
     </>
   );
 };

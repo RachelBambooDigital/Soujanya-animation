@@ -5,6 +5,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import ScrollableDrivers from '@/sections/ScrollableDrivers';
 import { Link } from "react-router-dom";
 import '../index.css';
+import Footer from "../components/Footer";
 
 const AboutUs = () => {
   const [metaFields, setMetaFields] = useState(null);
@@ -366,6 +367,7 @@ const AboutUs = () => {
 
 
         <OurGlobalPresence />
+        <Footer />
 
       </div>
         

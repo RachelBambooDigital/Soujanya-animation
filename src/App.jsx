@@ -21,7 +21,7 @@ import ProductListing3 from "./pages/ProductListing3";
 import ProductDetail from "./pages/ProductDetail";
 import ProductDetail2 from "./pages/ProductDetail2";
 import Career from "./pages/Career";
-import Footer from "./components/Footer";
+// import Footer from "./components/Footer";
 
 function App() {
   const scrollRef = useRef(null); // Initialize scrollRef
@@ -77,7 +77,6 @@ function App() {
         <Route path="/career" element={<Career />} />
         <Route path="/home-care-cosmetics" element={<HomeCareCosmetics />} />
         <Route path="/coatings-inks" element={<CoatingsInks />} />
-        <Route path="/about-us" element={<AboutUs />} />
         <Route path="/product-listing" element={<ProductListing />} />
         <Route path="/product-listing2" element={<ProductListing2 />} />
         <Route path="/product-listing3" element={<ProductListing3 />} />
@@ -85,7 +84,7 @@ function App() {
         <Route path="/productDet2/:productId" element={<ProductDetail2 />} />
         
       </Routes>
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   );
 }

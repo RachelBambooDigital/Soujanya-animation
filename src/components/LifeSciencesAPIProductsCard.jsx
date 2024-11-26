@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 const LifeSciencesAPIProductsCard = ({ title, description,EmpiricalFormula,CASNumber, MolecularWeight }) => {
   return (
-    <div className="w-full lg:w-[644px] h-[310px] lg:h-[303px] ">
+    <div className="w-full lg:w-[644px] h-[350px] lg:h-[350px] ">
       {/* Product Title */}
       <h2 className="text-[24px] lg:text-[32px] font-heading mb-4 lg:ml-6">{title}</h2>
 

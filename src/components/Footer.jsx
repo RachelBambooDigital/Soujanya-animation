@@ -5,13 +5,11 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   const scrollToTop = () => {
-    const scrollContainer = document.querySelector('.custom-scroll'); // Target the correct scrollable container
-    if (scrollContainer) {
-      scrollContainer.scrollTo({
-        top: 0,
-        behavior: 'smooth' // Enable smooth scrolling
-      });
-    }
+    // Scroll the page to the top (use window.scrollTo for the whole page)
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Enable smooth scrolling
+    });
   };
 
   // State to store form data

@@ -2,6 +2,7 @@ import IntermediateProducts from "@/sections/IntermediateProducts";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import React, { useEffect, useState } from 'react';
 import '../index.css';
+import Footer from "../components/Footer";
 
 const Intermediate = () => {
   const [metaFields, setMetaFields] = useState([]); // Initialize as an empty array
@@ -79,7 +80,7 @@ const Intermediate = () => {
   }, []);
 
   // Check if metaFields is empty and return loading state
-  if (!metaFields) {
+  if (loading) {
     return (
         <div className="h-screen bg-black flex flex-col items-center justify-center px-8 sm:px-10 md:px-12 lg:px-20">
             {/* Logo */}
@@ -167,14 +168,8 @@ const Intermediate = () => {
   const product7Molecular = metaFields.find(field => field.key === 'product_4_molecular')?.value || '';
   const product7Desc = metaFields.find(field => field.key === 'product_4_desc')?.value || '';
 
-  const product8Title = metaFields.find(field => field.key === 'product_4_title')?.value || '';
-  const product8Empirical = metaFields.find(field => field.key === 'product_4_empirical')?.value || '';
-  const product8Cas = metaFields.find(field => field.key === 'product_4_cas')?.value || '';
-  const product8Molecular = metaFields.find(field => field.key === 'product_4_molecular')?.value || '';
-  const product8Desc = metaFields.find(field => field.key === 'product_4_desc')?.value || '';
-
   return (
-    <div className='w-full bg-cover bg-center bg-white relative' style={{ backgroundImage: `url("/pipe.png")` }}>
+    <div className='w-full bg-cover bg-center bg-white relative'>
       <div className='w-full h-[100dvh] lg:h-screen bg-cover bg-center relative'>
         <video
           className='w-full h-[100dvh] xl:h-full object-cover '
@@ -238,14 +233,9 @@ const Intermediate = () => {
         product7Cas={product7Cas}
         product7Molecular={product7Molecular}
         product7Desc={product7Desc}
-
-        product8Title={product8Title}
-        product8Empirical={product8Empirical}
-        product8Cas={product8Cas}
-        product8Molecular={product8Molecular}
-        product8Desc={product8Desc}
       />
       <OurGlobalPresence />
+      <Footer />
     </div>
   );
 };

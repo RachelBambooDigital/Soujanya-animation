@@ -2,6 +2,7 @@ import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import ProductListingCards from '@/sections/ProductListingCards';
 import  React, { useEffect, useRef, useState } from "react";
 import { useLocation } from 'react-router-dom';
+import Footer from "../components/Footer";
 
 const ProductListing = () => {
   const [categories, setCategories] = useState([]); // Initialize categories state
@@ -146,6 +147,7 @@ const ProductListing = () => {
             ))}
           </div>
           <OurGlobalPresence />
+          <Footer />
         </div>
       </div>      
     </div>
