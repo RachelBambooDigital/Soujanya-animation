@@ -1,4 +1,4 @@
-import { globalPresence } from '@/lib/images';
+import { globalPresence } from "@/lib/images";
 
 const OurGlobalPresence = () => {
   return (
@@ -7,18 +7,20 @@ const OurGlobalPresence = () => {
         <div className="w-full flex flex-col lg:flex-row justify-between h-full px-5 sm:px-8 md:px-10">
           <div className="flex flex-col justify-between gap-10 md:gap-16 lg:gap-0 w-full lg:w-2/3">
             {/* Global Presence Header */}
-            <div className='w-full flex flex-col items-start'>
-              <p className='py-3 sm:py-5 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>
+            <div className="w-full flex flex-col items-start">
+              <p className="py-3 sm:py-5 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
                 Our Global Presence
               </p>
-              <h1 className='font-heading text-[28px] lg:text-[54px] leading-8 sm:leading-10 md:leading-[60px] lg:leading-[70px]'>
-                We are available <br />Worldwide
+              <h1 className="font-heading text-[28px] lg:text-[54px] leading-8 sm:leading-10 md:leading-[60px] lg:leading-[70px]">
+                We are available <br />
+                Worldwide
               </h1>
             </div>
 
             {/* Locations Grid */}
             <div className="w-full flex flex-col lg:flex-row justify-between mb-5 lg:mb-10">
-              <div className="locations grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8 lg:gap-16">
+              <div className="locations grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-2 lg:gap-16">
+                {/* <div className="location w-full flex lg:flex-row lg:justify-start"> */}
                 {/* India */}
                 <div className="address flex flex-col gap-2 lg:gap-4">
                   <h1 className="font-subHeading font-light text-[24px] sm:text-[28px] md:text-[32px] lg:text-[52px]">
