@@ -36,7 +36,7 @@ const ContactUs = () => {
                     </div>
                 </div>
                 <OurGlobalPresence />
-                <Footer />
+
             {/* </div> */}
         </div>
         

@@ -147,7 +147,6 @@ const ProductListing = () => {
             ))}
           </div>
           <OurGlobalPresence />
-          <Footer />
         </div>
       </div>      
     </div>

@@ -154,7 +154,6 @@ const ProductListing2 = () => {
             })};
           </div>
           <OurGlobalPresence />
-          <Footer />
         </div>
       </div>      
     </div>
