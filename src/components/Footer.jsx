@@ -55,7 +55,7 @@ const Footer = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/newsletter`,
+        `${apiBaseUrl}/newsletter`,
         formData
       );
       if (response.status === 201) {
