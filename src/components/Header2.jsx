@@ -82,24 +82,40 @@ const Header1 = () => {
             </Link>
           </div>
           <div className="lg:flex gap-5 items-center hidden">
-              {/* <div className="flex relative border border-white rounded-md">
-                <ApplicationDropdown color="white" />
-              </div> */}
-              <div className="flex relative border rounded-md">
-                <button className={`text-xs font-semibold py-2 px-4 h-full text-black`}>
-                  Eng
-                </button>
-              </div>
-              <div className="flex relative border rounded-md">
-                <button className={`text-xs font-semibold py-2 px-4 h-full text-black`} onClick={handleContactUs}>
-                  Contact
-                </button>
-              </div>
-              <div className="flex relative border rounded-md">
+            {/* <div className="flex relative border border-white rounded-md">
+              <ApplicationDropdown color="white" />
+            </div> */}
+            <div className="flex relative border rounded-md">
+              <button className={`text-xs font-semibold py-2 px-4 h-full text-black`}>
+                Eng
+              </button>
+            </div>
+            <div className="flex relative border rounded-md">
+              <button className={`text-xs font-semibold py-2 px-4 h-full text-black`} onClick={handleContactUs}>
+                Contact
+              </button>
+            </div>
+            <div className="flex relative border rounded-md">
               <button
                 className={`text-xs font-semibold py-2 px-4 h-full text-black`}  
                 onClick={toggleSidebar2}>
                 <CiSearch className="text-black text-lg" />
+              </button>
+            </div>
+          </div>
+
+          {/* For small screens */}
+          <div className="lg:hidden flex gap-3 items-center">
+            <div className="flex relative border rounded-md">
+              <button className={`text-xs font-semibold py-1 px-2 h-full text-black`}>
+                Eng
+              </button>
+            </div>
+            <div className="flex relative border rounded-md">
+              <button
+                className={`text-xs font-semibold py-1 px-2 h-full text-black`}  
+                onClick={toggleSidebar2}>
+                <CiSearch className="text-black text-sm" />
               </button>
             </div>
           </div>

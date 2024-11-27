@@ -40,6 +40,7 @@ const Footer = () => {
     }
 
     try {
+
       const response = await axios.post(`${apiBaseUrl}/newsletter`, formData);
       if (response.status === 201) {
         toast.success("Form submitted successfully!");

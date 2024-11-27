@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import Sidebar from "./Sidebar";
 import Sidebar2 from "./Sidebar2";
-import ApplicationDropdown from "./ApplicationDropdown";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -37,25 +36,40 @@ const Header = () => {
               <img src="/logos/NavLogoWhite.svg" className="w-40" alt="logo" />
             </Link>
           </div>
+          
+          {/* For larger screens */}
           <div className="lg:flex gap-5 items-center hidden">
-              {/* <div className="flex relative border border-white rounded-md">
-                <ApplicationDropdown color="white" />
-              </div> */}
-              <div className="flex relative border border-white  rounded-md">
-                <button className={`text-xs font-semibold py-2 px-4 h-full text-white`}>
-                  Eng
-                </button>
-              </div>
-              <div className="flex relative border border-white  rounded-md">
-                <button className={`text-xs font-semibold py-2 px-4 h-full text-white`} onClick={handleContactUs}>
-                  Contact
-                </button>
-              </div>
-              <div className="flex relative border border-white rounded-md">
+            <div className="flex relative border border-white rounded-md">
+              <button className={`text-xs font-semibold py-2 px-4 h-full text-white`}>
+                Eng
+              </button>
+            </div>
+            <div className="flex relative border border-white rounded-md">
+              <button className={`text-xs font-semibold py-2 px-4 h-full text-white`} onClick={handleContactUs}>
+                Contact
+              </button>
+            </div>
+            <div className="flex relative border border-white rounded-md">
               <button
                 className={`text-xs font-semibold py-2 px-4 h-full text-white`}  
                 onClick={toggleSidebar2}>
                 <CiSearch className="text-white text-lg" />
+              </button>
+            </div>
+          </div>
+
+          {/* For small screens */}
+          <div className="lg:hidden flex gap-3 items-center">
+            <div className="flex relative border border-white rounded-md">
+              <button className={`text-xs font-semibold py-1 px-2 h-full text-white`}>
+                Eng
+              </button>
+            </div>
+            <div className="flex relative border border-white rounded-md">
+              <button
+                className={`text-xs font-semibold py-1 px-2 h-full text-white`}  
+                onClick={toggleSidebar2}>
+                <CiSearch className="text-white text-sm" />
               </button>
             </div>
           </div>
@@ -74,8 +88,6 @@ const Header = () => {
           <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         </div>
       )}
-
-      {/* <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} /> */}
     </>
   );
 };

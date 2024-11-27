@@ -110,7 +110,6 @@ const HomeCareCosmetics = () => {
             }
           }
         }`;
-  
     
         try {
             // Fetch cosmetics
@@ -281,29 +280,30 @@ const HomeCareCosmetics = () => {
     fetchLifesciences();
   }, []);
 
-  const [viewBox, setViewBox] = useState("250 0 2065 2800");
+  const [viewBox, setViewBox] = useState("250 0 2065 4000");
   const [width, setWidth] = useState("2100");
   const [height, setHeight] = useState("5026");
 
   useEffect(() => {
     const updateSVGSize = () => {
-    if (window.innerWidth <= 768) {
-        setViewBox("450 0 990 5000");
-        setWidth("1000");
-        setHeight("5050");
-    } else {
-        setViewBox("250 0 2065 2800");
-        setWidth("2100");
-        setHeight("5026");
-    }
+      if (window.innerWidth <= 768) {
+          setViewBox("550 0 750 3500");
+          setWidth("900");
+          setHeight("5430");
+      } else {
+          setViewBox("250 0 2065 4000");
+          setWidth("2100");
+          setHeight("5026");
+      }
     };
 
     updateSVGSize(); // Initial check
     window.addEventListener('resize', updateSVGSize);
 
     return () => window.removeEventListener('resize', updateSVGSize);
-}, []);
-// width="2100" height="5026" viewBox="250 0 2065 2800"
+  }, []);
+  // width="2100" height="5026" viewBox="250 0 2065 2800"
+
   // Function to fetch image URL
   const fetchImage = async (gid) => {
       try {
@@ -367,7 +367,7 @@ const HomeCareCosmetics = () => {
   } 
 
   return (
-    <div className="scrollContainer w-full h-[5200px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+    <div className="scrollContainer w-full lg:h-[5200px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
       <svg width={width}
             height={height}
             viewBox={viewBox} fill="none" xmlns="http://www.w3.org/2000/svg">

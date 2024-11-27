@@ -23,7 +23,9 @@ const Home = () => {
   const [viewBox, setViewBox] = useState("250 0 2436 5350");
   const [width, setWidth] = useState("2100");
   const [height, setHeight] = useState("5800");
+
 // width="2100" height="5800" viewBox="250 0 2436 5350"
+
   useEffect(() => {
     if (!metaFields) return; // Ensure animation doesn't run until metaFields are set
 
@@ -56,7 +58,7 @@ const Home = () => {
       window.removeEventListener("scroll", () => handleOffset());
     };
   }, [metaFields]); // Run this effect only when `metaFields` is set
-//added now
+
   useEffect(() => {
     const fetchHomePageMeta = async () => {
         const query = `query {
@@ -176,22 +178,22 @@ const Home = () => {
 
   useEffect(() => {
     const updateSVGSize = () => {
-    if (window.innerWidth <= 768) {
-        setViewBox("450 0 990 5000");
-        setWidth("900");
-        setHeight("5050");
-    } else {
-        setViewBox("250 0 2436 5350");
-        setWidth("2100");
-        setHeight("5800");
-    }
+        if (window.innerWidth <= 768) {
+            setViewBox("450 0 990 5000");
+            setWidth("900");
+            setHeight("5050");
+        } else {
+            setViewBox("250 0 2436 5350");
+            setWidth("2100");
+            setHeight("5800");
+        }
     };
 
     updateSVGSize(); // Initial check
     window.addEventListener('resize', updateSVGSize);
 
     return () => window.removeEventListener('resize', updateSVGSize);
-}, []);
+  }, []);
 
   // Function to fetch image URL
   const fetchImage = async (gid) => {

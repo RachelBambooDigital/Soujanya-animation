@@ -5,7 +5,7 @@ import { apiBaseUrl } from "../config";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
-const ContactUs = () => {
+const Career = () => {
     return (
         <div>
             {/* <div className="w-full bg-cover bg-center bg-white relative" style={{ backgroundImage: `url("/pipe.png")` }}> */}
@@ -44,4 +44,4 @@ const ContactUs = () => {
     );
 };
 
-export default ContactUs;
+export default Career;
