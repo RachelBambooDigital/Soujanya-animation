@@ -367,7 +367,6 @@ const AboutUs = () => {
 
 
         <OurGlobalPresence />
-        <Footer />
 
       </div>
         

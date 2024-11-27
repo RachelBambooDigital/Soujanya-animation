@@ -235,7 +235,6 @@ const Intermediate = () => {
         product7Desc={product7Desc}
       />
       <OurGlobalPresence />
-      <Footer />
     </div>
   );
 };

@@ -199,7 +199,7 @@ const Emollients = () => {
         product4Desc={product4Desc}
       />
       <OurGlobalPresence />
-      <Footer />
+
     </div>
   );
 };

@@ -153,7 +153,6 @@ const ProductListing3 = () => {
             })};
           </div>
           <OurGlobalPresence />
-          <Footer />
         </div>
       </div>      
     </div>
