@@ -56,7 +56,7 @@ const Home = () => {
       window.removeEventListener("scroll", () => handleOffset());
     };
   }, [metaFields]); // Run this effect only when `metaFields` is set
-
+//added now
   useEffect(() => {
     const fetchHomePageMeta = async () => {
         const query = `query {

@@ -15,13 +15,13 @@ export default {
       black: "#000000",
       red: "#DC3E37",
       blue: "#019ACC",
-      lightBlue: '#74BCD3',
-      pink: '#BF278C',
+      lightBlue: "#74BCD3",
+      pink: "#BF278C",
       green: "#B0CD1A",
       lightOrange: "#E4A16A",
       darkOrange: "#EA5C50",
       violet: "#595FB3",
-      lightViolet: '#948EE8',
+      lightViolet: "#948EE8",
       purple: "#C0268C",
     },
     fontFamily: {
@@ -37,5 +37,4 @@ export default {
       colors: {},
     },
   },
-
 };
