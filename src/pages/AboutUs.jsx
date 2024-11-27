@@ -211,7 +211,7 @@ const AboutUs = () => {
 
   return (
     <div className="">
-      <div className="w-full bg-cover bg-center bg-white relative" style={{ backgroundImage: `url("/pipe.png")` }}>
+      <div className="w-full bg-cover bg-center bg-white relative" >
         <div className="w-full h-[635px] lg:h-[880px] bg-cover bg-center bg-white relative">
           {/* Breadcrumbs for Large Screens */}
           <div className="hidden lg:flex inset-x-0 top-0 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8">

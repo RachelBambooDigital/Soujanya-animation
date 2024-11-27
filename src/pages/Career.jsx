@@ -3,17 +3,28 @@ import axios from "axios";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import { apiBaseUrl } from "../config";
 import Footer from "../components/Footer";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Career = () => {
+    const location = useLocation();
     return (
         <div>
             {/* <div className="w-full bg-cover bg-center bg-white relative" style={{ backgroundImage: `url("/pipe.png")` }}> */}
-                <div className="w-full h-[700px] lg:h-[880px] bg-cover bg-center  bg-white relative" >
-                    <div className="hidden lg:flex inset-x-0 top-0 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8" >
-                        <Link to="/"><span>Home</span></Link>
+                <div className="w-full h-[700px] lg:h-[880px] bg-cover bg-center bg-white relative" >
+                    <div className="hidden lg:flex inset-x-0 top-20 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8 relative z-10">
+                        <Link 
+                            to="/" 
+                            className={`hover:text-blue-500 ${location.pathname === "/" ? "font-bold" : ""}`}
+                        >
+                            Home
+                        </Link>
                         <span className="text-gray-400"> &gt; </span>
-                        <span>Career</span>
+                        <Link 
+                            to="/career" 
+                            className={`hover:text-blue-500 ${location.pathname === "/career" ? "font-bold" : ""}`}
+                        >
+                            Career
+                        </Link>
                     </div>
 
                     {/* Banner */}

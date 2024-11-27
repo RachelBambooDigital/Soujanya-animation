@@ -456,7 +456,7 @@ const CoatingsInks = () => {
 
             {/* Our Current offering */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
-              <CustomSlider title='Our Brands' subTitle='Enhance your Aura with our Aura series' slides={slides} />
+              <CustomSlider title='Our Offerings' subTitle='Enhance your Aura with our Aura series' slides={slides} />
             </div>
 
             {/* Our Products highlights */}
