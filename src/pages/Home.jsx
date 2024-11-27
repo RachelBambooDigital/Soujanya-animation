@@ -232,7 +232,7 @@ const Home = () => {
   };
   
   return (
-    <div className="scrollContainer w-full lg:h-[5555px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+    <div className="scrollContainer w-full lg:h-[4850px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
         
         <svg width={width}
             height={height}
