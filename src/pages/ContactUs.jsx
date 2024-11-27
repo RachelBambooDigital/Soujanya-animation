@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
-import { apiBaseUrl } from "../config";
 import Footer from "../components/Footer";
+import { apiBaseUrl } from "@/config";
 
 const ContactUs = () => {
   // State to store form data
@@ -12,7 +13,6 @@ const ContactUs = () => {
     email: "",
     contactNumber: "",
     message: "",
-    // privacyPolicyAccepted: false,
   });
 
   // State to store errors
@@ -73,25 +73,36 @@ const ContactUs = () => {
       return;
     }
 
-    // if (!formData.privacyPolicyAccepted) {
-    //     alert("Please accept the Privacy Policy.");
-    //     return;
-    // }
-
     try {
       const response = await axios.post(`${apiBaseUrl}/contact`, formData);
 
       if (response.status === 201) {
-        alert("Form submitted successfully!");
+        // Display success toast
+        toast.success("Form submitted successfully!");
+
+        // Clear the form
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          contactNumber: "",
+          message: "",
+        });
+
+        // Clear errors
+        setErrors({});
       }
     } catch (error) {
       console.error("Error submitting the form", error);
-      alert("There was an error submitting the form.");
+      toast.error("There was an error submitting the form.", {
+        position: "bottom-right",
+      });
     }
   };
 
   return (
     <div>
+      <Toaster position="bottom-right" />
       <div className="w-full h-[1200px] lg:h-[880px] bg-cover bg-center bg-white relative py-20 ">
         <div className="hidden lg:flex inset-x-0 top-0 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8">
           <span>Home</span>
