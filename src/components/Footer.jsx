@@ -1,52 +1,38 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { apiBaseUrl } from "../config";
+import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { apiBaseUrl } from "@/config";
 
 const Footer = () => {
   const scrollToTop = () => {
-    // Scroll the page to the top (use window.scrollTo for the whole page)
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // Enable smooth scrolling
+      behavior: "smooth",
     });
   };
 
-  // State to store form data
-  const [formData, setFormData] = useState({
-    email: "",
-  });
-
-  // State to store errors
+  const [formData, setFormData] = useState({ email: "" });
   const [errors, setErrors] = useState({});
 
-  // Handle input changes
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  // Validation function
   const validate = () => {
     const newErrors = {};
-
     const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!emailRegex.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
     }
-
     return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate inputs
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -54,24 +40,30 @@ const Footer = () => {
     }
 
     try {
-      const response = await axios.post(
-        `http://localhost:5000/api/newsletter`,
-        formData
-      );
+      const response = await axios.post(`${apiBaseUrl}/newsletter`, formData);
       if (response.status === 201) {
-        alert("Form submitted successfully!");
+        toast.success("Form submitted successfully!");
+        setFormData({ email: "" });
+      } else {
+        toast.error("Unexpected response status!");
       }
     } catch (error) {
       console.error("Error submitting the form", error);
-      alert("There was an error submitting the form.");
+      toast.error("There was an error submitting the form.");
     }
   };
 
   return (
-    <footer id="footer" className="w-full px-5 lg:px-10 h-screen bg-black flex flex-col justify-between overflow-y-hidden">
-      <div className="foot-note flex lg:flex-row flex-col w-full justify-start gap-[30px] lg:gap-[470px] mt-[60px] lg:mt-[72px]">
-        <p className="text-white font-subHeading hover:underline cursor-pointer"
-          onClick={scrollToTop}>
+    <footer
+      id="footer"
+      className="w-full px-5 lg:px-10 h-screen bg-black flex flex-col justify-between overflow-y-hidden"
+    >
+      <Toaster position="bottom-right" /> {/* Toast notification container */}
+      <div className="foot-note flex lg:flex-row flex-col w-full justify-start gap-[30px] lg:gap-[470px] mt-[40px] lg:mt-[72px]">
+        <p
+          className="text-white font-subHeading hover:underline cursor-pointer"
+          onClick={scrollToTop}
+        >    
           Back to top
         </p>
         <div className="flex flex-col">
@@ -87,10 +79,10 @@ const Footer = () => {
                   name="email"
                   placeholder="Email"
                   className="w-full lg:w-[320px] p-5 h-[42px] text-white text-[14px] rounded-md bg-[#292929] border-2 border-[#576275] focus-visible:border-y-white"
-                  value={formData.firstName}
+                  value={formData.email}
                   onChange={handleChange}
                   required
-                />{" "}
+                />
                 <br />
                 {errors.email && (
                   <span className="text-red">{errors.email}</span>
@@ -107,9 +99,7 @@ const Footer = () => {
           </form>
         </div>
       </div>
-
       <div className="footer-links max-w-screen-xl mx-auto w-full flex flex-col lg:flex-row justify-between items-center gap-6 lg:gap-20 mb-8 px-5 lg:px-10">
-        {/* Logo Section - Left Aligned */}
         <Link
           to="/"
           className="flex justify-center lg:justify-start mb-4 lg:mb-0 w-full lg:w-auto"
@@ -121,20 +111,14 @@ const Footer = () => {
           />
         </Link>
 
-        {/* Navigation Links - Center Aligned */}
         <nav className="text-white flex flex-row gap-6 lg:gap-10 text-[0.8rem] sm:text-[0.8rem] md:text-[1rem] lg:text-[1.1rem] w-full lg:w-auto justify-center items-center text-center">
           <Link to="/about-us" className="mr-1">
             About Us
           </Link>
-          <Link to="/home-care-cosmetics" className="">
-            Home, Personal Care & Cosmetics
-          </Link>
-          <Link to="/life-sciences" className="">
-            Life Sciences
-          </Link>
+          <Link to="/home-care-cosmetics">Home, Personal Care & Cosmetics</Link>
+          <Link to="/life-sciences">Life Sciences</Link>
         </nav>
 
-        {/* Rights Text - Center Aligned */}
         <p className="text-white text-center lg:text-left lg:mt-0 w-full lg:w-auto text-[0.8rem] sm:text-[0.8rem] md:text-[1rem] lg:text-[1.1rem]">
           All rights reserved
         </p>
