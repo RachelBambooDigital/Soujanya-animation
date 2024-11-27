@@ -467,7 +467,6 @@ const ProductDetail2 = () => {
             </div>
 
             <OurGlobalPresence />
-            <Footer />
         </div>
     );
 };

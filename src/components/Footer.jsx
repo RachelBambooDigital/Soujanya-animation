@@ -63,7 +63,7 @@ const Footer = () => {
         <p
           className="text-white font-subHeading hover:underline cursor-pointer"
           onClick={scrollToTop}
-        >
+        >    
           Back to top
         </p>
         <div className="flex flex-col">

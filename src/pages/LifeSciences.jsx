@@ -361,7 +361,6 @@ const LifeSciences = () => {
 
             {/* Our Global presence */}
             <OurGlobalPresence />
-            <Footer />
           </div>
         </div>
       </div>

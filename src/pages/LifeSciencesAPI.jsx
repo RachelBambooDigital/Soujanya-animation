@@ -191,7 +191,6 @@ const LifeSciencesAPI = () => {
         product3Desc={product3Desc}
       />
       <OurGlobalPresence />
-      <Footer />
     </div>
   );
 };
