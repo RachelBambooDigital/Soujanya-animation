@@ -187,7 +187,7 @@ const LifeSciences = () => {
   useEffect(() => {
     const updateSVGSize = () => {
         if (window.innerWidth <= 768) {
-            setViewBox("450 0 990 5500");
+            setViewBox("470 0 990 5500");
             setWidth("900");
             setHeight("5900");
         } else {

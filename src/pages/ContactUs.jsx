@@ -4,6 +4,7 @@ import { Toaster, toast } from "react-hot-toast";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import Footer from "../components/Footer";
 import { apiBaseUrl } from "@/config";
+import { Link, useLocation } from "react-router-dom";
 
 const ContactUs = () => {
   // State to store form data
@@ -100,14 +101,26 @@ const ContactUs = () => {
     }
   };
 
+  const location = useLocation();
+
   return (
     <div>
       <Toaster position="bottom-right" />
       <div className="w-full h-[1200px] lg:h-[880px] bg-cover bg-center bg-white relative py-20 ">
-        <div className="hidden lg:flex inset-x-0 top-0 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8">
-          <span>Home</span>
+        <div className="hidden lg:flex inset-x-0 top-12 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8">
+          <Link 
+            to="/" 
+            className={`hover:text-blue-500 ${location.pathname === "/" ? "font-bold" : ""}`}
+          >
+            Home
+          </Link>
           <span className="text-gray-400"> &gt; </span>
-          <span>Contact us</span>
+          <Link 
+            to="/contact-us" 
+            className={`hover:text-blue-500 ${location.pathname === "/contact-us" ? "font-bold" : ""}`}
+          >
+            Contact us
+          </Link>
         </div>
 
         <div className="w-full flex h-full lg:h-[800px] relative bg-white">
