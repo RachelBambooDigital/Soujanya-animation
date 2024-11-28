@@ -290,6 +290,30 @@ const ProductDetail = () => {
     fetchProductData();
   }, [productId]);
 
+    //width="3600" height="4026" viewBox="100 0 4936 4750"
+    const [viewBox, setViewBox] = useState("100 0 4936 4750");
+    const [width, setWidth] = useState("3600");
+    const [height, setHeight] = useState("4026");
+  
+    useEffect(() => {
+      const updateSVGSize = () => {
+        if (window.innerWidth <= 768) {
+            setViewBox("850 0 2000 3350");
+            setWidth("2100");
+            setHeight("4100");
+        } else {
+            setViewBox("100 0 4936 4750");
+            setWidth("3600");
+            setHeight("4026");
+        }
+      };
+  
+      updateSVGSize(); // Initial check
+      window.addEventListener('resize', updateSVGSize);
+  
+      return () => window.removeEventListener('resize', updateSVGSize);
+    }, []);
+
   const handleButtonClick = async (buttonIndex, metafields) => {
     const titleMetafield = `benefitstitle${buttonIndex}`;
     const descMetafield = `benefitsdesc${buttonIndex}`;
@@ -354,14 +378,14 @@ const ProductDetail = () => {
 
   return (
     <div
-      className="scrollContainer w-full h-[2770px] overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[2770px] overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
       key={key}
     >
       <svg
-        width="3600"
-        height="4026"
-        viewBox="100 0 4936 4750"
+        width={width}
+        height={height}
+        viewBox={viewBox} 
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -569,27 +593,24 @@ const ProductDetail = () => {
           </div>
 
           {/* Applications Section */}
-          <div className="p-5 lg:p-10 w-full items-start grid grid-cols-12 bg-opacity-5 backdrop-blur-lg bg-white">
-            <p className="col-span-12 lg:col-span-5 py-3 sm:py-5 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[15px]">
-              {applicationTitle || "Applications"}
+          <div className='p-5 lg:p-10 w-full items-start grid grid-cols-12'>
+            <p className='col-span-12 lg:col-span-5 py-3 sm:py-5 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[15px]'>
+                {applicationTitle || 'Applications'}
             </p>
-            <div className="col-span-12 lg:col-span-7 py-3 sm:py-5 lg:py-10">
-              {applicationDesc ? (
-                applicationDesc.split("\n").map((paragraph, index) => (
-                  <p
-                    key={index}
-                    className="font-subHeading font-light text-[18px] lg:text-[20px] leading-5 sm:leading-8 md:leading-8 lg:leading-[30px] mb-5"
-                  >
-                    {paragraph.trim()}
-                  </p>
-                ))
-              ) : (
-                <p className="font-subHeading font-light text-[28px] lg:text-[20px] leading-8 sm:leading-10 md:leading-[60px] lg:leading-[30px]">
-                  Default application description...
-                </p>
-              )}
+            <div className='col-span-12 lg:col-span-7 py-3 sm:py-5 lg:py-10'>
+                {applicationDesc ? (
+                    applicationDesc.split('\n').map((paragraph, index) => (
+                        <p key={index} className='font-subHeading font-light text-[28px] lg:text-[20px] leading-8 sm:leading-10 md:leading-[60px] lg:leading-[30px] mb-5'>
+                            {paragraph.trim()}
+                        </p>
+                    ))
+                ) : (
+                    <p className='font-subHeading font-light text-[28px] lg:text-[20px] leading-8 sm:leading-10 md:leading-[60px] lg:leading-[30px]'>
+                        Default application description...
+                    </p>
+                )}
             </div>
-          </div>
+          </div>  
 
           {/* Dynamic Content Section */}
           <div className="w-full flex flex-col px-5 lg:px-10 mt-10">
