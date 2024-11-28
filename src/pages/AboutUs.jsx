@@ -190,15 +190,17 @@ const AboutUs = () => {
 
     fetchAboutUs();
   }, []);
-
+  // setViewBox("450 0 990 6000");
+  //       setWidth("900");
+  //       setHeight("8600");
   useEffect(() => {
     const updateSVGSize = () => {
       if (window.innerWidth <= 768) {
-        setViewBox("400 1100 1090 1500");
+        setViewBox("250 0 1036 5100");
         setWidth("1000");
         setHeight("8600");
       } else {
-        setViewBox("250 0 2436 5350");
+        setViewBox("250 0 2436 4500");
         setWidth("2100");
         setHeight("5800");
       }
@@ -459,13 +461,13 @@ const AboutUs = () => {
               </div>
             </div>
           </div>
-
+          
           <div ref={historyRef}>
             <ScrollableDrivers drivers2={scrollableDrivers} />
           </div>
 
           {/* Who we are about us */} 
-          <div className='w-full flex flex-col px-5 lg:px-10'>
+          <div className='hidden w-full lg:flex flex-col px-5 lg:px-10 bg-white'>
             <div className='w-full flex flex-col items-start'>
               <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Who we are</p>
               <h1 className='font-heading leading-10 text-[28px] lg:text-[54px] lg:leading-[70px]'>{metaFields.who_we_are_title}</h1>
@@ -492,7 +494,7 @@ const AboutUs = () => {
                 <div className='flex flex-col text-black'>
                   <h2 className="w-full font-heading text-2xl lg:text-4xl">{metaFields.who_we_are_heading}</h2>
                   <p className="text-[#667085] font-normal text-[16px] mt-4">{metaFields.who_we_are_desc_2}</p>
-                  <Link to="/careers">
+                  <Link to="/career">
                     <button className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg mt-10 mb-10'>Explore Careers</button>
                   </Link>
                 </div>
@@ -507,6 +509,56 @@ const AboutUs = () => {
                 {/* Image 2 */}
                 <div className='w-full lg:w-[260px] h-auto max-h-[380px]'>
                   <img src={metaFields.who_we_are_imgs_line_2[1]} className='w-full h-auto object-contain' alt="Who are we Image 1" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Who we are about us small screen*/} 
+          <div className='lg:hidden w-full sm:flex flex-col px-5 lg:px-10 bg-white'>
+            <div className='w-full flex flex-col items-start'>
+              <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Who we are</p>
+              <h1 className='font-heading leading-10 text-[28px] lg:text-[54px] lg:leading-[70px]'>{metaFields.who_we_are_title}</h1>
+            </div>
+
+            <div className='w-full flex gap-5 lg:gap-8 justify-between lg:justify-end px-3 lg:px-0 mt-12'>
+              {/* Image 1 */}
+              <div className='w-full object-contain'>
+                <img src={metaFields.who_we_are_imgs_line_1[0]} className='w-full h-full' alt="Who are we Image 1" />
+              </div>
+              {/* Image 2 */}
+              <div className='w-[50%] object-contain'>
+                <img src={metaFields.who_we_are_imgs_line_1[1]} className='w-full h-full' alt="Who are we Image 2" />
+              </div>
+            </div>
+            <div className='w-full flex gap-5 lg:gap-8 justify-between lg:justify-end px-3 lg:px-0 mt-5'>
+              {/* Image 3 */}
+              <div className='w-full lg:w-[580px] h-auto max-h-[380px]'>
+                <img src={metaFields.who_we_are_imgs_line_1[2]} className='w-full h-auto object-contain' alt="Who are we Image 3" />
+              </div>
+            </div>
+
+            <div className="flex flex-col lg:flex-row gap-10 mt-10 ">
+              {/* Left content - Description */}
+              <div className="w-full flex lg:flex-row flex-col lg:justify-start items-center">
+                <div className='flex flex-col text-black'>
+                  <h2 className="w-full font-heading text-2xl lg:text-4xl">{metaFields.who_we_are_heading}</h2>
+                  <p className="text-[#667085] font-normal text-[16px] mt-4">{metaFields.who_we_are_desc_2}</p>
+                  <Link to="/career">
+                    <button className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg mt-10 mb-10'>Explore Careers</button>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Right content - Images */}
+              <div className="w-full flex gap-6 mt-5 mb-14">
+                {/* Image 1 */}
+                <div className='w-full object-contain'>
+                  <img src={metaFields.who_we_are_imgs_line_2[0]} className='w-full h-full' alt="Who are we Image 2" />
+                </div>
+                {/* Image 2 */}
+                <div className='w-[50%] object-contain'>
+                  <img src={metaFields.who_we_are_imgs_line_2[1]} className='w-full h-full' alt="Who are we Image 1" />
                 </div>
               </div>
             </div>
