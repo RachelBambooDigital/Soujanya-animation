@@ -194,8 +194,8 @@ const AboutUs = () => {
   useEffect(() => {
     const updateSVGSize = () => {
       if (window.innerWidth <= 768) {
-        setViewBox("400 0 490 9000");
-        setWidth("400");
+        setViewBox("400 1100 1090 1500");
+        setWidth("1000");
         setHeight("8600");
       } else {
         setViewBox("250 0 2436 5350");
@@ -273,7 +273,7 @@ const AboutUs = () => {
   //added now
 
   return (
-    <div className="scrollContainer w-full lg:h-[4850px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+    <div className="scrollContainer w-full lg:h-[6100px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
       <svg
         width={width}
         height={height}
@@ -464,7 +464,7 @@ const AboutUs = () => {
             <ScrollableDrivers drivers2={scrollableDrivers} />
           </div>
 
-          {/* Who we are */} 
+          {/* Who we are about us */} 
           <div className='w-full flex flex-col px-5 lg:px-10'>
             <div className='w-full flex flex-col items-start'>
               <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Who we are</p>
@@ -511,8 +511,6 @@ const AboutUs = () => {
               </div>
             </div>
           </div>
-
-
 
           <OurGlobalPresence />
 
