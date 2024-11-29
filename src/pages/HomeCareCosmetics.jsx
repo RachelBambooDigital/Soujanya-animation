@@ -452,13 +452,13 @@ const HomeCareCosmetics = () => {
 
             {/* Our Current offering */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
-              <CustomSlider title='Our Brands' subTitle='Enhance your Aura with our Aura series' slides={slides} />
+              <CustomSlider title='Our Offerings' subTitle='Colorants designed for a seamless blend' slides={slides} />
             </div>
 
             {/* Our Products highlights */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
               <div className='w-full flex flex-col items-start'>
-                <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Our Product Highlights</p>
+                <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Colorant Highlights</p>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-10 lg:pr-20">
                 {highlights.map((highlight, index) => (

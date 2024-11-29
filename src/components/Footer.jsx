@@ -69,7 +69,7 @@ const Footer = () => {
         </p>
         <div className="flex flex-col">
           <h1 className="font-subHeading text-white text-[40px] leading-[45px] tracking-[-3%] font-light lg:text-[52px] lg:w-[600px] lg:leading-[60px] w-600px">
-            Be the first to know about our events and product updates.
+            Join our newsletter & be the first to know about our events & product updates.
             <span className="font-heading text-red"> #nospam</span>
           </h1>
           <form onSubmit={handleSubmit}>

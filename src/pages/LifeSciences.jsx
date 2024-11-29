@@ -368,7 +368,7 @@ const LifeSciences = () => {
 
             {/* Our Current offering */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
-              <CustomSlider1 title='Our Current Offerings' subTitle='We are passionate about what we do' slides={slides} />
+              <CustomSlider1 title='Our Categories' subTitle='We are passionate about what we do' slides={slides} />
             </div>
 
             {/* Our business highlights */}

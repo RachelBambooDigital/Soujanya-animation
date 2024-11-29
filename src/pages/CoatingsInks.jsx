@@ -317,7 +317,7 @@ const CoatingsInks = () => {
       if (window.innerWidth <= 768) {
         setViewBox("450 0 990 5000");
         setWidth("900");
-        setHeight("5100");
+        setHeight("5350");
       } else {
         setViewBox("110 0 2436 5026");
         setWidth("2100");
@@ -402,7 +402,7 @@ const CoatingsInks = () => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[5000px] overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[5200px] overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
       <svg
@@ -513,7 +513,7 @@ const CoatingsInks = () => {
             <div className="w-full flex flex-col px-5 lg:px-10 gap-20">
               <div className="w-full flex flex-col items-start">
                 <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
-                  Who are we
+                  Who We Are
                 </p>
                 <h1 className="font-heading text-[28px] lg:text-[54px] leading-10 lg:leading-[70px]">
                   {metaFields.who_we_are_desc}
@@ -538,14 +538,14 @@ const CoatingsInks = () => {
 
             {/* Our Current offering */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
-              <CustomSlider title='Our Offerings' subTitle='Enhance your Aura with our Aura series' slides={slides} />
+              <CustomSlider title='Our Offerings' subTitle='Colorants designed for industrial coloring applications' slides={slides} />
             </div>
 
             {/* Our Products highlights */}
             <div className="w-full flex flex-col px-5 lg:px-10">
               <div className="w-full flex flex-col items-start">
                 <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
-                  Our Product Highlights
+                  Our Excellence
                 </p>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-10 lg:pr-20">
@@ -556,6 +556,18 @@ const CoatingsInks = () => {
                     desc={highlight.desc}
                   />
                 ))}
+              </div>
+            </div>
+
+            {/* Applications Section */}
+            <div className='p-5 lg:p-10 w-full items-start grid grid-cols-12'>
+              <p className='col-span-12 lg:col-span-5 py-3 sm:py-5 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[15px]'>
+                {metaFields.application_header || 'Applications'} {/* Use fetched title */}
+              </p>
+              <div className='col-span-12 lg:col-span-7 py-3 sm:py-5 lg:py-10'>
+                <p className='font-subHeading font-light text-[28px] lg:text-[20px] leading-8 sm:leading-10 md:leading-[60px] lg:leading-[30px]'>
+                  {metaFields.application_desc || 'No description available.'} {/* Use fetched description */}
+                </p>
               </div>
             </div>
 
