@@ -238,7 +238,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                         </div>
                       </Link>
                       <Link
-                        to="/productDet/7376147382338"
+                        to="/productDet/7376147284034"
                         onClick={toggleSidebar}
                       >
                         <div className="py-2 px-5 border-b border-black">
@@ -493,7 +493,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                       </div>
                     </Link>
                     <Link
-                      to="/productDet/7376147382338"
+                      to="/productDet/7376147284034"
                       onClick={toggleSidebar}
                     >
                       <div className="py-2 px-5 border-b border-black">

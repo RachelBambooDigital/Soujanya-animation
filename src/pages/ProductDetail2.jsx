@@ -79,180 +79,223 @@ const ProductDetail2 = () => {
                     const data = await response.json();
                     console.log("Fetched product data:", data);
                     setProductData(data);
-
+          
                     const mediaEdges = data.media?.edges;
-
+          
                     if (mediaEdges && mediaEdges.length > 1) {
-                        const secondImage = mediaEdges[1]?.node?.image;
-                        const url = secondImage?.url;
-
-                        if (url) {
-                            setSecondImageUrl(url); // Set only the second image URL
-                        }
+                      const secondImage = mediaEdges[1]?.node?.image;
+                      const url = secondImage?.url;
+          
+                      if (url) {
+                        setSecondImageUrl(url); // Set only the second image
+                      }
                     }
-
+          
                     if (data.metafields && data.metafields.edges.length > 0) {
-                        console.log("Metafields edges:", data.metafields.edges);
-
-                        const metafields = data.metafields.edges;
-
-                        // Fetch buttons
-                        const buttons = data.metafields.edges.filter(mf => mf.node.key.startsWith('button')).map(b => b.node.value);
-                        setButtons(buttons);
-
-                        // Set initial active category and cards
-                        if (buttons.length > 0) {
-                            setActiveCategory(`button1`);
-                            handleButtonClick(1, metafields);
-                        }
-
-                        // Fetch cards
-                        const benefitsTitle = metafields.find(mf => mf.node.key === 'benefitstitle');
-                        const benefitsDesc = metafields.find(mf => mf.node.key === 'benefitsdesc');
-                        if (benefitsTitle && benefitsDesc) {                            
-                            setCards1({
-                                heading: benefitsTitle.node.value,
-                                description: benefitsDesc.node.value,
-                            });
-                        }
-
-                        // Fetch cards
-                        const usecaseTitle = metafields.find(mf => mf.node.key === 'usecasetitle');
-                        const usecaseDesc = metafields.find(mf => mf.node.key === 'usecasedesc');
-                        if (usecaseTitle && usecaseDesc) {                            
-                            setCards1({
-                                heading: usecaseTitle.node.value,
-                                description: usecaseDesc.node.value,
-                            });
-                        }
-
-                        // Retrieve the bulletpoints metafield
-                        const bulletpointMetafield = data.metafields.edges.find(
-                            (mf) => mf.node.namespace === 'custom' && mf.node.key === 'bulletpoints'
-                        );
-                        if (bulletpointMetafield && bulletpointMetafield.node.value) {
-                            const details = bulletpointMetafield.node.value;
-                            const parsedDetails = typeof details === 'string' ? JSON.parse(details) : details;
-                            const bulletPoints = [];
-
-                            if (parsedDetails.type === "root" && Array.isArray(parsedDetails.children)) {
-                                parsedDetails.children.forEach((child) => {
-                                    if (child.listType === "unordered" && child.type === "list" && child.children) {
-                                        child.children.forEach((item) => {
-                                            if (item.type === "list-item" && item.children) {
-                                                item.children.forEach((subChild) => {
-                                                    if (subChild.type === "text" && subChild.value) {
-                                                        bulletPoints.push(subChild.value);
-                                                    }
-                                                });
-                                            }
-                                        });
+                      console.log("Metafields edges:", data.metafields.edges);
+          
+                      const metafields = data.metafields.edges;
+          
+                      // Fetch buttons
+                      const buttons = data.metafields.edges
+                        .filter((mf) => mf.node.key.startsWith("button"))
+                        .map((b) => b.node.value);
+                      setButtons(buttons);
+          
+                      // Set initial active category and cards
+                      if (buttons.length > 0) {
+                        setActiveCategory(`button1`);
+                        handleButtonClick(1, metafields);
+                      }
+          
+                      // Fetch cards
+                      const benefitsTitle = metafields.find(
+                        (mf) => mf.node.key === "benefitstitle"
+                      );
+                      const benefitsDesc = metafields.find(
+                        (mf) => mf.node.key === "benefitsdesc"
+                      );
+                      if (benefitsTitle && benefitsDesc) {
+                        setCards1({
+                          heading: benefitsTitle.node.value,
+                          description: benefitsDesc.node.value,
+                        });
+                      }
+          
+                      // Fetch use case card data (for second card)
+                      const usecaseTitle = metafields.find(
+                        (mf) => mf.node.key === "usecasetitle1"
+                      );
+                      const usecaseDesc = metafields.find(
+                        (mf) => mf.node.key === "usecasedesc1"
+                      );
+                      if (usecaseTitle && usecaseDesc) {
+                        setCards2({
+                          heading: usecaseTitle.node.value,
+                          description: usecaseDesc.node.value,
+                        });
+                      }
+          
+                      // Retrieve the bulletpoints metafield
+                      const bulletpointMetafield = data.metafields.edges.find(
+                        (mf) =>
+                          mf.node.namespace === "custom" && mf.node.key === "bulletpoints"
+                      );
+                      if (bulletpointMetafield && bulletpointMetafield.node.value) {
+                        const details = bulletpointMetafield.node.value;
+                        const parsedDetails =
+                          typeof details === "string" ? JSON.parse(details) : details;
+                        const bulletPoints = [];
+          
+                        if (
+                          parsedDetails.type === "root" &&
+                          Array.isArray(parsedDetails.children)
+                        ) {
+                          parsedDetails.children.forEach((child) => {
+                            if (
+                              child.listType === "unordered" &&
+                              child.type === "list" &&
+                              child.children
+                            ) {
+                              child.children.forEach((item) => {
+                                if (item.type === "list-item" && item.children) {
+                                  item.children.forEach((subChild) => {
+                                    if (subChild.type === "text" && subChild.value) {
+                                      bulletPoints.push(subChild.value);
                                     }
-                                });
-                                setMoreDetails(bulletPoints);
-                            } else {
-                                console.log("Details structure is not as expected.");
-                                setMoreDetails(['Default Value']);
+                                  });
+                                }
+                              });
                             }
+                          });
+                          setMoreDetails(bulletPoints);
                         } else {
-                            console.log("Bulletpoints metafield not found.");
-                            setMoreDetails(['Default Value']);
+                          console.log("Details structure is not as expected.");
+                          setMoreDetails(["Default Value"]);
                         }
-
-                        // Retrieve the product description metafield
-                        const descriptionMetafield = data.metafields.edges.find(
-                            (mf) => mf.node.namespace === 'custom' && mf.node.key === 'productdescriptions'
-                        );
-                        if (descriptionMetafield && descriptionMetafield.node.value) {
-                            setProductDescription(descriptionMetafield.node.value);
-                        } else {
-                            console.log("Product description metafield not found.");
-                        }
-
-                        // Retrieve the product category metafield
-                        const categoryMetafield = data.metafields.edges.find(
-                            (mf) => mf.node.namespace === 'custom' && mf.node.key === 'productcategory'
-                        );
-                        if (categoryMetafield && categoryMetafield.node.value) {
-                            setProductCategory(categoryMetafield.node.value);
-                        } else {
-                            console.log("Product category metafield not found.");
-                        }
-
-                        // Retrieve card 1 heading and description
-                        const card1TitleMetafield = data.metafields.edges.find(
-                            (mf) => mf.node.namespace === 'custom' && mf.node.key === 'card1title'
-                        );
-                        const card1DescMetafield = data.metafields.edges.find(
-                            (mf) => mf.node.namespace === 'custom' && mf.node.key === 'card1desc'
-                        );
-                        if (card1TitleMetafield && card1TitleMetafield.node.value &&
-                            card1DescMetafield && card1DescMetafield.node.value) {
-                            setCard1({
-                                heading: card1TitleMetafield.node.value,
-                                description: card1DescMetafield.node.value,
-                            });
-                        }
-
-                        // Retrieve card 2 heading and description
-                        const card2TitleMetafield = data.metafields.edges.find(
-                            (mf) => mf.node.namespace === 'custom' && mf.node.key === 'card2title'
-                        );
-                        const card2DescMetafield = data.metafields.edges.find(
-                            (mf) => mf.node.namespace === 'custom' && mf.node.key === 'card2desc'
-                        );
-                        if (card2TitleMetafield && card2TitleMetafield.node.value &&
-                            card2DescMetafield && card2DescMetafield.node.value) {
-                            setCard2({
-                                heading: card2TitleMetafield.node.value,
-                                description: card2DescMetafield.node.value,
-                            });
-                        }
-
-                        // Retrieve card 3 heading and description
-                        const card3TitleMetafield = data.metafields.edges.find(
-                            (mf) => mf.node.namespace === 'custom' && mf.node.key === 'card3title'
-                        );
-                        const card3DescMetafield = data.metafields.edges.find(
-                            (mf) => mf.node.namespace === 'custom' && mf.node.key === 'card3desc'
-                        );
-                        if (card3TitleMetafield && card3TitleMetafield.node.value &&
-                            card3DescMetafield && card3DescMetafield.node.value) {
-                            setCard3({
-                                heading: card3TitleMetafield.node.value,
-                                description: card3DescMetafield.node.value,
-                            });
-                        }
-
-                        // Retrieve application title
-                        const appTitleMetafield = data.metafields.edges.find(
-                            (mf) => mf.node.namespace === 'custom' && mf.node.key === 'applicationheader'
-                        );
-                        console.log("Application title metafield:", appTitleMetafield); // Debug log
-                        if (appTitleMetafield && appTitleMetafield.node.value) {
-                            setApplicationTitle(appTitleMetafield.node.value);
-                        } else {
-                            console.log("Application title metafield not found.");
-                        }
-
-                        // Retrieve application description
-                        const appDescMetafield = data.metafields.edges.find(
-                            (mf) => mf.node.namespace === 'custom' && mf.node.key === 'applicationdesc'
-                        );
-                        console.log("Application description metafield:", appDescMetafield); // Debug log
-                        if (appDescMetafield && appDescMetafield.node.value) {
-                            setApplicationDesc(appDescMetafield.node.value);
-                        } else {
-                            console.log("Application description metafield not found.");
-                        }
-
+                      } else {
+                        console.log("Bulletpoints metafield not found.");
+                        setMoreDetails(["Default Value"]);
+                      }
+          
+                      // Retrieve the product description metafield
+                      const descriptionMetafield = data.metafields.edges.find(
+                        (mf) =>
+                          mf.node.namespace === "custom" &&
+                          mf.node.key === "productdescriptions"
+                      );
+                      if (descriptionMetafield && descriptionMetafield.node.value) {
+                        setProductDescription(descriptionMetafield.node.value);
+                      } else {
+                        console.log("Product description metafield not found.");
+                      }
+          
+                      // Retrieve the product category metafield
+                      const categoryMetafield = data.metafields.edges.find(
+                        (mf) =>
+                          mf.node.namespace === "custom" &&
+                          mf.node.key === "productcategory"
+                      );
+                      if (categoryMetafield && categoryMetafield.node.value) {
+                        setProductCategory(categoryMetafield.node.value);
+                      } else {
+                        console.log("Product category metafield not found.");
+                      }
+          
+                      // Retrieve card 1 heading and description
+                      const card1TitleMetafield = data.metafields.edges.find(
+                        (mf) =>
+                          mf.node.namespace === "custom" && mf.node.key === "card1title"
+                      );
+                      const card1DescMetafield = data.metafields.edges.find(
+                        (mf) =>
+                          mf.node.namespace === "custom" && mf.node.key === "card1desc"
+                      );
+                      if (
+                        card1TitleMetafield &&
+                        card1TitleMetafield.node.value &&
+                        card1DescMetafield &&
+                        card1DescMetafield.node.value
+                      ) {
+                        setCard1({
+                          heading: card1TitleMetafield.node.value,
+                          description: card1DescMetafield.node.value,
+                        });
+                      }
+          
+                      // Retrieve card 2 heading and description
+                      const card2TitleMetafield = data.metafields.edges.find(
+                        (mf) =>
+                          mf.node.namespace === "custom" && mf.node.key === "card2title"
+                      );
+                      const card2DescMetafield = data.metafields.edges.find(
+                        (mf) =>
+                          mf.node.namespace === "custom" && mf.node.key === "card2desc"
+                      );
+                      if (
+                        card2TitleMetafield &&
+                        card2TitleMetafield.node.value &&
+                        card2DescMetafield &&
+                        card2DescMetafield.node.value
+                      ) {
+                        setCard2({
+                          heading: card2TitleMetafield.node.value,
+                          description: card2DescMetafield.node.value,
+                        });
+                      }
+          
+                      // Retrieve card 3 heading and description
+                      const card3TitleMetafield = data.metafields.edges.find(
+                        (mf) =>
+                          mf.node.namespace === "custom" && mf.node.key === "card3title"
+                      );
+                      const card3DescMetafield = data.metafields.edges.find(
+                        (mf) =>
+                          mf.node.namespace === "custom" && mf.node.key === "card3desc"
+                      );
+                      if (
+                        card3TitleMetafield &&
+                        card3TitleMetafield.node.value &&
+                        card3DescMetafield &&
+                        card3DescMetafield.node.value
+                      ) {
+                        setCard3({
+                          heading: card3TitleMetafield.node.value,
+                          description: card3DescMetafield.node.value,
+                        });
+                      }
+          
+                      // Retrieve application title
+                      const appTitleMetafield = data.metafields.edges.find(
+                        (mf) =>
+                          mf.node.namespace === "custom" &&
+                          mf.node.key === "applicationheader"
+                      );
+                      console.log("Application title metafield:", appTitleMetafield); // Debug log
+                      if (appTitleMetafield && appTitleMetafield.node.value) {
+                        setApplicationTitle(appTitleMetafield.node.value);
+                      } else {
+                        console.log("Application title metafield not found.");
+                      }
+          
+                      // Retrieve application description
+                      const appDescMetafield = data.metafields.edges.find(
+                        (mf) =>
+                          mf.node.namespace === "custom" &&
+                          mf.node.key === "applicationdesc"
+                      );
+                      console.log("Application description metafield:", appDescMetafield); // Debug log
+                      if (appDescMetafield && appDescMetafield.node.value) {
+                        setApplicationDesc(appDescMetafield.node.value);
+                      } else {
+                        console.log("Application description metafield not found.");
+                      }
                     } else {
-                        console.log("No metafields found.");
-                    }       
-
-                } else {
-                    console.error('Failed to fetch product data', response.statusText);
-                }
+                      console.log("No metafields found.");
+                    }
+                  } else {
+                    console.error("Failed to fetch product data", response.statusText);
+                  }
             } catch (error) {
                 console.error('Error fetching product data:', error);
             }
@@ -284,19 +327,43 @@ const ProductDetail2 = () => {
   
       return () => window.removeEventListener('resize', updateSVGSize);
     }, []);
-
+    
     const handleButtonClick = async (buttonIndex, metafields) => {
-        const titleMetafield = `benefitstitle${buttonIndex}`;
-        const descMetafield = `benefitsdesc${buttonIndex}`;
-        const usecaseTitleMetafield = `benefitstitle${buttonIndex}`;
-        const usecaseDescMetafield = `benefitsdesc${buttonIndex}`;
-
-        const title = metafields.find(mf => mf.node.key === titleMetafield)?.node.value;
-        const desc = metafields.find(mf => mf.node.key === descMetafield)?.node.value;
-
-        setActiveCards([{ heading: title || 'Default Title', description: desc || 'Default Description' }]);
-        setActiveCategory(`button${buttonIndex}`);
-    };   
+        const benefitTitleKey = `benefitstitle${buttonIndex}`;
+        const benefitDescKey = `benefitsdesc${buttonIndex}`;
+        const useCaseTitleKey = `usecasetitle${buttonIndex}`;
+        const useCaseDescKey = `usecasedesc${buttonIndex}`;
+      
+        // Retrieve values for the first card (benefits)
+        const benefitTitle = metafields.find((mf) => mf.node.key === benefitTitleKey)?.node.value;
+        const benefitDesc = metafields.find((mf) => mf.node.key === benefitDescKey)?.node.value;
+      
+        // Retrieve values for the second card (use case), only if they exist
+        const useCaseTitle = metafields.find((mf) => mf.node.key === useCaseTitleKey)?.node.value;
+        const useCaseDesc = metafields.find((mf) => mf.node.key === useCaseDescKey)?.node.value;
+      
+        // Update the cards only if the category has changed
+        if (activeCategory !== `button${buttonIndex}`) {
+          // If use case data exists, set both cards; otherwise, only set the benefits card
+          const cardsToDisplay = [
+            {
+              heading: benefitTitle || "Default Benefit Title",
+              description: benefitDesc || "Default Benefit Description",
+            },
+          ];
+      
+          // Add the second card only if the use case data exists
+          if (useCaseTitle && useCaseDesc) {
+            cardsToDisplay.push({
+              heading: useCaseTitle || "Default Use Case Title",
+              description: useCaseDesc || "Default Use Case Description",
+            });
+          }
+      
+          setActiveCards(cardsToDisplay); // Set the cards to display
+          setActiveCategory(`button${buttonIndex}`); // Update active category
+        }
+    };      
 
     if (!productData) {
         return (
@@ -340,7 +407,7 @@ const ProductDetail2 = () => {
     } 
 
     return (
-        <div className="scrollContainer w-full lg:h-[2750px] overflow-hidden bg-no-repeat" ref={svgContainerRef} key={key}>
+        <div className="scrollContainer w-full lg:h-[3265px] overflow-hidden bg-no-repeat" ref={svgContainerRef} key={key}>
             <svg width={width} height={height} viewBox={viewBox} fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M445.634 0.836114C454.975 -1.82847 462.56 2.21838 469.367 8.13043C488.641 24.884 511.766 69.8656 532.391 93.0475C808.928 403.971 1393.2 266.645 1760.87 255.937C1957.97 250.208 2318.88 285.83 2398.03 500.613C2406.61 523.911 2419.87 566.328 2410.06 589.326C2407.31 595.771 2399.84 599.652 2398.47 606.929C2397.1 614.207 2401.51 621.118 2401.51 628.562C2401.53 654.226 2360.77 702.521 2341.34 719.775C2184.33 859.232 1792.34 817.831 1592.58 812.286C1380.58 806.39 1169.45 800.978 956.952 796.565C710.279 791.435 294.654 755.18 117.475 962.668C-11.1398 1113.28 134.097 1314.31 285.465 1378.99C826.614 1610.25 1464.22 1200.98 2032.37 1356.91C2271.61 1422.56 2502.59 1627.33 2418.27 1895.62C2349.03 2115.92 2079.59 2213.46 1870.2 2250.3C1528.13 2310.47 1181.17 2264.73 837.306 2260.74C654.671 2258.61 378.337 2262.02 234.131 2385.51C78.438 2518.84 193.995 2674.38 343.86 2741.06C576.428 2844.55 976.073 2806.36 1232.76 2801.4C1489.45 2796.44 1899.47 2756.93 2141.8 2857.32C2448.08 2984.21 2356.99 3259.64 2114.91 3396.55C1545.75 3718.43 613.894 3033.77 132.205 3621.51C41.5291 3732.16 30.3467 3842.82 69.671 3977.2C141.546 4222.79 450.178 4339 679.908 4388.86C1123.1 4485.07 1685.04 4433.97 2044.71 4743.7C2104.27 4794.99 2165.43 4866.4 2185.63 4943.61C2191.21 4964.89 2204.38 5017.33 2174.44 5025.38C2143.46 5033.71 2136.19 4956.02 2129.06 4935.47C2068.27 4760.15 1824.82 4643.28 1657.34 4591.8C1240.99 4463.85 771.056 4519.94 369.789 4336.63C116.546 4220.94 -85.5317 3988.7 36.5798 3699.86C161.833 3403.65 512.729 3315.31 811.343 3325.52C1212.8 3339.23 1754.55 3559.52 2122.15 3339.78C2188.3 3300.24 2217.76 3276.09 2253.78 3207.42C2392.19 2943.5 2080.01 2861.6 1880.89 2846.06C1522.9 2818.1 1162.69 2855.54 804.84 2855.76C593.995 2855.89 254.924 2836.37 139.198 2629.57C12.8129 2403.71 302.83 2262.97 484.739 2233.04C810.347 2179.45 1163.93 2251.18 1495.31 2241.84C1754.18 2234.54 2212.41 2191.88 2354.27 1944.4C2472.83 1737.56 2354.01 1568.78 2170.8 1463.38C1858.02 1283.45 1393.61 1404.67 1056.55 1460.51C743.387 1512.41 315.161 1552.76 95.0933 1275.79C11.7318 1170.87 -19.9067 1071.12 64.6204 952.11C232.12 716.277 689.924 738.477 947.492 745.155C1247.69 752.932 1548.2 771.701 1848.66 773.932C1986.88 774.965 2237.93 777.746 2333.07 660.488C2340.04 651.894 2366.63 610.693 2368.22 602.183C2369.54 595.139 2363.4 552.622 2361.48 543.079C2333.61 404.904 2155.25 344.001 2031.73 321.552C1547 233.504 862.644 532.338 486.985 112.232C471.884 95.3457 428.928 42.7367 430.381 21.2368C430.82 14.692 439.249 2.63474 445.6 0.819495L445.634 0.836114Z" 
                 fill="url(#paint0_angular_2834_4224)"
@@ -508,64 +575,74 @@ const ProductDetail2 = () => {
                         {/* Buttons */}
                         <div className="flex justify-center flex-wrap gap-4 py-5">
                             {buttons.map((button, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => handleButtonClick(index + 1, productData.metafields.edges)}
-                                    className={`px-6 py-2 border rounded-md transition-all duration-300 ease-in-out w-[10rem] lg:w-[20rem] ${activeCategory === `button${index + 1}` ? 'bg-red text-white shadow-lg' : 'bg-white text-black border border-gray-300 hover:bg-[#d2d3d3]'}`}
-                                >
-                                    {button}
-                                </button>
+                            <button
+                                key={index}
+                                onClick={() =>
+                                handleButtonClick(index + 1, productData.metafields.edges)
+                                }
+                                className={`px-6 py-2 border rounded-md transition-all duration-300 ease-in-out w-[10rem] lg:w-[20rem] ${
+                                activeCategory === `button${index + 1}`
+                                    ? "bg-red text-white shadow-lg"
+                                    : "bg-white text-black border border-gray-300 hover:bg-[#d2d3d3]"
+                                }`}
+                            >
+                                {button}
+                            </button>
                             ))}
                         </div>
 
                         {/* Content based on active cards */}
                         <div className="content-section px-5 lg:px-10">
                             <div className="flex flex-col lg:flex-row gap-10">
-                                <div className='flex flex-col'>
-                                    {activeCards.map((card, index) => (
-                                        <div key={index}>
-                                            <div className='pr-44 pl-44 mt-20'>
-                                                {/* Conditionally apply background for larger screens only */}
-                                                <div className='hidden lg:flex flex-col lg:flex-row items-start gap-5 mb-16 border border-[#E6E6E6] bg-white bg-opacity-15 backdrop-blur-lg rounded-lg'>
-                                                    {/* Left Side: Text */}
-                                                    <div className='w-full lg:w-1/2 px-5 lg:px-10'>
-                                                        <h1 className='font-semibold text-[26px] ml-10 mt-14'>{card.heading}</h1>
-                                                        <p className='font-subHeading font-normal ml-10 mt-5 text-[15px] leading-5'>
-                                                            {card.description}
-                                                        </p>
-                                                    </div>
-
-                                                    {/* Right Side: Image */}
-                                                    <div className='w-full lg:w-1/2'>
-                                                        {secondImageUrl && (
-                                                            <img 
-                                                                src={secondImageUrl} 
-                                                                alt="Product Image" 
-                                                                className='w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0'
-                                                            />
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* For smaller screens, show image above title and description without the background */}
-                                            <div className="lg:hidden">
-                                                <div className='flex flex-col items-start mb-16'>
-                                                    {secondImageUrl && (
-                                                        <img 
-                                                            src={secondImageUrl} 
-                                                            alt="Product Image" 
-                                                            className='w-full object-cover rounded-lg mb-5'
-                                                        />
-                                                    )}
-                                                    <h1 className='font-semibold text-[22px] mt-5 text-start'>{card.heading}</h1>
-                                                    <p className='font-subHeading font-normal mt-3 text-[15px] text-start'>
-                                                        {card.description}
-                                                    </p>
-                                                </div>
-                                            </div>
+                                <div className="flex flex-col">
+                                {activeCards.length > 0 && activeCards.map((card, index) => (
+                                    <div key={index}>
+                                    <div className="pr-44 pl-44 mt-20">
+                                        {/* Conditionally apply background for larger screens only */}
+                                        <div className="hidden lg:flex flex-col lg:flex-row items-start gap-5 mb-16 border border-[#E6E6E6] bg-white bg-opacity-15 backdrop-blur-lg rounded-lg">
+                                        {/* Left Side: Text */}
+                                        <div className="w-full lg:w-1/2 px-5 lg:px-10">
+                                            <h1 className="font-semibold text-[26px] ml-10 mt-14">
+                                            {card.heading}
+                                            </h1>
+                                            <p className="font-subHeading font-normal ml-10 mt-5 text-[15px] leading-5">
+                                            {card.description}
+                                            </p>
                                         </div>
-                                    ))}
+
+                                        {/* Right Side: Image */}
+                                        <div className="w-full lg:w-1/2">
+                                            {secondImageUrl && (
+                                            <img
+                                                src={secondImageUrl}
+                                                alt="Product Image"
+                                                className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
+                                            />
+                                            )}
+                                        </div>
+                                        </div>
+                                    </div>
+
+                                    {/* For smaller screens, show image above title and description without the background */}
+                                    <div className="lg:hidden">
+                                        <div className="flex flex-col items-start mb-16">
+                                        {secondImageUrl && (
+                                            <img
+                                            src={secondImageUrl}
+                                            alt="Product Image"
+                                            className="w-full object-cover rounded-lg mb-5"
+                                            />
+                                        )}
+                                        <h1 className="font-semibold text-[22px] mt-5 text-start">
+                                            {card.heading}
+                                        </h1>
+                                        <p className="font-subHeading font-normal mt-3 text-[15px] text-start">
+                                            {card.description}
+                                        </p>
+                                        </div>
+                                    </div>
+                                    </div>
+                                ))}
                                 </div>
                             </div>
                         </div>

@@ -378,7 +378,7 @@ const ProductDetail = () => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[2770px] overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[2780px] overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
       key={key}
     >
