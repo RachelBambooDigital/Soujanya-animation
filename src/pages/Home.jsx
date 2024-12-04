@@ -25,39 +25,39 @@ const Home = () => {
 
   // width="2100" height="5800" viewBox="250 0 2436 5350"
 
- useEffect(() => {
-  const path = pathRef.current;
-  if (!path) return;
+  useEffect(() => {
+    if (!metaFields) return; // Ensure animation doesn't run until metaFields are set
 
-  const pathLength = path.getTotalLength(); // Get the total length of the path
+    const path = pathRef.current;
+    if (!path) return;
 
-  const handleOffset = (mPercent) => {
-    const distance = window.scrollY;
-    const totalDistance = document.body.scrollHeight - window.innerHeight;
-    const percentage = typeof mPercent === "number" ? mPercent : distance / totalDistance;
+    const pathLength = path.getTotalLength(); // Get the total length of the path
 
-    // Clamp percentage value to ensure it doesn't exceed [0, 1] range
-    const clampedPercentage = Math.min(Math.max(percentage, 0), 1);
+    const handleOffset = (mPercent) => {
+      const distance = window.scrollY;
+      const totalDistance = document.body.scrollHeight - window.innerHeight;
+      const percentage =
+        typeof mPercent === "number" ? mPercent : distance / totalDistance;
 
-    // Update the strokeDasharray and strokeDashoffset values
-    const offset = pathLength - (pathLength * clampedPercentage * 1.3); // Adjust for desired speed
+      // Clamp percentage value to ensure it doesn't exceed [0, 1] range
+      const clampedPercentage = Math.min(Math.max(percentage, 0), 1);
 
-    path.style.strokeDasharray = pathLength;
-    path.style.strokeDashoffset = offset;
-  };
+      // Update the strokeDasharray and strokeDashoffset values
+      const offset = pathLength - pathLength * clampedPercentage * 1.6; // Adjust for desired speed
 
-  window.addEventListener("scroll", () => handleOffset());
-  
-  // Trigger initially
-  handleOffset(0);
+      path.style.strokeDasharray = pathLength;
+      path.style.strokeDashoffset = offset;
+    };
 
-  
+    window.addEventListener("scroll", () => handleOffset());
 
-  return () => {
-    window.removeEventListener("scroll", () => handleOffset());
-  };
-}, []);
-// Run this effect only when `metaFields` is set
+    // Trigger initially
+    handleOffset(0);
+
+    return () => {
+      window.removeEventListener("scroll", () => handleOffset());
+    };
+  }, [metaFields]); // Run this effect only when `metaFields` is set
 
   useEffect(() => {
     const fetchHomePageMeta = async () => {
