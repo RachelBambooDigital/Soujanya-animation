@@ -1,22 +1,20 @@
 import Cards from "@/components/Cards";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
-import { businessCards, slides } from "../lib/contants";
+import { businessCards } from "../lib/contants";
 import CustomSlider from "../sections/CustomSlider";
 import OurProducts from "../sections/OurProducts";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import Loader from "../pages/Loader";
-import Footer from "../components/Footer";
+import translateText from "@/utils/translate";
 
 const Home = () => {
   const [metaFields, setMetaFields] = useState(null);
   const [slides, setSlides] = useState([]);
   const navigate = useNavigate();
 
-  const [svgContent, setSvgContent] = useState(""); // State to hold SVG content
   const svgContainerRef = useRef(null);
-  const scrollContainerRef = useRef(null);
   const pathRef = useRef(null);
 
   const [viewBox, setViewBox] = useState("250 0 2436 5350");
@@ -57,39 +55,39 @@ const Home = () => {
     return () => {
       window.removeEventListener("scroll", () => handleOffset());
     };
-  }, [metaFields]); // Run this effect only when `metaFields` is set
+  }, [metaFields]);
 
   useEffect(() => {
     const fetchHomePageMeta = async () => {
       const query = `query {
-            metaobjects(type: "homepage", first: 50) {
-                edges {
-                    node {
-                        id
-                        displayName
-                        fields {
-                            key
-                            value
-                            reference {
-                                ... on MediaImage {
-                                    image {
-                                        id
-                                        url
-                                    }
-                                }
-                                ... on Video {
-                                    id
-                                    sources {
-                                        url
-                                        mimeType
-                                    }
-                                }
-                            }
-                        }
-                    }
+      metaobjects(type: "homepage", first: 50) {
+        edges {
+          node {
+            id
+            displayName
+            fields {
+              key
+              value
+              reference {
+                ... on MediaImage {
+                  image {
+                    id
+                    url
+                  }
                 }
+                ... on Video {
+                  id
+                  sources {
+                    url
+                    mimeType
+                  }
+                }
+              }
             }
-        }`;
+          }
+        }
+      }
+    }`;
 
       try {
         const response = await fetch(
@@ -99,13 +97,13 @@ const Home = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ query }),
+            body: JSON.stringify({ query, targetLanguage: "mr" }),
           }
         );
 
         const result = await response.json();
 
-        if (result && result.data && result.data.metaobjects) {
+        if (result?.data?.metaobjects) {
           const fields = {};
           const slidesArray = [];
 
@@ -119,17 +117,23 @@ const Home = () => {
                 }
 
                 if (field.key.includes("title")) {
-                  slidesArray[cardIndex].title = field.value;
+                  slidesArray[cardIndex].title = field.value; // Use translated title directly
                 } else if (
                   field.key.includes("image") &&
                   field.reference?.image?.url
                 ) {
                   slidesArray[cardIndex].image = field.reference.image.url;
                 } else if (field.key.includes("link")) {
-                  slidesArray[cardIndex].link = field.value;
+                  slidesArray[cardIndex].link = field.value; // Use translated link directly
                 }
               } else {
-                fields[field.key] = field.value;
+                if (field.reference?.image?.url) {
+                  fields[field.key] = field.reference.image.url;
+                } else if (field.reference?.sources) {
+                  fields[field.key] = field.reference.sources[0].url;
+                } else {
+                  fields[field.key] = field.value; // Use translated value directly
+                }
               }
             }
           }
@@ -137,18 +141,7 @@ const Home = () => {
           const imageFetchPromises = result.data.metaobjects.edges.map(
             async (edge) => {
               for (const field of edge.node.fields) {
-                if (field.reference?.image?.url) {
-                  fields[field.key] = field.reference.image.url;
-                } else if (field.reference?.sources) {
-                  fields[field.key] = field.reference.sources[0].url;
-                } else {
-                  fields[field.key] = field.value;
-                }
-
-                // Check for GIDs and handle parsing
                 if (field.key === "who_we_are_image") {
-                  // console.log("GIDs for who_we_are_image:", fields[field.key]);
-                  // Parse if it is a string
                   const gids =
                     typeof fields[field.key] === "string"
                       ? JSON.parse(fields[field.key])
@@ -167,17 +160,11 @@ const Home = () => {
           );
 
           await Promise.all(imageFetchPromises);
-          // console.log("Fetched metaFields:", fields); // Log to check the structure
           setMetaFields(fields);
-          setSlides(slidesArray.filter((slide) => slide.image && slide.title)); // Set slides state
-
-          // console.log("Slides Array:", slidesArray);
+          setSlides(slidesArray.filter((slide) => slide.image && slide.title));
         } else {
           console.error("Metaobjects not found in the response");
         }
-
-        // console.log('Metaobjects response:', result);
-        // console.log('Fetched slides:', slides);
       } catch (error) {
         console.error("Error fetching homepage meta fields:", error);
       }
@@ -185,6 +172,9 @@ const Home = () => {
 
     fetchHomePageMeta();
   }, []);
+
+  console.log("Banner Button Link:", metaFields);
+  // console.log("Banner Button Link:", metaFieldss);
 
   useEffect(() => {
     const updateSVGSize = () => {
@@ -356,7 +346,8 @@ const Home = () => {
               onClick={handleContactUs}
               className="bg-red text-white text-base font-subHeading h-[42px] w-[175px] lg:w-[192px] rounded-lg hover:underline"
             >
-              {JSON.parse(metaFields.banner_button_link).text}
+              {/* {JSON.parse(metaFields.banner_button_link).text} */}
+              {/* {buttonLink.text} */}
             </button>
           </div>
         </div>
@@ -397,13 +388,13 @@ const Home = () => {
           </div>
 
           {/* What we offer */}
-          <div className="w-full flex flex-col px-5 lg:px-10 ">
+          {/* <div className="w-full flex flex-col px-5 lg:px-10 ">
             <CustomSlider
               title="What we offer"
               subTitle="We put our heart into delivering quality through our work"
               slides={slides}
             />
-          </div>
+          </div> */}
 
           {/* Our business highlights */}
           <div className="w-full flex flex-col px-5 sm:px-8 md:px-10 lg:px-10">
