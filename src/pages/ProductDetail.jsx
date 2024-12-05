@@ -99,6 +99,7 @@ const ProductDetail = () => {
             // Fetch buttons
             const buttons = data.metafields.edges
               .filter((mf) => mf.node.key.startsWith("button"))
+              .sort((a, b) => a.node.key.localeCompare(b.node.key))
               .map((b) => b.node.value);
             setButtons(buttons);
 
@@ -304,7 +305,7 @@ const ProductDetail = () => {
         } else {
             setViewBox("100 0 4936 4750");
             setWidth("3600");
-            setHeight("4026");
+            setHeight("4y026");
         }
       };
   
@@ -378,7 +379,7 @@ const ProductDetail = () => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[2780px] overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-auto overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
       key={key}
     >

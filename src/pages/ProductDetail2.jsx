@@ -99,7 +99,10 @@ const ProductDetail2 = () => {
                       // Fetch buttons
                       const buttons = data.metafields.edges
                         .filter((mf) => mf.node.key.startsWith("button"))
+                        .sort((a, b) => a.node.key.localeCompare(b.node.key))
                         .map((b) => b.node.value);
+
+
                       setButtons(buttons);
           
                       // Set initial active category and cards
@@ -327,7 +330,7 @@ const ProductDetail2 = () => {
   
       return () => window.removeEventListener('resize', updateSVGSize);
     }, []);
-    
+
     const handleButtonClick = async (buttonIndex, metafields) => {
         const benefitTitleKey = `benefitstitle${buttonIndex}`;
         const benefitDescKey = `benefitsdesc${buttonIndex}`;
@@ -344,7 +347,6 @@ const ProductDetail2 = () => {
       
         // Update the cards only if the category has changed
         if (activeCategory !== `button${buttonIndex}`) {
-          // If use case data exists, set both cards; otherwise, only set the benefits card
           const cardsToDisplay = [
             {
               heading: benefitTitle || "Default Benefit Title",
@@ -575,19 +577,19 @@ const ProductDetail2 = () => {
                         {/* Buttons */}
                         <div className="flex justify-center flex-wrap gap-4 py-5">
                             {buttons.map((button, index) => (
-                            <button
-                                key={index}
-                                onClick={() =>
-                                handleButtonClick(index + 1, productData.metafields.edges)
-                                }
-                                className={`px-6 py-2 border rounded-md transition-all duration-300 ease-in-out w-[10rem] lg:w-[20rem] ${
-                                activeCategory === `button${index + 1}`
-                                    ? "bg-red text-white shadow-lg"
-                                    : "bg-white text-black border border-gray-300 hover:bg-[#d2d3d3]"
-                                }`}
-                            >
-                                {button}
-                            </button>
+                                <button
+                                    key={index}
+                                    onClick={() =>
+                                        handleButtonClick(index + 1, productData.metafields.edges)
+                                    }
+                                    className={`px-6 py-2 border rounded-md transition-all duration-300 ease-in-out w-[10rem] lg:w-[20rem] ${
+                                        activeCategory === `button${index + 1}`
+                                            ? "bg-red text-white shadow-lg"
+                                            : "bg-white text-black border border-gray-300 hover:bg-[#d2d3d3]"
+                                    }`}
+                                >
+                                    {button}
+                                </button>
                             ))}
                         </div>
 
@@ -595,58 +597,58 @@ const ProductDetail2 = () => {
                         <div className="content-section px-5 lg:px-10">
                             <div className="flex flex-col lg:flex-row gap-10">
                                 <div className="flex flex-col">
-                                {activeCards.length > 0 && activeCards.map((card, index) => (
-                                    <div key={index}>
-                                    <div className="pr-44 pl-44 mt-20">
-                                        {/* Conditionally apply background for larger screens only */}
-                                        <div className="hidden lg:flex flex-col lg:flex-row items-start gap-5 mb-16 border border-[#E6E6E6] bg-white bg-opacity-15 backdrop-blur-lg rounded-lg">
-                                        {/* Left Side: Text */}
-                                        <div className="w-full lg:w-1/2 px-5 lg:px-10">
-                                            <h1 className="font-semibold text-[26px] ml-10 mt-14">
-                                            {card.heading}
-                                            </h1>
-                                            <p className="font-subHeading font-normal ml-10 mt-5 text-[15px] leading-5">
-                                            {card.description}
-                                            </p>
-                                        </div>
+                                    {/* Only display the active card content */}
+                                    {activeCategory && activeCards.length > 0 && activeCards.map((card, index) => (
+                                        <div key={index}>
+                                            <div className="pr-44 pl-44 mt-20">
+                                                {/* Conditionally apply background for larger screens only */}
+                                                <div className="hidden lg:flex flex-col lg:flex-row items-start gap-5 mb-16 border border-[#E6E6E6] bg-white bg-opacity-15 backdrop-blur-lg rounded-lg">
+                                                    {/* Left Side: Text */}
+                                                    <div className="w-full lg:w-1/2 px-5 lg:px-10">
+                                                        <h1 className="font-semibold text-[26px] ml-10 mt-14">
+                                                            {card.heading}
+                                                        </h1>
+                                                        <p className="font-subHeading font-normal ml-10 mt-5 text-[15px] leading-5">
+                                                            {card.description}
+                                                        </p>
+                                                    </div>
 
-                                        {/* Right Side: Image */}
-                                        <div className="w-full lg:w-1/2">
-                                            {secondImageUrl && (
-                                            <img
-                                                src={secondImageUrl}
-                                                alt="Product Image"
-                                                className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
-                                            />
-                                            )}
-                                        </div>
-                                        </div>
-                                    </div>
+                                                    {/* Right Side: Image */}
+                                                    <div className="w-full lg:w-1/2">
+                                                        {secondImageUrl && (
+                                                            <img
+                                                                src={secondImageUrl}
+                                                                alt="Product Image"
+                                                                className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
+                                                            />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                    {/* For smaller screens, show image above title and description without the background */}
-                                    <div className="lg:hidden">
-                                        <div className="flex flex-col items-start mb-16">
-                                        {secondImageUrl && (
-                                            <img
-                                            src={secondImageUrl}
-                                            alt="Product Image"
-                                            className="w-full object-cover rounded-lg mb-5"
-                                            />
-                                        )}
-                                        <h1 className="font-semibold text-[22px] mt-5 text-start">
-                                            {card.heading}
-                                        </h1>
-                                        <p className="font-subHeading font-normal mt-3 text-[15px] text-start">
-                                            {card.description}
-                                        </p>
+                                            {/* For smaller screens, show image above title and description without the background */}
+                                            <div className="lg:hidden">
+                                                <div className="flex flex-col items-start mb-16">
+                                                    {secondImageUrl && (
+                                                        <img
+                                                            src={secondImageUrl}
+                                                            alt="Product Image"
+                                                            className="w-full object-cover rounded-lg mb-5"
+                                                        />
+                                                    )}
+                                                    <h1 className="font-semibold text-[22px] mt-5 text-start">
+                                                        {card.heading}
+                                                    </h1>
+                                                    <p className="font-subHeading font-normal mt-3 text-[15px] text-start">
+                                                        {card.description}
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    </div>
-                                ))}
+                                    ))}
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                 </div>
