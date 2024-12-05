@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -17,21 +17,27 @@ body {
 
 /* Custom scrollbar styles */
 *::-webkit-scrollbar {
-  width: 14px; /* Adjust the width of the scrollbar */
+  width: 14px;
+  /* Adjust the width of the scrollbar */
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: red; /* Red color for the scrollbar thumb */
-  border-radius: 10px; /* 10px rounded corners */
-  border: 3px solid #fff; /* Border around the thumb */
+  background-color: red;
+  /* Red color for the scrollbar thumb */
+  border-radius: 10px;
+  /* 10px rounded corners */
+  border: 3px solid #fff;
+  /* Border around the thumb */
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: darkred; /* Darker red when hovered */
+  background-color: darkred;
+  /* Darker red when hovered */
 }
 
 *::-webkit-scrollbar-track {
-  background-color: #f1f1f1; /* Light color for the scrollbar track */
+  background-color: #f1f1f1;
+  /* Light color for the scrollbar track */
   border-radius: 10px !important;
 }
 
@@ -65,6 +71,7 @@ body {
   0% {
     width: 0%;
   }
+
   100% {
     width: 100%;
   }
@@ -73,4 +80,3 @@ body {
 .animate-fill {
   animation: fillAnimation 2s ease-in-out forwards;
 }
-
