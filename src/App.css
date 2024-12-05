@@ -1,3 +1,6 @@
+* {
+    box-sizing: border-box;
+}
 
 .cls-1{
   fill: none;
@@ -7,19 +10,19 @@
 }
 .cls-2{
     fill: none;
-    stroke: url(#paint0_angular_2834_3935);
+    stroke: url(#paint0_angular_2834_3080);
     stroke-miterlimit: 10;
-    stroke-width: 28px;
+    stroke-width: 27px;
   }
   .cls-3{
     fill: none;
-    stroke: url(#paint0_angular_2834_4236);
+    stroke: url(#paint0_angular_2834_3931);
     stroke-miterlimit: 10;
     stroke-width: 28px;
   }
   .cls-4{
     fill: none;
-    stroke: url(#paint0_angular_2834_4224);
+    stroke: url(#paint0_angular_2834_4237);
     stroke-miterlimit: 10;
     stroke-width: 28px;
   }
