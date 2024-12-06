@@ -189,22 +189,50 @@ const Home = () => {
 
   useEffect(() => {
     const updateSVGSize = () => {
-      if (window.innerWidth <= 768) {
+      const width = window.innerWidth;
+  
+      if (width <= 480) {
+        // Very small devices like older phones
+        setViewBox("400 0 800 4500");
+        setWidth("800");
+        setHeight("5100");
+      } else if (width <= 768) {
+        // Tablets or larger phones
         setViewBox("450 0 990 5000");
         setWidth("900");
-        setHeight("5050");
+        setHeight("4900");
+      } else if (width <= 1024) {
+        // Smaller laptops or large tablets
+        setViewBox("300 0 2000 5200");
+        setWidth("1900");
+        setHeight("4700");
       } else {
+        // Large screens
         setViewBox("250 0 2436 5350");
         setWidth("2100");
-        setHeight("5800");
+        setHeight("5000");
       }
     };
-
-    updateSVGSize(); // Initial check
-    window.addEventListener("resize", updateSVGSize);
-
-    return () => window.removeEventListener("resize", updateSVGSize);
+  
+    // Initial check
+    updateSVGSize();
+  
+    // Add event listener with a debounced function
+    const debouncedResize = debounce(updateSVGSize, 200);
+    window.addEventListener("resize", debouncedResize);
+  
+    // Cleanup
+    return () => window.removeEventListener("resize", debouncedResize);
   }, []);
+  
+  // Debounce utility function
+  const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), delay);
+    };
+  };
 
   // Function to fetch image URL
   const fetchImage = async (gid) => {
@@ -246,7 +274,8 @@ const Home = () => {
 
   return (
     <div
-      className="scrollContainer w-full h-[680vh] xs:h-[630vh] sm:h-[620vh] md:h-[610vh] lg:h-[600vh] xl:h-[490vh] overflow-hidden bg-no-repeat"
+     className="scrollContainer w-full h-auto min-h-[400vh] overflow-hidden bg-no-repeat"
+
       ref={svgContainerRef}
     >
       <svg 
@@ -288,7 +317,7 @@ fill="url(#paint0_angular_2834_2819)"/>
 </svg>
 
       {/* Main content */}
-      <div className="absolute w-full  top-[0] z-10 ">
+      <div className="absolute w-full top-[0] z-10 ">
         <div className="w-full h-screen bg-cover bg-center relative">
           <video
             className="w-full h-screen xl:h-screen object-cover"
