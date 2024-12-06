@@ -402,10 +402,10 @@ const CoatingsInks = () => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[5200px] h-[5800px] md:h-[5700px]  overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[5200px] h-[5600px] md:h-[5700px]  overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
-      <svg 
+      <svg
         width={width}
         height={height}
         viewBox={viewBox}

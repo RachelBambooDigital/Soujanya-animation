@@ -4,11 +4,11 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     screens: {
-      xs: "320px",
-      sm: "480px",
-      md: "768px",
-      lg: "976px",
-      xl: "1440px",
+      xs: "379px",
+      sm: "490px",
+      md: "980px",
+      lg: "1400px",
+      xl: "1750px",
     },
     colors: {
       navyBlue: "#262D31",
