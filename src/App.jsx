@@ -21,6 +21,7 @@ import ProductListing3 from "./pages/ProductListing3";
 import ProductDetail from "./pages/ProductDetail";
 import ProductDetail2 from "./pages/ProductDetail2";
 import Career from "./pages/Career";
+import BlogDetail from "./pages/BlogDetail";
 import Footer from "./components/Footer";
 
 function App() {
@@ -43,7 +44,7 @@ function App() {
 
   const getHeaderComponent = () => {
     const headerRoutes = ['/', '/active-pharmaceutical-ingredients', '/emollients', '/intermediate',];
-    const header1Routes = ['/life-sciences', '/contact-us', '/home-care-cosmetics', '/about-us', '/coatings-inks', '/career',];
+    const header1Routes = ['/life-sciences', '/contact-us', '/home-care-cosmetics', '/about-us', '/coatings-inks', '/career', '/blogDetail'];
     const header2Routes = ['/product-listing', '/product-listing2', '/product-listing3',];
 
     if (headerRoutes.includes(location.pathname)) {
@@ -82,7 +83,6 @@ function App() {
         <Route path="/product-listing3" element={<ProductListing3 />} />
         <Route path="/productDet/:productId" element={<ProductDetail />} />
         <Route path="/productDet2/:productId" element={<ProductDetail2 />} />
-       
       </Routes>
       <Footer/>
       
