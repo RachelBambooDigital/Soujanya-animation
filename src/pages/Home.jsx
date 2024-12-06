@@ -44,7 +44,7 @@ const Home = () => {
       const clampedPercentage = Math.min(Math.max(percentage, 0), 1);
 
       // Update the strokeDasharray and strokeDashoffset values
-      const offset = pathLength - pathLength * clampedPercentage * 0.55; // Adjust for desired speed
+      const offset = pathLength - pathLength * clampedPercentage * 0.6; // Adjust for desired speed
 
       path.style.strokeDasharray = pathLength;
       path.style.strokeDashoffset = offset;
