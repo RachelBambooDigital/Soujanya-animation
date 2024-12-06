@@ -117,7 +117,7 @@ const OurPurposeAboutUs = () => {
     }
 
     return (
-        <div className="w-full mb-5 lg:mb-10 ">
+        <div className="w-full min-h-screen mb-5 lg:mb-10 ">
             <div className="w-full flex flex-col gap-10 sm:gap-12 lg:gap-16 px-5 lg:px-10">
                 {/* Header Section */}
                 <div className="w-full flex flex-col items-start">
