@@ -15,9 +15,7 @@ const LifeSciences = () => {
   const [highlights, setHighlights] = useState([]);
   const navigate = useNavigate();
 
-  const [svgContent, setSvgContent] = useState(""); // State to hold SVG content
   const svgContainerRef = useRef(null);
-  const scrollContainerRef = useRef(null);
   const pathRef = useRef(null);
 
   const handleProductListing = (category) => {
