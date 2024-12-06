@@ -60,7 +60,7 @@ const Footer = () => {
       className="w-full px-5 lg:px-10 h-screen bg-black flex flex-col justify-between overflow-y-hidden"
     >
       <Toaster position="bottom-right" /> {/* Toast notification container */}
-      <div className="foot-note flex lg:flex-row flex-col w-full justify-start gap-[30px] lg:gap-[470px] mt-[40px] lg:mt-[72px]">
+      <div className="foot-note flex lg:flex-row flex-col w-full justify-between pr-16 mt-[40px] lg:mt-[72px]">
         <p
           className="text-white font-subHeading hover:underline cursor-pointer"
           onClick={scrollToTop}
@@ -68,7 +68,7 @@ const Footer = () => {
           Back to top
         </p>
         <div className="flex flex-col">
-          <h1 className="font-subHeading text-white text-[40px] leading-[45px] tracking-[-3%] font-light lg:text-[52px] lg:w-[600px] lg:leading-[60px] w-600px">
+          <h1 className="font-subHeading text-white text-[40px] leading-[45px] tracking-[-3%] font-light lg:text-[52px] lg:w-[600px] lg:leading-[60px] ">
             Join our newsletter & be the first to know about our events & product updates.
             <span className="font-heading text-red"> #nospam</span>
           </h1>
