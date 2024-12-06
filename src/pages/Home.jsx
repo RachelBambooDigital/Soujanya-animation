@@ -246,7 +246,7 @@ const Home = () => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[4950px] h-[5200px] overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full h-[680vh] xs:h-[630vh] sm:h-[620vh] md:h-[610vh] lg:h-[600vh] xl:h-[490vh] overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
       <svg 
@@ -288,10 +288,10 @@ fill="url(#paint0_angular_2834_2819)"/>
 </svg>
 
       {/* Main content */}
-      <div className="absolute w-full h-full top-[0] z-10 ">
+      <div className="absolute w-full  top-[0] z-10 ">
         <div className="w-full h-screen bg-cover bg-center relative">
           <video
-            className="w-full h-screen xl:h-full object-cover"
+            className="w-full h-screen xl:h-screen object-cover"
             autoPlay
             loop
             muted
@@ -375,9 +375,9 @@ fill="url(#paint0_angular_2834_2819)"/>
           </div>
 
           <OurProducts />
-          <div className="">
+          
           <OurGlobalPresence />
-          </div>
+          
           
         </div>
         
