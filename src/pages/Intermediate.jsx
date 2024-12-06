@@ -235,7 +235,7 @@ const Intermediate = () => {
   return (
 
     
-       <div className="scrollContainer w-full lg:h-[3675px] h-[5000px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+       <div className="scrollContainer w-full lg:h-[3350px] h-[5000px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
         <svg 
               width="2436" 
               height="5026" 
