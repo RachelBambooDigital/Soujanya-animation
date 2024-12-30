@@ -84,6 +84,7 @@ const Intermediate = ({language, setLoading}) => {
   if (loading) {
     return <Loader />;
   }
+  //changed
 
   // Access the values using the correct keys
   const bannerTitle = metaFields.find(field => field.key === 'banner_title')?.value || '';
