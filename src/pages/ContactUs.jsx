@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
-import Footer from "../components/Footer";
 import { apiBaseUrl } from "@/config";
 import { Link, useLocation } from "react-router-dom";
+import Loader from "../pages/Loader";
 
-const ContactUs = () => {
+const ContactUs = ({language, setLoading}) => {
+  const [metaFields, setMetaFields] = useState(null);
+
   // State to store form data
   const [formData, setFormData] = useState({
     firstName: "",
@@ -103,6 +105,88 @@ const ContactUs = () => {
 
   const location = useLocation();
 
+  useEffect(() => {
+    const fetchContact = async () => {
+      const query = `query {
+        metaobjects(type: "contact_us", first: 50) {
+          edges {
+            node {
+              id
+              displayName
+              fields {
+                key
+                value
+                reference {
+                  ... on MediaImage {
+                    image {
+                      id
+                      url
+                    }
+                  }
+                  ... on Video {
+                    id
+                    sources {
+                      url
+                      mimeType
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }`;
+  
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/shopify/homepage-meta`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query, targetLanguage: language }),
+          }
+        );
+  
+        const result = await response.json();
+        console.log("result", result);
+  
+        if (result && result.data && result.data.metaobjects) {
+            const fields = {};
+        
+            const imageFetchPromises = result.data.metaobjects.edges.map(async (edge) => {
+              for (const field of edge.node.fields) {            
+                if (field.reference?.image?.url) {
+                  fields[field.key] = field.reference.image.url;
+                } else if (field.reference?.sources) {
+                  fields[field.key] = field.reference.sources[0].url;
+                } else {
+                  fields[field.key] = field.value;
+                }
+              }
+            });
+        
+            await Promise.all(imageFetchPromises);
+            setMetaFields(fields);  
+            setLoading(false); // Set loading to false once data is fetched
+        }
+        else {
+          console.error("Metaobjects not found in the response");
+        }
+      } catch (error) {
+        console.error("Error fetching homepage meta fields:", error);
+        setLoading(false); // Set loading to false even if there is an error
+      }
+    };
+  
+    fetchContact();
+  }, [language, setLoading]); 
+
+  if (!metaFields) {
+    return <Loader />;
+  }
+
   return (
     <div>
       <Toaster position="bottom-right" />
@@ -127,9 +211,9 @@ const ContactUs = () => {
           <div className="absolute inset-0 flex lg:flex-row flex-col-reverse gap-24 lg:justify-between w-full lg:w-auto items-end lg:items-center px-10 lg:px-10">
             <div className="flex flex-col gap-6 text-black font-medium md:px-12 lg:px-14">
               <h1 className="text-[28px] md:text-[32px] lg:text-[40px] font-subHeading text-black leading-[30px] md:leading-[40px] lg:leading-[45px]">
-                Be the first to know about <br />
-                our events and product updates.{" "}
-                <span className="text-red">#nospam</span>
+                {metaFields.banner_title} <br />
+                {metaFields.banner_title_2} <br />
+                <span className="text-red">#{metaFields.red_color_text}</span>
               </h1>
               <div>
                 <form className="space-y-4" onSubmit={handleSubmit}>
@@ -138,7 +222,7 @@ const ContactUs = () => {
                       <input
                         type="text"
                         name="firstName"
-                        placeholder="First Name"
+                        placeholder={metaFields.first_name}
                         className="w-full border border-gray-300 p-3 rounded-lg"
                         value={formData.firstName}
                         onChange={handleChange}
@@ -154,7 +238,7 @@ const ContactUs = () => {
                       <input
                         type="text"
                         name="lastName"
-                        placeholder="Last Name"
+                        placeholder={metaFields.last_name}
                         className="w-full border border-gray-300 p-3 rounded-lg"
                         value={formData.lastName}
                         onChange={handleChange}
@@ -173,7 +257,7 @@ const ContactUs = () => {
                       <input
                         type="email"
                         name="email"
-                        placeholder="Email Address"
+                        placeholder={metaFields.email_addr}
                         className="w-full border border-gray-300 p-3 rounded-lg"
                         value={formData.email}
                         onChange={handleChange}
@@ -188,7 +272,7 @@ const ContactUs = () => {
                       <input
                         type="tel"
                         name="contactNumber"
-                        placeholder="Contact Number"
+                        placeholder={metaFields.contact_no}
                         className="w-full border border-gray-300 p-3 rounded-lg"
                         value={formData.contactNumber}
                         onChange={handleChange}
@@ -205,7 +289,7 @@ const ContactUs = () => {
                   <div className="w-full">
                     <textarea
                       name="message"
-                      placeholder="Message"
+                      placeholder={metaFields.message}
                       className="w-full border border-gray-300 p-3 rounded-lg"
                       rows="4"
                       value={formData.message}
@@ -226,21 +310,22 @@ const ContactUs = () => {
                         required
                       />
                       <label className="text-sm">
-                        I accept the{" "}
+                        {/* I accept the{" "}
                         <a href="#" className="underline">
                           Privacy Policy
                         </a>{" "}
                         and{" "}
                         <a href="#" className="underline">
                           Terms & Conditions
-                        </a>
+                        </a> */}
+                        {metaFields.accept_terms}
                       </label>
                     </div>
                     <button
                       type="submit"
                       className="bg-red text-white py-2 px-10 rounded-lg"
                     >
-                      Submit
+                      {metaFields.button_text}
                     </button>
                   </div>
                 </form>
@@ -248,13 +333,16 @@ const ContactUs = () => {
             </div>
 
             <div className="w-[60%] lg:w-[35%]">
-              <img src="/images/contactUs.png" alt="Contact Us" />
+              <img
+                src={metaFields.banner_img}
+                alt="Contat Us"
+              />
             </div>
           </div>
         </div>
       </div>
-      <OurGlobalPresence />
-      <Footer />
+      <OurGlobalPresence language={language}/>
+      {/* <Footer /> */}
     </div>
   );
 };

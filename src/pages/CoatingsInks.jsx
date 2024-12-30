@@ -9,9 +9,9 @@ import { descImage1, descImage2, descImage3, descImage4 } from "../lib/images";
 import ButtonSlider from "../sections/ButtonSlider";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
-import Footer from "../components/Footer";
+import Loader from "../pages/Loader";
 
-const CoatingsInks = () => {
+const CoatingsInks = ({language, setLoading}) => {
   // State to manage selected category
   const [activeCategory, setActiveCategory] = useState("Eye Makeup");
 
@@ -113,6 +113,7 @@ const CoatingsInks = () => {
                     }
                   }
                 }
+                  
               }
             }
           }
@@ -128,11 +129,12 @@ const CoatingsInks = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ query: cosmeticsQuery }),
+            body: JSON.stringify({ query: cosmeticsQuery, targetLanguage: language }),
           }
         );
 
         const cosmeticsResult = await cosmeticsResponse.json();
+        // console.log('Cosmetics Response:', cosmeticsResult);
 
         // Fetch categories
         const categoriesResponse = await fetch(
@@ -142,7 +144,7 @@ const CoatingsInks = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ query: categoriesQuery }),
+            body: JSON.stringify({ query: categoriesQuery, targetLanguage: language }),
           }
         );
 
@@ -168,6 +170,7 @@ const CoatingsInks = () => {
 
                 if (field.key.includes("title")) {
                   slidesArray1[cardIndex].title = field.value;
+                  // console.log("text:", slidesArray1[cardIndex].title);
                 } else if (
                   field.key.includes("image") &&
                   field.reference?.image?.url
@@ -208,7 +211,7 @@ const CoatingsInks = () => {
               .replace(/\s+/g, "_"); // Convert displayName to a key format
 
             categories[categoryKey] = {
-              title: node.displayName,
+              title: "",
               title1: "", // New title field
               description1: "", // Initialize with empty string
               description2: "",
@@ -219,6 +222,8 @@ const CoatingsInks = () => {
               images3: [],
               images4: [],
             };
+
+            console.log("Category displayName (title):", node.displayName);  
 
             for (const field of node.fields) {
               if (field.key === "description_1") {
@@ -251,9 +256,14 @@ const CoatingsInks = () => {
                 );
               } else if (field.key === "title_1") {
                 categories[categoryKey].title1 = field.value;
+                console.log("Title 1 (translated):", field.value);
+              } else if (field.key === "title") {
+                categories[categoryKey].title = field.value;
+                console.log("Title 1 (translated):", field.value);
               }
             }
           }
+          console.log("Categories:", categories); 
 
           const imageFetchPromises = cosmeticsResult.data.metaobjects.edges.map(
             async (edge) => {
@@ -293,11 +303,12 @@ const CoatingsInks = () => {
           setHighlights(highlights.filter((h) => h.title && h.desc));
           setCategories(categories);
           setActiveCategory(Object.keys(categories)[0]);
+          setLoading(false); // Set loading to false once data is fetched
 
           // console.log("Fetched metaFields:", fields);
           // console.log("Slides Array:", slidesArray1);
           // console.log("highlights:", highlights);
-          console.log("Categories:", categories);
+          // console.log("Categories:", categories);
         } else {
           console.error("Metaobjects not found in the response");
         }
@@ -306,11 +317,12 @@ const CoatingsInks = () => {
         // console.log('Fetched slides:', slides);
       } catch (error) {
         console.error("Error fetching homepage meta fields:", error);
+        setLoading(false); // Set loading to false even if there is an error
       }
     };
 
     fetchCoatings();
-  }, []);
+  }, [language, setLoading]);
 
   useEffect(() => {
     const updateSVGSize = () => {
@@ -346,7 +358,7 @@ const CoatingsInks = () => {
 
       const data = await response.json();
       if (data.url) {
-        console.log("Fetched Image URL:", data.url);
+        // console.log("Fetched Image URL:", data.url);
         return data.url;
       }
       throw new Error("Image URL not found in response");
@@ -357,47 +369,7 @@ const CoatingsInks = () => {
   };
 
   if (!metaFields) {
-    return (
-      <div className="h-screen bg-black flex flex-col items-center justify-center px-8 sm:px-10 md:px-12 lg:px-20">
-        {/* Logo */}
-        <img
-          src="/logos/NavLogoWhite.svg"
-          alt="Loading Logo"
-          className="h-10 sm:h-12 md:h-16 lg:h-20"
-        />
-        <div className="relative mt-6 w-full max-w-4xl">
-          {/* Horizontal Progress Bar with Rounded Edges */}
-          <svg
-            className="h-4 sm:h-6 md:h-8 lg:h-10 w-full"
-            viewBox="0 0 100 10"
-          >
-            {/* Background Rectangle */}
-            <rect
-              x="0"
-              y="0"
-              width="100"
-              height="2"
-              fill="#d1d5db" // Light gray background color
-              rx="3" // Rounded corners
-              ry="3" // Rounded corners
-            />
-            {/* Filling Rectangle (animated) */}
-            <rect
-              x="0"
-              y="0"
-              width="0"
-              height="2"
-              fill="#4a5568" // Darker color for the progress bar
-              rx="3" // Rounded corners
-              ry="3" // Rounded corners
-              className="animate-fill"
-            />
-          </svg>
-          {/* Loading text (optional) */}
-          {/* <p className="text-white mt-2 text-center">Loading...</p> */}
-        </div>
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
@@ -449,7 +421,7 @@ const CoatingsInks = () => {
                   className="bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg"
                   onClick={() => handleProductListing("CoatingsInks")}
                 >
-                  Explore Products
+                  {metaFields.banner_button_text}
                 </button>
               </div>
               <div className="w-full lg:w-[60%] h-[300px] lg:h-[600px] bg-cover bg-center">
@@ -466,7 +438,7 @@ const CoatingsInks = () => {
             <div className="w-full flex flex-col px-5 lg:px-10 gap-20">
               <div className="w-full flex flex-col items-start">
                 <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
-                  Who We Are
+                {metaFields.who_we_are_title}
                 </p>
                 <h1 className="font-heading text-[28px] lg:text-[54px] leading-10 lg:leading-[70px]">
                   {metaFields.who_we_are_desc}
@@ -491,14 +463,14 @@ const CoatingsInks = () => {
 
             {/* Our Current offering */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
-              <CustomSlider title='Our Offerings' subTitle='Colorants designed for industrial coloring applications' slides={slides} />
+              <CustomSlider language={language} title={metaFields.our_offerings_title} subTitle={metaFields.our_offerings_desc} slides={slides} />
             </div>
 
             {/* Our Products highlights */}
             <div className="w-full flex flex-col px-5 lg:px-10">
               <div className="w-full flex flex-col items-start">
                 <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
-                  Our Excellence
+                  {metaFields.excellence_title}
                 </p>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-10 lg:pr-20">
@@ -586,7 +558,7 @@ const CoatingsInks = () => {
                   <div className="w-full flex lg:flex-row flex-col lg:justify-between items-center lg:w-1/2">
                     <div className="flex flex-col text-black">
                       <h2 className="w-full font-heading text-2xl lg:text-4xl">
-                        Benefits
+                        {metaFields.benefits_title}
                       </h2>
                       <p className="text-[#667085] font-subHeading text-[16px] mt-4">
                         {showAlternateContent
@@ -671,7 +643,7 @@ const CoatingsInks = () => {
                   <div className="w-full flex lg:flex-row flex-col lg:justify-between items-center lg:w-1/2 order-1 lg:order-2">
                     <div className="flex flex-col text-black">
                       <h2 className="w-full font-heading text-2xl lg:text-4xl">
-                        Use Cases
+                        {metaFields.use_case_title}
                       </h2>
                       <p className="text-[#667085] font-subHeading text-[16px] mt-4">
                         {showAlternateContent
@@ -687,7 +659,7 @@ const CoatingsInks = () => {
             </div>
 
             {/* Our Global presence */}
-            <OurGlobalPresence />
+            <OurGlobalPresence language={language}/>
           </div>
         </div>
       </div>

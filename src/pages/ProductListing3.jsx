@@ -2,16 +2,26 @@ import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import ProductListingCards3 from '@/sections/ProductListingCards3';
 import  React, { useEffect, useRef, useState } from "react";
 import { useLocation } from 'react-router-dom';
-import Footer from "../components/Footer";
+import Loader from "../pages/Loader";
 
-const ProductListing3 = () => {
+const ProductListing3 = ({language}) => {
   const [categories, setCategories] = useState([]); // Initialize categories state
   const [products, setProducts] = useState([]);
+  const [pageContent, setPageContent] = useState({
+    sectionTitle: "Industrial Applications",
+    mainHeading: "Coatings & Inks"
+  });
   
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-          const response = await fetch(`${import.meta.env.VITE_BASE_URL}/shopify/fetchProductCategories`, { method: 'POST' });
+          const response = await fetch(`${import.meta.env.VITE_BASE_URL}/shopify/fetchProductCategories`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ targetLanguage: language }) // Add language to request
+          });
           const data = await response.json();
   
           if (!Array.isArray(data)) {
@@ -33,8 +43,34 @@ const ProductListing3 = () => {
       }
     };  
 
+    // Fetch static content translations
+    const fetchPageContent = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/shopify/translate-content`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            content: {
+              sectionTitle: "Industrial Applications",
+              mainHeading: "Coatings & Inks"
+            },
+            targetLanguage: language
+          })
+        });
+        const translatedContent = await response.json();
+        setPageContent(translatedContent);
+      } catch (error) {
+        console.error('Error fetching translations:', error);
+      }
+    };
+
     fetchCategories();
-  }, []);
+    if (language !== 'en') {
+      fetchPageContent();
+    }
+  }, [language]);
 
   const [svgContent, setSvgContent] = useState(""); // State to hold SVG content
   const svgContainerRef = useRef(null);
@@ -143,26 +179,22 @@ const ProductListing3 = () => {
             />
 
             <div className='absolute inset-3 flex flex-col gap-3 sm:gap-4 md:gap-5 lg:gap-6 justify-center text-white font-medium p-5 xl:p-10 -mb-40 sm:-mb-44 md:-mb-64 lg:-mb-16'>
-              <p className="text-[12px] sm:text-[14px] md:text-[15px] lg:text-[16px] font-normal">Industrial Applications</p>
+              <p className="text-[12px] sm:text-[14px] md:text-[15px] lg:text-[16px] font-normal">{pageContent.sectionTitle}</p>
               <h1 className='w-full md:w-[500px] lg:w-[650px] text-[40px] sm:text-[32px] md:text-[40px] lg:text-[56px] leading-[45px] sm:leading-10 md:leading-10 lg:leading-[65px] font-heading'>
-                Coatings & <br /> Inks
+                {pageContent.mainHeading}
               </h1>
             </div>
           </div>
           
           <div className="bg-white">
-            {categories.map((category, index) => {
-              console.log("Products for category:", category.categoryName, category.products); 
-              return(
-                <div key={index}>
-                  {/* <h2>{category.categoryName}</h2> */}
-                  <ProductListingCards3 products={category.products} />
+            {categories.map((category, index) => (
+              <div key={index}>
+                {/* <h2>{category.categoryName}</h2> */}
+                <ProductListingCards3 products={category.products} language={language}/>
               </div>
-              );
-              
-            })};
+            ))}
           </div>
-          <OurGlobalPresence />
+          <OurGlobalPresence language={language}/>
         </div>
       </div>      
     </div>

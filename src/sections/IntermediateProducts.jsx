@@ -45,6 +45,8 @@ const IntermediateProducts = ({
   product7Molecular,
   product7Desc,
 
+  language,
+
 }) => {
   return (
     <div className="w-full bg-white">
@@ -69,6 +71,7 @@ const IntermediateProducts = ({
             EmpiricalFormula={product1Empirical} // Correctly passing string
             CASNumber={product1Cas} // Correctly passing string
             MolecularWeight={product1Molecular} // Correctly passing string
+            language={language}
           />
           <LifeSciencesAPIProductsCard
             title={product2Title} // Correctly passing string
@@ -76,6 +79,7 @@ const IntermediateProducts = ({
             EmpiricalFormula={product2Empirical} // Correctly passing string
             CASNumber={product2Cas} // Correctly passing string
             MolecularWeight={product2Molecular} // Correctly passing string
+            language={language}
           />
           <LifeSciencesAPIProductsCard
             title={product3Title} // Correctly passing string
@@ -83,6 +87,7 @@ const IntermediateProducts = ({
             EmpiricalFormula={product3Empirical} // Correctly passing string
             CASNumber={product3Cas} // Correctly passing string
             MolecularWeight={product3Molecular} // Correctly passing string
+            language={language}
           />
           <LifeSciencesAPIProductsCard
             title={product4Title} // Correctly passing string
@@ -90,6 +95,7 @@ const IntermediateProducts = ({
             EmpiricalFormula={product4Empirical} // Correctly passing string
             CASNumber={product4Cas} // Correctly passing string
             MolecularWeight={product4Molecular} // Correctly passing string
+            language={language}
           />
           <LifeSciencesAPIProductsCard
             title={product5Title} // Correctly passing string
@@ -97,6 +103,7 @@ const IntermediateProducts = ({
             EmpiricalFormula={product5Empirical} // Correctly passing string
             CASNumber={product5Cas} // Correctly passing string
             MolecularWeight={product5Molecular} // Correctly passing string
+            language={language}
           />
           <LifeSciencesAPIProductsCard
             title={product6Title} // Correctly passing string
@@ -104,6 +111,7 @@ const IntermediateProducts = ({
             EmpiricalFormula={product6Empirical} // Correctly passing string
             CASNumber={product6Cas} // Correctly passing string
             MolecularWeight={product6Molecular} // Correctly passing string
+            language={language}
           />
           <LifeSciencesAPIProductsCard
             title={product7Title} // Correctly passing string
@@ -111,6 +119,7 @@ const IntermediateProducts = ({
             EmpiricalFormula={product7Empirical} // Correctly passing string
             CASNumber={product7Cas} // Correctly passing string
             MolecularWeight={product7Molecular} // Correctly passing string
+            language={language}
           />
           {/* Add more product cards if necessary */}
         </div>

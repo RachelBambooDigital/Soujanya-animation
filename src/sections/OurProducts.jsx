@@ -19,7 +19,7 @@ const CustomArrow = ({ className, style, onClick, icon }) => {
     );
 };
 
-const OurProducts = () => {
+const OurProducts = ({language}) => {
     const sliderRef = React.useRef(null);
 
     const nextSlide = () => {
@@ -57,10 +57,35 @@ const OurProducts = () => {
     };
 
     const [metaFields, setMetaFields] = useState(null);
+    const [highlights, setHighlights] = useState([]);
+
     useEffect(() => {
         const fetchHomePageMeta = async () => {
-            const query = `query {
+            const homepage1 = `query {
                 metaobjects(type: "homepage", first: 50) {
+                    edges {
+                        node {
+                            id
+                            displayName
+                            fields {
+                                key
+                                value
+                                reference {
+                                    ... on MediaImage {
+                                        image {
+                                            id
+                                            url
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }`;
+
+            const homepage2 = `query {
+                metaobjects(type: "homepage_2", first: 50) {
                     edges {
                         node {
                             id
@@ -83,21 +108,50 @@ const OurProducts = () => {
             }`;
         
             try {
-                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/shopify/homepage-meta`, {
+                const homepageResponse1 = await fetch(`${import.meta.env.VITE_BASE_URL}/shopify/homepage-meta`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ query }),
+                    body: JSON.stringify({ query: homepage1, targetLanguage: language }),
                 });
         
-                const result = await response.json();
+                const homepageResult1 = await homepageResponse1.json();
+
+                const homepageResponse2 = await fetch(`${import.meta.env.VITE_BASE_URL}/shopify/homepage-meta`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ query: homepage2, targetLanguage: language }),
+                });
+
+                const homepageResult2 = await homepageResponse2.json();
+                // console.log("result2", homepageResult2);
         
-                if (result && result.data && result.data.metaobjects) {
+                if (homepageResult1?.data && homepageResult2?.data) {
                     const fields = {};
-        
-                    const imageFetchPromises = result.data.metaobjects.edges.map(async (edge) => {
+
+                    for (const edge of homepageResult2.data.metaobjects.edges) {
                         for (const field of edge.node.fields) {
+                          // Check for highlights
+                          if (field.key.startsWith('highlight')) {
+                            const index = field.key.match(/\d+/)[0]; // Extract number from key
+                            highlights[index - 1] = highlights[index - 1] || {}; // Ensure array entry exists
+                            if (field.key.includes('title')) {
+                              highlights[index - 1].title = field.value;
+                            } else if (field.key.includes('desc')) {
+                              highlights[index - 1].desc = field.value;
+                            }
+                          } else {
+                            fields[field.key] = field.value;
+                          }
+                        }
+                    }
+        
+                    const imageFetchPromises = homepageResult1.data.metaobjects.edges.map(async (edge) => {
+                        for (const field of edge.node.fields) {
+
                             if (field.reference?.image?.url) {
                                 fields[field.key] = field.reference.image.url;
                             } else if (field.reference?.sources) {
@@ -105,6 +159,8 @@ const OurProducts = () => {
                             } else {
                                 fields[field.key] = field.value;
                             }
+
+                            // console.log(`Updated fields:`, fields);
         
                             // Check for GIDs and handle parsing
                             if (field.key === 'our_products_image' || field.key === 'product_2_images') {
@@ -122,7 +178,7 @@ const OurProducts = () => {
                     });
         
                     await Promise.all(imageFetchPromises);
-                    console.log("Fetched metaFields:", fields); // Log to check the structure
+                    // console.log("Fetched metaFields:", fields); // Log to check the structure
                     setMetaFields(fields);
                 } else {
                     console.error("Metaobjects not found in the response");
@@ -133,7 +189,7 @@ const OurProducts = () => {
         };
         
         fetchHomePageMeta();
-    }, []);
+    }, [language]);
 
     // Function to fetch image URL
     const fetchImage = async (gid) => {
@@ -165,7 +221,7 @@ const OurProducts = () => {
         <div className='w-full mb-5 lg:mb-10'>
             <div className='w-full flex flex-col gap-16 px-5 lg:px-10'>
                 <div className='w-full flex flex-col items-start'>
-                    <p className='py-5 lg:py-10 font-subHeading font-medium text-[14px] lg:text-[18px]'>Our Products</p>
+                    <p className='py-5 lg:py-10 font-subHeading font-medium text-[14px] lg:text-[18px]'>{metaFields.our_products_main_title}</p>
                     <h1 className='font-heading text-[32px] leading-10 lg:text-[62px] lg:leading-[70px]'>{metaFields.our_products_title}</h1>
                 </div>
 
