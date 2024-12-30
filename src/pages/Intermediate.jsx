@@ -1,16 +1,13 @@
 import IntermediateProducts from "@/sections/IntermediateProducts";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
-import React, { useEffect,useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../index.css';
 import Loader from "../pages/Loader";
-import { useNavigate } from 'react-router-dom';
 
 const Intermediate = ({language, setLoading}) => {
   const [metaFields, setMetaFields] = useState([]); // Initialize as an empty array
   const [bannerVideo, setBannerVideo] = useState(''); // State for the banner video URL
   const [loading, setLoadings] = useState(true); // Add loading state
-
-  const navigate = useNavigate();
 
   const svgContainerRef = useRef(null);
   const pathRef = useRef(null);
@@ -32,7 +29,7 @@ const Intermediate = ({language, setLoading}) => {
       const clampedPercentage = Math.min(Math.max(percentage, 0), 1);
 
       // Update the strokeDasharray and strokeDashoffset values
-      const offset = pathLength - (pathLength * clampedPercentage * 0.5); // Adjust for desired speed
+      const offset = pathLength - (pathLength * clampedPercentage * 0.4); // Adjust for desired speed
 
       path.style.strokeDasharray = pathLength;
       path.style.strokeDashoffset = offset;
@@ -120,35 +117,9 @@ const Intermediate = ({language, setLoading}) => {
     fetchIntermediate();
   }, [language, setLoading]);
 
-  // width="2436" height="5026" viewBox="250 0 1965 3600"
-  const [viewBox, setViewBox] = useState("250 0 1965 3600");
-  const [width, setWidth] = useState("2136");
-  const [height, setHeight] = useState("5026");
-
-  useEffect(() => {
-    const updateSVGSize = () => {
-        if (window.innerWidth <= 768) {
-            setViewBox("470 0 990 5500");
-            setWidth("900");
-            setHeight("5900");
-        } else {
-            setViewBox("250 0 1965 3600");
-            setWidth("2136");
-            setHeight("5026");
-        }
-    };
-
-    updateSVGSize(); // Initial check
-    window.addEventListener('resize', updateSVGSize);
-
-    return () => window.removeEventListener('resize', updateSVGSize);
-  }, []);
-
-
   if (loading) {
     return <Loader />;
   }
-  //changed
 
   // Access the values using the correct keys
   const bannerTitle = metaFields.find(field => field.key === 'banner_title')?.value || '';
@@ -198,7 +169,7 @@ const Intermediate = ({language, setLoading}) => {
   const product7Desc = metaFields.find(field => field.key === 'product_4_desc')?.value || '';
 
   return (
-    <div className="scrollContainer w-full lg:h-[3350px] h-[5000px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+    <div className="scrollContainer w-full lg:h-[3150px] h-[5000px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
       <svg 
             width="2436" 
             height="5026" 
@@ -227,7 +198,7 @@ const Intermediate = ({language, setLoading}) => {
       </radialGradient>
       </defs>
       </svg>
-      <div className='w-full absolute h-full top-[0] z-10  '>
+      <div className='w-full absolute h-full top-[0] z-10'>
         <div className='w-full h-[100dvh] lg:h-screen bg-cover bg-center relative'>
           <video
             className='w-full h-[100dvh] xl:h-full object-cover '
@@ -296,7 +267,6 @@ const Intermediate = ({language, setLoading}) => {
           language={language}
         />
         <OurGlobalPresence language={language}/>
-
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import ProductListingCards from '@/sections/ProductListingCards';
 import  React, { useEffect, useRef, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import Loader from "../pages/Loader";
+import Footer from "@/components/Footer";
 
 const ProductListing = ({language}) => {
   const [categories, setCategories] = useState([]); // Initialize categories state
@@ -93,7 +94,7 @@ const ProductListing = ({language}) => {
       const clampedPercentage = Math.min(Math.max(percentage, 0), 1);
 
       // Update the strokeDasharray and strokeDashoffset values
-      const offset = pathLength - (pathLength * clampedPercentage * 0.6); // Adjust for desired speed
+      const offset = pathLength - (pathLength * clampedPercentage * 0.5); // Adjust for desired speed
 
       path.style.strokeDasharray = pathLength;
       path.style.strokeDashoffset = offset;
@@ -134,8 +135,8 @@ const ProductListing = ({language}) => {
   }, []);
 
   return (
-    <div className="scrollContainer w-full lg:h-[3200px] h-[4600px] md:h-[4200px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
-            <svg 
+    <div className="scrollContainer w-full lg:h-[3070px] h-[4600px] md:h-[4200px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+      <svg 
         width={width}
         height={height}
         viewBox={viewBox}
@@ -194,6 +195,7 @@ const ProductListing = ({language}) => {
             ))}
           </div>
           <OurGlobalPresence language={language} />
+          <Footer language={language} />
         </div>
       </div>      
     </div>

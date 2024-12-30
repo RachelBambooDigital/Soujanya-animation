@@ -345,7 +345,7 @@ const ProductDetail = ({language, setLoading}) => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[2980px] h-[4550px] overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[2720px] h-[4550px] overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
       key={key}
     >

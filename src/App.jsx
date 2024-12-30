@@ -91,7 +91,7 @@ function App() {
         <Route path="/career" element={<Career language={selectedLanguage} setLoading={setIsLoading}/>} />
         <Route path="/home-care-cosmetics" element={<HomeCareCosmetics language={selectedLanguage} setLoading={setIsLoading}/>} />
         <Route path="/coatings-inks" element={<CoatingsInks language={selectedLanguage} setLoading={setIsLoading}/>} />
-        <Route path="/product-listing" element={<ProductListing language={selectedLanguage}/>} />
+        <Route path="/product-listing" element={<ProductListing language={selectedLanguage}/>} setLoading={setIsLoading}/>
         <Route path="/product-listing2" element={<ProductListing2 language={selectedLanguage} />} />
         <Route path="/product-listing3" element={<ProductListing3 language={selectedLanguage} />} />
         <Route path="/productDet/:productId" element={<ProductDetail language={selectedLanguage} setLoading={setIsLoading}/>} />
