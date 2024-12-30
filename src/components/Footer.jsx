@@ -1,10 +1,12 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { apiBaseUrl } from "@/config";
 
-const Footer = () => {
+const Footer = ({language}) => {
+  const [metaFields, setMetaFields] = useState(null);
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -54,6 +56,77 @@ const Footer = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchGlobalPresence = async () => {
+      const query = `query {
+        metaobjects(type: "footer", first: 50) {
+          edges {
+            node {
+              id
+              displayName
+              fields {
+                key
+                value
+                reference {
+                  ... on MediaImage {
+                    image {
+                      id
+                      url
+                    }
+                  }
+                  ... on Video {
+                    id
+                    sources {
+                      url
+                      mimeType
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }`;
+  
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/shopify/homepage-meta`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query, targetLanguage: language }),
+          }
+        );
+  
+        const result = await response.json();
+        console.log("result", result);
+  
+        if (result?.data?.metaobjects) {
+          const fields = {};
+          for (const edge of result.data.metaobjects.edges) {
+            for (const field of edge.node.fields) {
+              fields[field.key] = field.value;
+            }
+          }
+  
+          setMetaFields(fields);
+        } else {
+          console.error("Metaobjects not found in the response");
+        }
+      } catch (error) {
+        console.error("Error fetching homepage meta fields:", error);
+      }
+    };
+  
+    fetchGlobalPresence();
+  }, [language]); 
+
+  if (!metaFields) {
+    return <div>Loading...</div>; // Loading state
+  }
+
   return (
     <footer
       id="footer"
@@ -65,12 +138,12 @@ const Footer = () => {
           className="text-white font-subHeading hover:underline cursor-pointer"
           onClick={scrollToTop}
         >    
-          Back to top
+          {metaFields.back_to_top_text}
         </p>
         <div className="flex flex-col">
           <h1 className="font-subHeading text-white text-[40px] leading-[45px] tracking-[-3%] font-light lg:text-[52px] lg:w-[600px] lg:leading-[60px] w-600px">
-            Join our newsletter & be the first to know about our events & product updates.
-            <span className="font-heading text-red"> #nospam</span>
+            {metaFields.footer_desc}
+            <span className="font-heading text-red">#{metaFields.red_color_text}</span>
           </h1>
           <form onSubmit={handleSubmit}>
             <div className="inputs flex flex-col lg:flex-row gap-4 mt-6 font-subHeading font-normal">
@@ -78,7 +151,7 @@ const Footer = () => {
                 <input
                   type="text"
                   name="email"
-                  placeholder="Email"
+                  placeholder={metaFields.email_field}
                   className="w-full lg:w-[320px] p-5 h-[42px] text-white text-[14px] rounded-md bg-[#292929] border-2 border-[#576275] focus-visible:border-y-white"
                   value={formData.email}
                   onChange={handleChange}
@@ -94,7 +167,7 @@ const Footer = () => {
                 type="submit"
                 className="w-full lg:w-[100px] h-[42px] rounded-md bg-red text-white text-[14px] hover:underline"
               >
-                OK
+                {metaFields.button_text}
               </button>
             </div>
           </form>
@@ -114,14 +187,14 @@ const Footer = () => {
 
         <nav className="text-white flex flex-row gap-6 lg:gap-10 text-[0.8rem] sm:text-[0.8rem] md:text-[1rem] lg:text-[1.1rem] w-full lg:w-auto justify-center items-center text-center">
           <Link to="/about-us" className="mr-1">
-            About Us
+            {metaFields.aboutus_link_text}
           </Link>
-          <Link to="/home-care-cosmetics">Home, Personal Care & Cosmetics</Link>
-          <Link to="/life-sciences">Life Sciences</Link>
+          <Link to="/home-care-cosmetics">{metaFields.homecare_link_text}</Link>
+          <Link to="/life-sciences">{metaFields.lifesciences_link_text}</Link>
         </nav>
 
         <p className="text-white text-center lg:text-left lg:mt-0 w-full lg:w-auto text-[0.8rem] sm:text-[0.8rem] md:text-[1rem] lg:text-[1.1rem]">
-          All rights reserved
+          {metaFields.rights_reserved_text}
         </p>
       </div>
     </footer>

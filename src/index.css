@@ -67,16 +67,19 @@ body {
   fill: none;
 }
 
+/* Animation for the loading bar */
 @keyframes fillAnimation {
   0% {
     width: 0%;
   }
-
-  100% {
+  50% {
     width: 100%;
+  }
+  100% {
+    width: 0%;
   }
 }
 
 .animate-fill {
-  animation: fillAnimation 2s ease-in-out forwards;
+  animation: fillAnimation 2s infinite; /* 2 seconds for one cycle, repeat indefinitely */
 }

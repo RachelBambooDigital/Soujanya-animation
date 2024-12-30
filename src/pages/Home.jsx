@@ -7,10 +7,10 @@ import CustomSlider from "../sections/CustomSlider";
 import OurProducts from "../sections/OurProducts";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import Loader from "../pages/Loader";
-import translateText from "@/utils/translate";
 
-const Home = () => {
+const Home = ({language, setLoading}) => {
   const [metaFields, setMetaFields] = useState(null);
+  const [highlights, setHighlights] = useState([]);
   const [slides, setSlides] = useState([]);
   const navigate = useNavigate();
 
@@ -20,6 +20,11 @@ const Home = () => {
   const [viewBox, setViewBox] = useState("250 0 2436 5350");
   const [width, setWidth] = useState("2100");
   const [height, setHeight] = useState("5800");
+
+  // const [selectedLanguage, setSelectedLanguage] = useState("Eng"); // Store language
+  // const handleLanguageChange = (langShort) => {
+  //   setSelectedLanguage(langShort);  // Update language state
+  // };
 
   // width="2100" height="5800" viewBox="250 0 2436 5350"
 
@@ -59,55 +64,100 @@ const Home = () => {
 
   useEffect(() => {
     const fetchHomePageMeta = async () => {
-      const query = `query {
-      metaobjects(type: "homepage", first: 50) {
-        edges {
-          node {
-            id
-            displayName
-            fields {
-              key
-              value
-              reference {
-                ... on MediaImage {
-                  image {
-                    id
-                    url
+      const homepage1 = `query {
+        metaobjects(type: "homepage", first: 50) {
+          edges {
+            node {
+              id
+              displayName
+              fields {
+                key
+                value
+                reference {
+                  ... on MediaImage {
+                    image {
+                      id
+                      url
+                    }
                   }
-                }
-                ... on Video {
-                  id
-                  sources {
-                    url
-                    mimeType
+                  ... on Video {
+                    id
+                    sources {
+                      url
+                      mimeType
+                    }
                   }
                 }
               }
             }
           }
         }
-      }
-    }`;
+      }`;
+
+      const homepage2 = `query {
+        metaobjects(type: "homepage_2", first: 50) {
+          edges {
+            node {
+              id
+              displayName
+              fields {
+                key
+                value
+                reference {
+                  ... on MediaImage {
+                    image {
+                      id
+                      url
+                    }
+                  }
+                  ... on Video {
+                    id
+                    sources {
+                      url
+                      mimeType
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }`;
 
       try {
-        const response = await fetch(
+        const homepageResponse1 = await fetch(
           `${import.meta.env.VITE_BASE_URL}/shopify/homepage-meta`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ query, targetLanguage: "mr" }),
+            body: JSON.stringify({ query: homepage1, targetLanguage: language }),
           }
         );
 
-        const result = await response.json();
+        const homepageResult1 = await homepageResponse1.json();
+        console.log("result", homepageResult1);
 
-        if (result?.data?.metaobjects) {
+        const homepageResponse2 = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/shopify/homepage-meta`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query: homepage2, targetLanguage: language }),
+          }
+        );
+
+        const homepageResult2 = await homepageResponse2.json();
+        console.log("result2", homepageResult2);
+
+        if (homepageResult1?.data && homepageResult2?.data) {
           const fields = {};
           const slidesArray = [];
 
-          for (const edge of result.data.metaobjects.edges) {
+          for (const edge of homepageResult1.data.metaobjects.edges) {
             for (const field of edge.node.fields) {
               if (field.key.startsWith("what_we_offer_card")) {
                 const cardIndex = parseInt(field.key.split("_").pop(), 10) - 1;
@@ -138,7 +188,24 @@ const Home = () => {
             }
           }
 
-          const imageFetchPromises = result.data.metaobjects.edges.map(
+          for (const edge of homepageResult2.data.metaobjects.edges) {
+            for (const field of edge.node.fields) {
+              // Check for highlights
+              if (field.key.startsWith('highlight')) {
+                const index = field.key.match(/\d+/)[0]; // Extract number from key
+                highlights[index - 1] = highlights[index - 1] || {}; // Ensure array entry exists
+                if (field.key.includes('title')) {
+                  highlights[index - 1].title = field.value;
+                } else if (field.key.includes('desc')) {
+                  highlights[index - 1].desc = field.value;
+                }
+              } else {
+                fields[field.key] = field.value;
+              }
+            }
+          }
+
+          const imageFetchPromises = homepageResult1.data.metaobjects.edges.map(
             async (edge) => {
               for (const field of edge.node.fields) {
                 if (field.key === "who_we_are_image") {
@@ -161,20 +228,24 @@ const Home = () => {
 
           await Promise.all(imageFetchPromises);
           setMetaFields(fields);
+          console.log("slides", slidesArray);
           setSlides(slidesArray.filter((slide) => slide.image && slide.title));
+          setHighlights(highlights.filter(h => h.title && h.desc));
+          setLoading(false); // Set loading to false once data is fetched
         } else {
           console.error("Metaobjects not found in the response");
         }
+
       } catch (error) {
         console.error("Error fetching homepage meta fields:", error);
+        setLoading(false); // Set loading to false even if there is an error
       }
     };
 
     fetchHomePageMeta();
-  }, []);
+  }, [language, setLoading]);
 
-  console.log("Banner Button Link:", metaFields);
-  // console.log("Banner Button Link:", metaFieldss);
+  console.log("Metafields:", metaFields);
 
   useEffect(() => {
     const updateSVGSize = () => {
@@ -348,15 +419,16 @@ const Home = () => {
             >
               {/* {JSON.parse(metaFields.banner_button_link).text} */}
               {/* {buttonLink.text} */}
+              {metaFields.banner_button}
             </button>
           </div>
         </div>
 
-        <div className="w-full ">
+        <div className="w-full">
           <div className="w-full flex flex-col px-5 lg:px-10">
             <div className="w-full flex flex-col items-start">
               <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
-                Who We Are
+                {metaFields.who_we_are_title}
               </p>
               <h1 className="font-heading leading-10 text-[28px] lg:text-[54px] lg:leading-[70px]">
                 {metaFields.who_we_are_heading}
@@ -365,7 +437,8 @@ const Home = () => {
                 className="bg-red text-white text-base font-subHeading h-[42px] w-[175px] lg:w-[192px] my-10 rounded-lg hover:underline"
                 onClick={handleAboutUs}
               >
-                {/* {JSON.parse(metaFields.who_we_are_link).text} */}Overview
+                {/* {JSON.parse(metaFields.who_we_are_link).text} */}
+                {metaFields.who_we_are_button}
               </button>
             </div>
 
@@ -388,32 +461,32 @@ const Home = () => {
           </div>
 
           {/* What we offer */}
-          {/* <div className="w-full flex flex-col px-5 lg:px-10 ">
-            <CustomSlider
-              title="What we offer"
-              subTitle="We put our heart into delivering quality through our work"
+          <div className="w-full flex flex-col px-5 lg:px-10 ">
+            <CustomSlider language={language}
+              title={metaFields.what_we_offer_title}
+              subTitle={metaFields.what_we_offer_heading}
               slides={slides}
             />
-          </div> */}
+          </div>
 
           {/* Our business highlights */}
           <div className="w-full flex flex-col px-5 sm:px-8 md:px-10 lg:px-10">
             <div className="w-full flex flex-col items-start mb-5">
               <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
-                Business Highlights
+                {metaFields.business_highlights_title}
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-5 lg:gap-10">
-              {businessCards.map((card, index) => (
+              {highlights.map((highlight, index) => (
                 <div key={index} className="flex flex-col w-full h-full">
-                  <Cards title={card.title} desc={card.description} />
+                  <Cards title={highlight.title} desc={highlight.desc} />
                 </div>
               ))}
             </div>
           </div>
 
-          <OurProducts />
-          <OurGlobalPresence />
+          <OurProducts language={language}/>
+          <OurGlobalPresence language={language}/>
         </div>
       </div>
     </div>

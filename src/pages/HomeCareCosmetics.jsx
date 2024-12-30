@@ -7,9 +7,9 @@ import { descImage1, descImage2, descImage3, descImage4 } from '../lib/images';
 import ButtonSlider from '../sections/ButtonSlider';
 import { useNavigate } from 'react-router-dom';
 import '../index.css';
-import Footer from "../components/Footer";
+import Loader from "../pages/Loader";
 
-const HomeCareCosmetics = () => {
+const HomeCareCosmetics = ({language, setLoading}) => {
   // State to manage selected category
   const [activeCategory, setActiveCategory] = useState('Personal Care Solutions');
 
@@ -118,7 +118,7 @@ const HomeCareCosmetics = () => {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ query: cosmeticsQuery }),
+              body: JSON.stringify({ query: cosmeticsQuery, targetLanguage: language  }),
             });
 
             const cosmeticsResult = await cosmeticsResponse.json();
@@ -129,7 +129,7 @@ const HomeCareCosmetics = () => {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ query: categoriesQuery }),
+              body: JSON.stringify({ query: categoriesQuery, targetLanguage: language  }),
             });
     
             const categoriesResult = await categoriesResponse.json();
@@ -224,6 +224,8 @@ const HomeCareCosmetics = () => {
                       categories[categoryKey].images4 = await Promise.all(parsedImages4.map(gid => fetchImage(gid))); 
                     } else if (field.key === 'title_1') {
                       categories[categoryKey].title1 = field.value; 
+                    } else if (field.key === 'title') {
+                      categories[categoryKey].title = field.value; 
                     }
                   }
                 }
@@ -263,10 +265,11 @@ const HomeCareCosmetics = () => {
                 // console.log("Fetched metaFields:", fields); 
                 // console.log("Slides Array:", slidesArray1);
                 // console.log("highlights:", highlights);
-                console.log('Categories:', categories);
-                
+                // console.log('Categories:', categories);
+                setLoading(false); // Set loading to false once data is fetched
               } else {
                 console.error("Metaobjects not found in the response");
+                setLoading(false); // Set loading to false even if there is an error
             }
 
             // console.log('Metaobjects response:', result);
@@ -278,7 +281,7 @@ const HomeCareCosmetics = () => {
     };
     
     fetchLifesciences();
-  }, []);
+  }, [language, setLoading]);
 
   const [viewBox, setViewBox] = useState("250 0 2065 4000");
   const [width, setWidth] = useState("2100");
@@ -326,45 +329,8 @@ const HomeCareCosmetics = () => {
   };    
 
   if (!metaFields) {
-    return (
-        <div className="h-screen bg-black flex flex-col items-center justify-center px-8 sm:px-10 md:px-12 lg:px-20">
-            {/* Logo */}
-            <img
-                src="/logos/NavLogoWhite.svg"
-                alt="Loading Logo"
-                className="h-10 sm:h-12 md:h-16 lg:h-20"
-            />
-            <div className="relative mt-6 w-full max-w-4xl">
-                {/* Horizontal Progress Bar with Rounded Edges */}
-                <svg className="h-4 sm:h-6 md:h-8 lg:h-10 w-full" viewBox="0 0 100 10">
-                    {/* Background Rectangle */}
-                    <rect
-                        x="0"
-                        y="0"
-                        width="100"
-                        height="2"
-                        fill="#d1d5db" // Light gray background color
-                        rx="3" // Rounded corners
-                        ry="3" // Rounded corners
-                    />
-                    {/* Filling Rectangle (animated) */}
-                    <rect
-                        x="0"
-                        y="0"
-                        width="0"
-                        height="2"
-                        fill="#4a5568" // Darker color for the progress bar
-                        rx="3" // Rounded corners
-                        ry="3" // Rounded corners
-                        className="animate-fill"
-                    />
-                </svg>
-                {/* Loading text (optional) */}
-                {/* <p className="text-white mt-2 text-center">Loading...</p> */}
-            </div>
-        </div>
-    );
-  } 
+    return <Loader />;
+  }
 
   return (
     <div className="scrollContainer w-full lg:h-[5200px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
@@ -422,7 +388,7 @@ const HomeCareCosmetics = () => {
                 <p className='text-[18px] font-subHeading leading-[26px] lg:w-[500px]'>
                   {metaFields.banner_desc}
                 </p>
-                <button className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg' onClick={() => handleProductListing('HomeCareCosmetics')}>Explore Products</button>
+                <button className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg' onClick={() => handleProductListing('HomeCareCosmetics')}>{metaFields.banner_button_text}</button>
               </div>
               <div className='w-full lg:w-[60%] h-[300px] lg:h-[600px] bg-cover bg-center'>
                 <img src={metaFields.banner_img} className='w-full h-full'></img>
@@ -434,7 +400,7 @@ const HomeCareCosmetics = () => {
             {/* Who are we */}
             <div className='w-full flex flex-col px-5 lg:px-10 gap-20'>
               <div className='w-full flex flex-col items-start'>
-                <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Who are we</p>
+                <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.who_we_are_title}</p>
                 <h1 className='font-heading text-[28px] lg:text-[54px] leading-10 lg:leading-[70px]'>
                 {metaFields.who_we_are_desc}
                 </h1>
@@ -452,13 +418,13 @@ const HomeCareCosmetics = () => {
 
             {/* Our Current offering */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
-              <CustomSlider title='Our Offerings' subTitle='Colorants designed for a seamless blend' slides={slides} />
+              <CustomSlider title={metaFields.our_offerings_title} subTitle={metaFields.our_offerings_desc} slides={slides} />
             </div>
 
             {/* Our Products highlights */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
               <div className='w-full flex flex-col items-start'>
-                <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Colorant Highlights</p>
+                <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.colorant_title}</p>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-10 lg:pr-20">
                 {highlights.map((highlight, index) => (
@@ -530,7 +496,7 @@ const HomeCareCosmetics = () => {
                     {/* Left content - Description1 */}
                     <div className="w-full flex lg:flex-row flex-col lg:justify-between items-center lg:w-1/2">
                       <div className='flex flex-col text-black'>
-                        <h2 className="w-full font-heading text-2xl lg:text-4xl">Benefits</h2>
+                        <h2 className="w-full font-heading text-2xl lg:text-4xl">{metaFields.benefits_title}</h2>
                         <p className="text-[#667085] font-subHeading text-[16px] mt-4">
                           {showAlternateContent
                             ? categories[activeCategory]?.description3 || 'No description available for this category.'
@@ -591,7 +557,7 @@ const HomeCareCosmetics = () => {
                     {/* Right content - Description2 */}
                     <div className="w-full flex lg:flex-row flex-col lg:justify-between items-center lg:w-1/2 order-1 lg:order-2">
                       <div className='flex flex-col text-black'>
-                        <h2 className="w-full font-heading text-2xl lg:text-4xl">Use Cases</h2>
+                        <h2 className="w-full font-heading text-2xl lg:text-4xl">{metaFields.use_case_title}</h2>
                         <p className="text-[#667085] font-subHeading text-[16px] mt-4">
                           {showAlternateContent
                             ? categories[activeCategory]?.description4 || 'No description available for this category.'
@@ -604,7 +570,7 @@ const HomeCareCosmetics = () => {
             </div>
 
             {/* Our Global presence */}
-            <OurGlobalPresence />
+            <OurGlobalPresence language={language}/>
           </div>
         </div>
       </div>

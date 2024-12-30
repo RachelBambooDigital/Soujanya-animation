@@ -4,8 +4,9 @@ import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import { benefitImg, useCaseImg, guideImg } from "../lib/images";
 import ButtonSlider from "../sections/ButtonSlider";
 import "../index.css";
+import Loader from "../pages/Loader";
 
-const ProductDetail = () => {
+const ProductDetail = ({language, setLoading}) => {
   const { productId } = useParams();
   const [productData, setProductData] = useState(null);
   const [moreDetails, setMoreDetails] = useState([]);
@@ -24,6 +25,8 @@ const ProductDetail = () => {
   const [cards1, setCards1] = useState({ heading: "", description: "" });
   const [secondImageUrl, setSecondImageUrl] = useState("");
 
+
+  const [svgContent, setSvgContent] = useState(""); // State to hold SVG content
   const svgContainerRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const pathRef = useRef(null);
@@ -70,10 +73,11 @@ const ProductDetail = () => {
     const fetchProductData = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/shopify/productDet/${productId}`
+          `${import.meta.env.VITE_BASE_URL}/shopify/productDet/${productId}?targetLanguage=${language}`
         );
         console.log("Response Status:", response);
         console.log("Product ID from URL:", productId);
+        console.log("Current language:", language);
 
         if (response.ok) {
           const data = await response.json();
@@ -280,16 +284,18 @@ const ProductDetail = () => {
           } else {
             console.log("No metafields found.");
           }
+          setLoading(false); // Set loading to false once data is fetched
         } else {
           console.error("Failed to fetch product data", response.statusText);
         }
       } catch (error) {
         console.error("Error fetching product data:", error);
+        setLoading(false); // Set loading to false even if there is an error
       }
     };
 
     fetchProductData();
-  }, [productId]);
+  }, [productId, language, setLoading]);
 
     //width="3600" height="4026" viewBox="100 0 4936 4750"
     const [viewBox, setViewBox] = useState("100 0 4936 4750");
@@ -305,7 +311,7 @@ const ProductDetail = () => {
         } else {
             setViewBox("100 0 4936 4750");
             setWidth("3600");
-            setHeight("4y026");
+            setHeight("4026");
         }
       };
   
@@ -334,52 +340,12 @@ const ProductDetail = () => {
   };
 
   if (!productData) {
-    return (
-      <div className="h-screen bg-black flex flex-col items-center justify-center px-8 sm:px-10 md:px-12 lg:px-20">
-        {/* Logo */}
-        <img
-          src="/logos/NavLogoWhite.svg"
-          alt="Loading Logo"
-          className="h-10 sm:h-12 md:h-16 lg:h-20"
-        />
-        <div className="relative mt-6 w-full max-w-4xl">
-          {/* Horizontal Progress Bar with Rounded Edges */}
-          <svg
-            className="h-4 sm:h-6 md:h-8 lg:h-10 w-full"
-            viewBox="0 0 100 10"
-          >
-            {/* Background Rectangle */}
-            <rect
-              x="0"
-              y="0"
-              width="100"
-              height="2"
-              fill="#d1d5db" // Light gray background color
-              rx="3" // Rounded corners
-              ry="3" // Rounded corners
-            />
-            {/* Filling Rectangle (animated) */}
-            <rect
-              x="0"
-              y="0"
-              width="0"
-              height="2"
-              fill="#4a5568" // Darker color for the progress bar
-              rx="3" // Rounded corners
-              ry="3" // Rounded corners
-              className="animate-fill"
-            />
-          </svg>
-          {/* Loading text (optional) */}
-          {/* <p className="text-white mt-2 text-center">Loading...</p> */}
-        </div>
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
     <div
-      className="scrollContainer w-full lg:h-auto overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[2800px] overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
       key={key}
     >
@@ -638,7 +604,7 @@ const ProductDetail = () => {
             <div className="content-section px-5 lg:px-10">
               <div className="flex flex-col lg:flex-row gap-10">
                 <div className="flex flex-col">
-                  {activeCards.map((card, index) => (
+                  {activeCategory && activeCards.length > 0 && activeCards.map((card, index) => (
                     <div key={index}>
                       <div className="pr-44 pl-44 mt-20">
                         {/* Conditionally apply background for larger screens only */}
@@ -692,7 +658,7 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        <OurGlobalPresence />
+        <OurGlobalPresence language={language}/>
       </div>
     </div>
   );

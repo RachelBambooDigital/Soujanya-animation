@@ -1,6 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-const ScrollableDrivers = ({ drivers2 }) => {
+const 
+ScrollableDrivers = ({ drivers2, language }) => {
+    const [metaFields, setMetaFields] = useState(null);
+
     const scrollContainerRef = useRef(null);
     const scrollAmount = 320; // Amount to scroll each time
 
@@ -47,14 +50,85 @@ const ScrollableDrivers = ({ drivers2 }) => {
         scrollContainerRef.current.scrollLeft += touchDiff;
     };
 
+    useEffect(() => {
+      const fetchAboutUs2 = async () => {
+        const query = `query {
+          metaobjects(type: "about_us_2", first: 50) {
+            edges {
+              node {
+                id
+                displayName
+                fields {
+                  key
+                  value
+                  reference {
+                    ... on MediaImage {
+                      image {
+                        id
+                        url
+                      }
+                    }
+                    ... on Video {
+                      id
+                      sources {
+                        url
+                        mimeType
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }`;
+    
+        try {
+          const response = await fetch(
+            `${import.meta.env.VITE_BASE_URL}/shopify/homepage-meta`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ query, targetLanguage: language }),
+            }
+          );
+    
+          const result = await response.json();
+          console.log("result", result);
+    
+          if (result?.data?.metaobjects) {
+            const fields = {};
+            for (const edge of result.data.metaobjects.edges) {
+              for (const field of edge.node.fields) {
+                fields[field.key] = field.value;
+              }
+            }
+    
+            setMetaFields(fields);
+          } else {
+            console.error("Metaobjects not found in the response");
+          }
+        } catch (error) {
+          console.error("Error fetching homepage meta fields:", error);
+        }
+      };
+    
+      fetchAboutUs2();
+    }, [language]); 
+    
+    if (!metaFields) {
+      return <div>Loading...</div>; // Loading state
+    }
+
     return (
         <div className='w-full flex flex-col gap-16 mb-16 px-5 lg:px-10'>
             <div className='w-full flex flex-col items-start'>
                 <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>
-                Our Story
+                  {metaFields.our_story_title}
                 </p>
                 <h1 className='font-heading text-[28px] lg:text-[54px] leading-[38px] lg:leading-[70px]'>
-                Our purpose to bring color, performance and vibrancy to life is evident every day.
+                  {metaFields.our_story_desc}
                 </h1>
             </div>
 

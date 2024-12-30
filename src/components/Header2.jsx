@@ -5,14 +5,26 @@ import Sidebar2 from "./Sidebar2";
 import ApplicationDropdown from "./ApplicationDropdown";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md"; // Import the arrow icons
 
-const Header1 = () => {
+const Header1 = ({onLanguageChange}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Track sidebar state
   const [isSidebar2Open, setIsSidebar2Open] = useState(false);
   const [isVisible, setIsVisible] = useState(true); // Track header visibility
   const [lastScrollY, setLastScrollY] = useState(0); // Track last scroll position
   const [isHoveringTop, setIsHoveringTop] = useState(false); // Detect hover on top of page
   const navigate = useNavigate(); 
+  const [selectedLanguage, setSelectedLanguage] = useState("en"); // State for short language code
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to toggle dropdown
+
+  // Full language names and short codes
+  const languages = [
+    { name: "English", short: "en" },
+    { name: "Polish", short: "pl" },
+    { name: "German", short: "de" },
+    { name: "Portuguese", short: "pt" },
+    { name: "Spanish", short: "es" },
+  ];
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar visibility
@@ -25,6 +37,34 @@ const Header1 = () => {
   // Redirect functions
   const handleContactUs = () => {
     navigate('/contact-us');
+  };
+
+  // Set the initial language from localStorage if available
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("selectedLanguage");
+    if (savedLanguage) {
+      setSelectedLanguage(savedLanguage);
+      onLanguageChange(savedLanguage); // Propagate the language change to the parent component
+    }
+  }, [onLanguageChange]);
+
+  // Update the language when it's selected and save it to localStorage
+  const handleLanguageChange = (langShort) => {
+    setSelectedLanguage(langShort); // Update selected language short code
+    onLanguageChange(langShort); // Pass selected short language code to parent
+    localStorage.setItem("selectedLanguage", langShort); // Store selected language in localStorage
+    setIsDropdownOpen(false); // Close dropdown
+    console.log('Language changed to:', langShort);
+  };
+  
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown visibility
+  };
+
+  // Get full name of the selected language
+  const getSelectedLanguageName = () => {
+    const selectedLang = languages.find(lang => lang.short === selectedLanguage);
+    return selectedLang ? selectedLang.name : "English"; // Default to English if not found
   };
 
   const controlHeaderVisibility = () => {
@@ -76,7 +116,7 @@ const Header1 = () => {
             <Link to="/">
               <img
                 src="/logos/NavLogoBlack.svg"
-                className="w-40 pt-1"
+                className="w-36 pt-1"
                 alt="logo"
               />
             </Link>
@@ -85,10 +125,34 @@ const Header1 = () => {
             {/* <div className="flex relative border border-white rounded-md">
               <ApplicationDropdown color="white" />
             </div> */}
-            <div className="flex relative border rounded-md">
-              <button className={`text-xs font-semibold py-2 px-4 h-full text-black`}>
-                Eng
+            {/* Language Dropdown */}
+            <div className="relative border border-black rounded-md">
+              <button
+                className="text-xs font-semibold py-2 px-3 h-full text-black flex items-center gap-2"
+                onClick={toggleDropdown}>
+                {getSelectedLanguageName()} {/* Display full language name */}
+                <span className="ml-2">
+                  {isDropdownOpen ? (
+                    <MdOutlineKeyboardArrowUp className="text-black" /> // Up arrow when dropdown is open
+                  ) : (
+                    <MdOutlineKeyboardArrowDown className="text-black" /> // Down arrow when dropdown is closed
+                  )}
+                </span>
               </button>
+
+              {/* Language dropdown */}
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-20 bg-white rounded-md shadow-lg">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.short}
+                      className="w-full text-left px-2 py-2 text-sm text-black hover:bg-red hover:text-white" // Red background on hover
+                      onClick={() => handleLanguageChange(lang.short)}>
+                      {lang.name} {/* Display the full name of the language */}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="flex relative border rounded-md">
               <button className={`text-xs font-semibold py-2 px-4 h-full text-black`} onClick={handleContactUs}>
@@ -106,12 +170,36 @@ const Header1 = () => {
 
           {/* For small screens */}
           <div className="lg:hidden flex gap-3 items-center">
-            <div className="flex relative border rounded-md">
-              <button className={`text-xs font-semibold py-1 px-2 h-full text-black`}>
-                Eng
+            <div className="relative border border-black rounded-md">
+              <button 
+                className="text-xs font-semibold py-1 px-1 h-full text-black flex items-center" // Added flex and gap
+                onClick={toggleDropdown}> {/* Open dropdown when clicked */}
+                {getSelectedLanguageName()} {/* Display full language name */}
+                <span className="ml-2">
+                  {isDropdownOpen ? (
+                    <MdOutlineKeyboardArrowUp className="text-black" />
+                  ) : (
+                    <MdOutlineKeyboardArrowDown className="text-black" />
+                  )}
+                </span>
               </button>
+              
+              {/* Mobile dropdown */}
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-20 bg-white rounded-md shadow-lg">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.short}
+                      className="w-full text-left px-2 py-2 text-sm text-black hover:bg-red hover:text-white"
+                      onClick={() => handleLanguageChange(lang.short)}>
+                      {lang.name}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-            <div className="flex relative border rounded-md">
+
+            <div className="flex relative border border-black rounded-md">
               <button
                 className={`text-xs font-semibold py-1 px-2 h-full text-black`}  
                 onClick={toggleSidebar2}>

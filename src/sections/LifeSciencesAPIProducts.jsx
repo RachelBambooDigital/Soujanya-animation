@@ -20,6 +20,8 @@ const LifeSciencesAPIProducts = ({
   product3Cas,
   product3Molecular,
   product3Desc,
+
+  language,
 }) => {
   return (
     <div className="w-full bg-white">
@@ -44,6 +46,7 @@ const LifeSciencesAPIProducts = ({
             EmpiricalFormula={product1Empirical} // Correctly passing string
             CASNumber={product1Cas} // Correctly passing string
             MolecularWeight={product1Molecular} // Correctly passing string
+            language={language}
           />
           <LifeSciencesAPIProductsCard
             title={product2Title} // Correctly passing string
@@ -51,6 +54,7 @@ const LifeSciencesAPIProducts = ({
             EmpiricalFormula={product2Empirical} // Correctly passing string
             CASNumber={product2Cas} // Correctly passing string
             MolecularWeight={product2Molecular} // Correctly passing string
+            language={language}
           />
           <LifeSciencesAPIProductsCard
             title={product3Title} // Correctly passing string
@@ -58,6 +62,7 @@ const LifeSciencesAPIProducts = ({
             EmpiricalFormula={product3Empirical} // Correctly passing string
             CASNumber={product3Cas} // Correctly passing string
             MolecularWeight={product3Molecular} // Correctly passing string
+            language={language}
           />
           {/* Add more product cards if necessary */}
         </div>

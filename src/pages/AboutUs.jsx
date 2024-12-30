@@ -5,9 +5,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import ScrollableDrivers from '@/sections/ScrollableDrivers';
 import { Link } from "react-router-dom";
 import '../index.css';
-import Footer from "../components/Footer";
+import Loader from "../pages/Loader";
 
-const AboutUs = () => {
+const AboutUs = ({language, setLoading}) => {
   const [metaFields, setMetaFields] = useState(null);
   const [scrollableDrivers, setScrollableDrivers] = useState([]);
   const [businessHighlights, setBusinessHighlights] = useState([]);
@@ -58,7 +58,7 @@ const AboutUs = () => {
 
   useEffect(() => {
     const fetchAboutUs = async () => {
-      const query = `query {
+      const aboutUs1 = `query {
         metaobjects(type: "about_us", first: 50) {
           edges {
             node {
@@ -88,28 +88,82 @@ const AboutUs = () => {
         }
       }`;
 
+      const aboutUs2 = `query {
+        metaobjects(type: "about_us_2", first: 50) {
+          edges {
+            node {
+              id
+              displayName
+              fields {
+                key
+                value
+                reference {
+                  ... on MediaImage {
+                    image {
+                      id
+                      url
+                    }
+                  }
+                  ... on Video {
+                    id
+                    sources {
+                      url
+                      mimeType
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }`;
+
       try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/shopify/aboutUs`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        // Fetch both requests concurrently
+        const [aboutUsResponse1, aboutUsResponse2] = await Promise.all([
+          fetch(`${import.meta.env.VITE_BASE_URL}/shopify/aboutUs`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query: aboutUs1, targetLanguage: language }),
+          }),
+          fetch(`${import.meta.env.VITE_BASE_URL}/shopify/aboutUs`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query: aboutUs2, targetLanguage: language }),
+          }),
+        ]);
+      
+        // Parse the JSON responses
+        const aboutUsResult1 = await aboutUsResponse1.json();
+        const aboutUsResult2 = await aboutUsResponse2.json();
+      
+        // Combine the results of both responses
+        const combinedResult = {
+          data: {
+            metaobjects: {
+              edges: [
+                ...aboutUsResult1.data.metaobjects.edges,
+                ...aboutUsResult2.data.metaobjects.edges,
+              ],
+            },
           },
-          body: JSON.stringify({ query }),
-        });
-
-        const result = await response.json();
-
-        if (result && result.data && result.data.metaobjects) {
+        };
+      
+        if (combinedResult && combinedResult.data && combinedResult.data.metaobjects) {
           const fields = {};
           const newDrivers = [];
           const newHighlights = [];
-
-          const imageFetchPromises = result.data.metaobjects.edges.map(async (edge) => {
+      
+          const imageFetchPromises = combinedResult.data.metaobjects.edges.map(async (edge) => {
             for (const field of edge.node.fields) {
               if (field.key === 'highlights_heading') {
                 fields[field.key] = field.value; // Extract highlights_heading
               }
-
+      
               if (field.reference?.image?.url) {
                 fields[field.key] = field.reference.image.url;
               } else if (field.reference?.sources) {
@@ -117,10 +171,9 @@ const AboutUs = () => {
               } else {
                 fields[field.key] = field.value;
               }
-
+      
               // Check for GIDs and handle parsing
               if (field.key === 'who_we_are_imgs_line_1' || field.key === 'who_we_are_imgs_line_2') {
-                // console.log("GIDs for about_us:", fields[field.key]);
                 const gids = typeof fields[field.key] === 'string' ? JSON.parse(fields[field.key]) : fields[field.key];
                 if (Array.isArray(gids)) {
                   const imageUrls = await Promise.all(gids.map(gid => fetchImage(gid)));
@@ -131,30 +184,24 @@ const AboutUs = () => {
               }      
             }
           });
-
+      
           await Promise.all(imageFetchPromises);
-          // console.log("Fetched metaFields:", fields);
           setMetaFields(fields);
-
-          result.data.metaobjects.edges.forEach(edge => {
+      
+          combinedResult.data.metaobjects.edges.forEach(edge => {
             edge.node.fields.forEach(field => {
               if (field.key.startsWith('card_') && field.key.endsWith('_title')) {
                 const index = parseInt(field.key.split('_')[1]) - 1; // Convert to 0-based index
                 const descKey = `card_${index + 1}_desc`; // Build the correct desc key
-
-                // console.log(`Processing card index: ${index + 1}, looking for key: ${descKey}`);
-                // console.log("Fields object:", fields);
       
                 // Check if the description exists in fields
                 if (fields[descKey] !== undefined && fields[descKey] !== null) {
-                  // console.log(`Found description for ${descKey}: ${fields[descKey]}`);
                   newDrivers[index] = { title: field.value, desc: fields[descKey] };
                 } else {
-                  // console.error(`Description not found for index ${index + 1}: ${descKey}`);
                   newDrivers[index] = { title: field.value, desc: 'Description not available' }; // Fallback
                 }
               }
-
+      
               if (field.key.startsWith('highlights_title_')) {
                 const index = parseInt(field.key.split('_')[2]) - 1;
                 const descKey = `highlights_desc_${index + 1}`;
@@ -176,20 +223,23 @@ const AboutUs = () => {
               }
             });
           });
-
+      
           setScrollableDrivers(newDrivers.filter(Boolean)); // Filter out any undefined values
           setBusinessHighlights(newHighlights.filter(Boolean));
-
+          setLoading(false); // Set loading to false once data is fetched
         } else {
           console.error("Metaobjects not found in the response");
         }
       } catch (error) {
         console.error("Error fetching homepage meta fields:", error);
+        setLoading(false); // Set loading to false even if there is an error
       }
+      
     };
 
     fetchAboutUs();
-  }, []);
+  }, [language, setLoading]);
+  
   // setViewBox("450 0 990 6000");
   //       setWidth("900");
   //       setHeight("8600");
@@ -233,46 +283,8 @@ const AboutUs = () => {
   };
 
   if (!metaFields) {
-    return (
-        <div className="h-screen bg-black flex flex-col items-center justify-center px-8 sm:px-10 md:px-12 lg:px-20">
-            {/* Logo */}
-            <img
-                src="/logos/NavLogoWhite.svg"
-                alt="Loading Logo"
-                className="h-10 sm:h-12 md:h-16 lg:h-20"
-            />
-            <div className="relative mt-6 w-full max-w-4xl">
-                {/* Horizontal Progress Bar with Rounded Edges */}
-                <svg className="h-4 sm:h-6 md:h-8 lg:h-10 w-full" viewBox="0 0 100 10">
-                    {/* Background Rectangle */}
-                    <rect
-                        x="0"
-                        y="0"
-                        width="100"
-                        height="2"
-                        fill="#d1d5db" // Light gray background color
-                        rx="3" // Rounded corners
-                        ry="3" // Rounded corners
-                    />
-                    {/* Filling Rectangle (animated) */}
-                    <rect
-                        x="0"
-                        y="0"
-                        width="0"
-                        height="2"
-                        fill="#4a5568" // Darker color for the progress bar
-                        rx="3" // Rounded corners
-                        ry="3" // Rounded corners
-                        className="animate-fill"
-                    />
-                </svg>
-                {/* Loading text (optional) */}
-                {/* <p className="text-white mt-2 text-center">Loading...</p> */}
-            </div>
-        </div>
-    );
-  } 
-  //added now
+    return <Loader />;
+  }
 
   return (
     <div className="scrollContainer w-full lg:h-[6100px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
@@ -367,10 +379,20 @@ const AboutUs = () => {
         <div className="w-full bg-cover bg-center relative" >
           <div className="w-full h-[635px] lg:h-[880px] bg-cover bg-center relative">
             {/* Breadcrumbs for Large Screens */}
-            <div className="hidden lg:flex inset-x-0 top-0 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8">
-              <span>Home</span>
-              <span className="text-gray-400"> &gt; </span>
-              <span>About us</span>
+            <div className="hidden lg:flex inset-x-0 top-20 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8 relative z-10">
+            <Link 
+                to="/" 
+                className={`hover:text-blue-500 ${location.pathname === "/" ? "font-bold" : ""}`}
+            >
+                Home
+            </Link>
+            <span className="text-gray-400"> &gt; </span>
+            <Link 
+                to="/about-us" 
+                className={`hover:text-blue-500 ${location.pathname === "/about-us" ? "font-bold" : ""}`}
+            >
+                About Us
+            </Link>
             </div>
             
             {/* Banner */}
@@ -411,25 +433,26 @@ const AboutUs = () => {
           {/* Who are we */}
           <div className='w-full flex flex-col px-5 lg:px-10'>
             <div className='w-[85%] flex flex-col items-start'>
-              <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Who We Are</p>
+              <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.who_we_are_1_title}</p>
               <h1 className='font-heading text-[28px] lg:text-[36px] leading-10 lg:leading-[45px]'>{metaFields.who_we_are_desc}</h1>
               <button className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg mt-10 mb-10' 
                 onClick={() => {
                   if (historyRef.current) {
                     historyRef.current.scrollIntoView({ behavior: 'smooth' });
                   }
-                }}>Our History
+                }}>
+                  {metaFields.who_we_are_1_button_text}
               </button>
             </div>
           </div>
 
-          <OurPurposeAboutUs />
+          <OurPurposeAboutUs language={language}/>
 
           {/* Business Highlights */}
           <div className="w-full flex flex-col gap-16 mb-16 px-5 lg:px-10">
             <div className="w-full flex flex-col items-start">
               <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
-                Business Highlights
+                {metaFields.business_highlights_title}
               </p>
               <h1 className="font-heading text-[28px] lg:text-[54px] leading-[38px] lg:leading-[70px]">
                 {metaFields.highlights_heading}
@@ -463,13 +486,13 @@ const AboutUs = () => {
           </div>
           
           <div ref={historyRef}>
-            <ScrollableDrivers drivers2={scrollableDrivers} />
+            <ScrollableDrivers drivers2={scrollableDrivers} language={language}/>
           </div>
 
           {/* Who we are about us */} 
           <div className='hidden w-full lg:flex flex-col px-5 lg:px-10 bg-white'>
             <div className='w-full flex flex-col items-start'>
-              <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Who we are</p>
+              <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.who_we_are_2_title}</p>
               <h1 className='font-heading leading-10 text-[28px] lg:text-[54px] lg:leading-[70px]'>{metaFields.who_we_are_title}</h1>
             </div>
 
@@ -495,7 +518,7 @@ const AboutUs = () => {
                   <h2 className="w-full font-heading text-2xl lg:text-4xl">{metaFields.who_we_are_heading}</h2>
                   <p className="text-[#667085] font-normal text-[16px] mt-4">{metaFields.who_we_are_desc_2}</p>
                   <Link to="/career">
-                    <button className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg mt-10 mb-10'>Explore Careers</button>
+                    <button className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg mt-10 mb-10'>{metaFields.who_we_are_2_button_text}</button>
                   </Link>
                 </div>
               </div>
@@ -564,7 +587,7 @@ const AboutUs = () => {
             </div>
           </div>
 
-          <OurGlobalPresence />
+          <OurGlobalPresence language={language}/>
 
         </div>
       </div>        

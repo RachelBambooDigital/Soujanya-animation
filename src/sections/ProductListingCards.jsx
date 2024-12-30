@@ -3,7 +3,7 @@ import { productListCards } from '../lib/contants';
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 import { Link } from 'react-router-dom';
 
-const ProductListingCards = ({ products }) => {
+const ProductListingCards = ({ products, language }) => {
     return (
         <div className="w-full mt-32">
             <div className="w-full flex flex-col gap-6 sm:gap-8 md:gap-10 lg:gap-16 px-5 lg:px-10">
@@ -27,7 +27,7 @@ const ProductListingCards = ({ products }) => {
                                     </p>
                                     <Link to={`/productDet/${product.id.replace('gid://shopify/Product/', '')}`}>
                                         <button className="w-full flex items-center justify-center gap-2 sm:gap-3 mt-1 rounded-lg border border-black hover:border-opacity-0 py-2 text-[14px] sm:text-[16px] lg:text-[16px] font-normal hover:bg-red hover:text-white transition-all duration-300">
-                                            See Product <HiOutlineArrowNarrowRight />
+                                        {language === 'en' ? 'See Product' : product.seeProductText}  <HiOutlineArrowNarrowRight />
                                         </button>
                                     </Link>
                                 </div>

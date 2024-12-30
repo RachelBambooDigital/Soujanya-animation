@@ -3,7 +3,7 @@ import { aboutUsCards } from '../lib/contants';
 import { HiOutlineArrowNarrowRight } from "react-icons/hi"; // Make sure you import the right icon
 import { Link } from 'react-router-dom';
 
-const OurPurposeAboutUs = () => {
+const OurPurposeAboutUs = ({language}) => {
     const [metaFields, setMetaFields] = useState(null);
 
     useEffect(() => {
@@ -44,7 +44,7 @@ const OurPurposeAboutUs = () => {
                   headers: {
                       "Content-Type": "application/json",
                   },
-                  body: JSON.stringify({ query }),
+                  body: JSON.stringify({ query, targetLanguage: language }),
               });
       
               const result = await response.json();
@@ -89,7 +89,7 @@ const OurPurposeAboutUs = () => {
       };
       
       fetchAboutUs();
-    }, []);
+    }, [language]);
   
     // Function to fetch image URL
     const fetchImage = async (gid) => {
@@ -122,7 +122,7 @@ const OurPurposeAboutUs = () => {
                 {/* Header Section */}
                 <div className="w-full flex flex-col items-start">
                     <p className="py-3 sm:py-5 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
-                        Our Purpose
+                        {metaFields.our_purpose_title}
                     </p>
                     <h1 className="font-heading sm:text-[40px] text-[28px] lg:text-[56px] leading-8 sm:leading-10 lg:leading-[70px]">{metaFields.our_purpose_desc}</h1>
                 </div>

@@ -1,4 +1,4 @@
-import CustomSlider1 from '../sections/CustomSlider'
+import CustomSlider from '../sections/CustomSlider'
 import  React, { useEffect, useRef, useState } from "react";
 import { productCards, lifeSciencesSlides } from '../lib/contants'
 import { drivers } from '../lib/contants'
@@ -7,13 +7,14 @@ import OurGlobalPresence from '@/sections/OurGlobalPresence'
 import { lifeSciImgs, lifeSciImg1, lifeSciImg2 } from '../lib/images'
 import '../index.css';
 import { useNavigate } from 'react-router-dom';
-import Footer from "../components/Footer";
+import Loader from "../pages/Loader";
 
-const LifeSciences = () => {
+const LifeSciences = ({language, setLoading}) => {
   const [metaFields, setMetaFields] = useState(null);
   const [slides, setSlides] = useState([]);
   const [highlights, setHighlights] = useState([]);
   const navigate = useNavigate();
+  const [drivers, setDrivers] = useState([]);
 
   const [svgContent, setSvgContent] = useState(""); // State to hold SVG content
   const svgContainerRef = useRef(null);
@@ -59,125 +60,205 @@ const LifeSciences = () => {
 
   useEffect(() => {
     const fetchLifesciences = async () => {
-        const query = `query {
-            metaobjects(type: "lifesciences", first: 50) {
-                edges {
-                    node {
-                        id
-                        displayName
-                        fields {
-                            key
-                            value
-                            reference {
-                                ... on MediaImage {
-                                    image {
-                                        id
-                                        url
-                                    }
-                                }
-                                ... on Video {
-                                    id
-                                    sources {
-                                        url
-                                        mimeType
-                                    }
-                                }
-                            }
-                        }
+      const lifesciences1 = `{
+        metaobjects(type: "lifesciences", first: 50) {
+          edges {
+            node {
+              id
+              displayName
+              fields {
+                key
+                value
+                reference {
+                  ... on MediaImage {
+                    image {
+                      id
+                      url
                     }
-                }
-            }
-        }`;
-    
-        try {
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/shopify/lifesciences`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ query }),
-            });
-    
-            const result = await response.json();
-    
-            if (result && result.data && result.data.metaobjects) {
-                const fields = {};
-                const slidesArray1 = [];
-
-                for (const edge of result.data.metaobjects.edges) {
-                  for (const field of edge.node.fields) {
-                      if (field.key.startsWith('our_categories_card')) {
-                          const cardIndex = parseInt(field.key.split('_').pop(), 10) - 1;
-
-                          if (!slidesArray1[cardIndex]) {
-                              slidesArray1[cardIndex] = { id: cardIndex + 1 };
-                          }
-
-                          if (field.key.includes('title')) {
-                              slidesArray1[cardIndex].title = field.value;
-                          } else if (field.key.includes('image') && field.reference?.image?.url) {
-                              slidesArray1[cardIndex].image = field.reference.image.url;
-                          } else if (field.key.includes('link')) {
-                              slidesArray1[cardIndex].link = field.value;
-                          }
-                      } 
-
-                      // Check for highlights
-                      if (field.key.startsWith('highlight')) {
-                        const index = field.key.match(/\d+/)[0]; // Extract number from key
-                        highlights[index - 1] = highlights[index - 1] || {}; // Ensure array entry exists
-                        if (field.key.includes('title')) {
-                          highlights[index - 1].title = field.value;
-                        } else if (field.key.includes('desc')) {
-                          highlights[index - 1].desc = field.value;
-                        }
-                      } else {
-                        fields[field.key] = field.value;
-                      }
+                  }
+                  ... on Video {
+                    id
+                    sources {
+                      url
+                      mimeType
+                    }
                   }
                 }
-    
-                const imageFetchPromises = result.data.metaobjects.edges.map(async (edge) => {
-                    for (const field of edge.node.fields) {
-                        if (field.reference?.image?.url) {
-                            fields[field.key] = field.reference.image.url;
-                        } else if (field.reference?.sources) {
-                            fields[field.key] = field.reference.sources[0].url;
-                        } else {
-                            fields[field.key] = field.value;
-                        }
-    
-                        // Check for GIDs and handle parsing
-                        if (field.key === 'lifesciences') {
-                            console.log("GIDs for lifesciences:", fields[field.key]);
-                            // Parse if it is a string
-                            const gids = typeof fields[field.key] === 'string' ? JSON.parse(fields[field.key]) : fields[field.key];
-                            if (Array.isArray(gids)) {
-                                const imageUrls = await Promise.all(gids.map(gid => fetchImage(gid)));
-                                fields[field.key] = imageUrls; // Set the image URLs
-                            } else {
-                                console.error("lifesciences is not an array");
-                            }
-                        }
-                    }
-                });
-    
-                await Promise.all(imageFetchPromises);
-                console.log("Fetched metaFields:", fields); // Log to check the structure
-                setMetaFields(fields);
-                setSlides(slidesArray1.filter(slide => slide.image && slide.title)); // Set slides state
-                setHighlights(highlights.filter(h => h.title && h.desc));
-
-            } else {
-                console.error("Metaobjects not found in the response");
+              }
             }
-        } catch (error) {
-            console.error("Error fetching homepage meta fields:", error);
+          }
         }
+      }`;
+  
+      const lifesciences2 = `{
+        metaobjects(type: "lifesciences_2", first: 50) {
+          edges {
+            node {
+              id
+              displayName
+              fields {
+                key
+                value
+                reference {
+                  ... on MediaImage {
+                    image {
+                      id
+                      url
+                    }
+                  }
+                  ... on Video {
+                    id
+                    sources {
+                      url
+                      mimeType
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }`;
+  
+      try {
+        // Fetch both requests concurrently
+        const [lifesciencesResponse1, lifesciencesResponse2] = await Promise.all([
+          fetch(`${import.meta.env.VITE_BASE_URL}/shopify/lifesciences`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query: lifesciences1, targetLanguage: language }),
+          }),
+          fetch(`${import.meta.env.VITE_BASE_URL}/shopify/lifesciences`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query: lifesciences2, targetLanguage: language }),
+          }),
+        ]);
+  
+        // Parse the JSON responses
+        const lifesciencesResult1 = await lifesciencesResponse1.json();
+        const lifesciencesResult2 = await lifesciencesResponse2.json();
+  
+        // Combine the results of both responses
+        const combinedResult = {
+          data: {
+            metaobjects: {
+              edges: [
+                ...lifesciencesResult1.data.metaobjects.edges,
+                ...lifesciencesResult2.data.metaobjects.edges,
+              ],
+            },
+          },
+        };
+  
+        if (combinedResult && combinedResult.data && combinedResult.data.metaobjects) {
+          const fields = {};
+          const slidesArray1 = [];
+          const newDrivers = [];
+          const highlights = [];
+  
+          const imageFetchPromises = combinedResult.data.metaobjects.edges.map(async (edge) => {
+            for (const field of edge.node.fields) {
+              if (field.key === 'highlights_heading') {
+                fields[field.key] = field.value; // Extract highlights_heading
+              }
+  
+              if (field.reference?.image?.url) {
+                fields[field.key] = field.reference.image.url;
+              } else if (field.reference?.sources) {
+                fields[field.key] = field.reference.sources[0].url;
+              } else {
+                fields[field.key] = field.value;
+              }
+  
+              // Handle GIDs and fetching image URLs
+              if (field.key === 'lifesciences') {
+                const gids = typeof fields[field.key] === 'string' ? JSON.parse(fields[field.key]) : fields[field.key];
+                if (Array.isArray(gids)) {
+                  const imageUrls = await Promise.all(gids.map(gid => fetchImage(gid)));
+                  fields[field.key] = imageUrls;
+                } else {
+                  console.error("lifesciences is not an array");
+                }
+              }
+            }
+          });
+  
+          await Promise.all(imageFetchPromises);
+  
+          setMetaFields(fields); // Set the fields for meta data
+  
+          combinedResult.data.metaobjects.edges.forEach(edge => {
+            edge.node.fields.forEach(field => {
+              // Handle category cards (e.g., API, Emollients)
+              if (field.key.startsWith('our_categories_card')) {
+                const cardIndex = parseInt(field.key.split('_').pop(), 10) - 1;
+  
+                if (!slidesArray1[cardIndex]) {
+                  slidesArray1[cardIndex] = { id: cardIndex + 1 };
+                }
+  
+                if (field.key.includes('title')) {
+                  slidesArray1[cardIndex].title = field.value;
+                } else if (field.key.includes('image') && field.reference?.image?.url) {
+                  slidesArray1[cardIndex].image = field.reference.image.url;
+                } else if (field.key.includes('link')) {
+                  slidesArray1[cardIndex].link = field.value;
+                }
+              }
+  
+              // Handle highlights (e.g., Quality Control, R&D)
+              if (field.key.startsWith('highlight')) {
+                const index = field.key.match(/\d+/)[0]; // Extract number from key
+                highlights[index - 1] = highlights[index - 1] || {}; // Ensure array entry exists
+                if (field.key.includes('title')) {
+                  highlights[index - 1].title = field.value;
+                } else if (field.key.includes('desc')) {
+                  highlights[index - 1].desc = field.value;
+                }
+              }
+  
+              // Handle drivers (e.g., Sustainability, Precision)
+              for (let i = 1; i <= 4; i++) {
+                const titleKey = `drivers_title_${i}`;
+                const descKey = `drivers_desc_${i}`;
+                const colorKey = `drivers_color_${i}`;
+  
+                const title = fields[titleKey] || `Driver ${i} title not available`;
+                const desc = fields[descKey] || 'Description not available';
+                const color = fields[colorKey] || 'gray';
+  
+                // Ensure drivers are unique before adding to the array
+                if (!newDrivers.some(driver => driver.title === title && driver.desc === desc)) {
+                  newDrivers.push({
+                    title,
+                    desc,
+                    color,
+                  });
+                }
+              }
+            });
+          });
+  
+          setSlides(slidesArray1.filter(slide => slide.image && slide.title)); // Set slides data
+          setHighlights(highlights.filter(h => h.title && h.desc)); // Set highlights data
+          setDrivers(newDrivers); // Set drivers data (no need for `.filter(Boolean)` since we avoid duplicates now)
+          setLoading(false); // Set loading to false once data is fetched
+        } else {
+          console.error("Metaobjects not found in the response");
+        }
+      } catch (error) {
+        console.error("Error fetching lifesciences meta fields:", error);
+        setLoading(false); // Set loading to false even if there is an error
+      }
     };
-    
+  
     fetchLifesciences();
-  }, []);
+  }, [language, setLoading]);  
 
   // width="2436" height="5026" viewBox="250 0 1965 3600"
   const [viewBox, setViewBox] = useState("250 0 1965 3600");
@@ -225,45 +306,8 @@ const LifeSciences = () => {
   };    
 
   if (!metaFields) {
-    return (
-        <div className="h-screen bg-black flex flex-col items-center justify-center px-8 sm:px-10 md:px-12 lg:px-20">
-            {/* Logo */}
-            <img
-                src="/logos/NavLogoWhite.svg"
-                alt="Loading Logo"
-                className="h-10 sm:h-12 md:h-16 lg:h-20"
-            />
-            <div className="relative mt-6 w-full max-w-4xl">
-                {/* Horizontal Progress Bar with Rounded Edges */}
-                <svg className="h-4 sm:h-6 md:h-8 lg:h-10 w-full" viewBox="0 0 100 10">
-                    {/* Background Rectangle */}
-                    <rect
-                        x="0"
-                        y="0"
-                        width="100"
-                        height="2"
-                        fill="#d1d5db" // Light gray background color
-                        rx="3" // Rounded corners
-                        ry="3" // Rounded corners
-                    />
-                    {/* Filling Rectangle (animated) */}
-                    <rect
-                        x="0"
-                        y="0"
-                        width="0"
-                        height="2"
-                        fill="#4a5568" // Darker color for the progress bar
-                        rx="3" // Rounded corners
-                        ry="3" // Rounded corners
-                        className="animate-fill"
-                    />
-                </svg>
-                {/* Loading text (optional) */}
-                {/* <p className="text-white mt-2 text-center">Loading...</p> */}
-            </div>
-        </div>
-    );
-  } 
+    return <Loader />;
+  }
 
   return (
     <div className="scrollContainer w-full lg:h-[4475px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
@@ -318,7 +362,7 @@ const LifeSciences = () => {
               <div className=' flex flex-col gap-6 text-black font-medium '>
                 <h1 className='w-full lg:text-[62px] text-[40px] lg:leading-[70px] leading-[50px] font-heading'>{metaFields.banner_title}</h1>
                 <p className='text-[18px] font-subHeading leading-[26px] lg:w-[500px]'>{metaFields.banner_desc}</p>
-                <button className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg' onClick={() => handleProductListing('LifeSciences')}>Explore Products</button>
+                <button className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg' onClick={() => handleProductListing('LifeSciences')}>{metaFields.banner_button_text}</button>
               </div>
               <div className='w-full lg:w-[60%] h-[300px] lg:h-[600px] bg-cover bg-center'>
                 <img src={metaFields.banner_img} className='w-full h-full'></img>
@@ -331,7 +375,7 @@ const LifeSciences = () => {
             {/* Who are we */}
             <div className='w-full flex flex-col px-5 lg:px-10 gap-20'>
               <div className='w-full flex flex-col items-start'>
-                <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Who we are</p>
+                <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.who_we_are_title}</p>
                 <h1 className='font-heading text-[28px] lg:text-[54px] leading-10 lg:leading-[70px]'>{metaFields.who_we_are_desc}</h1>
               </div>
 
@@ -350,16 +394,30 @@ const LifeSciences = () => {
             {/* Our Drivers */}
             <div className='w-full flex flex-col gap-20 mb-16 px-5 lg:px-10'>
               <div className='w-full flex flex-col items-start'>
-                <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Our Drivers</p>
-                <h1 className='font-heading text-[28px] lg:text-[54px] leading-[38px] lg:leading-[70px]'>We are dedicated to precision</h1>
+                <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.our_drivers_title}</p>
+                <h1 className='font-heading text-[28px] lg:text-[54px] leading-[38px] lg:leading-[70px]'>{metaFields.our_drivers_desc}</h1>
               </div>
 
               <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:px-20 gap-[16px] h-800px lg:h-[400px] '>
                 {
                   drivers.map((driver, index) => (
-                    <div key={index} className={`w-full h-[450px] flex flex-col justify-center text-white p-4 gap-4 ${driver.color} rounded-t-[42px] rounded-l-[42px]`}>
-                      <h1 className='text-[32px] font-heading'>{driver.title}</h1>
-                      <p className='text-[16px] font-subHeading leading-[24px]'>{driver.desc}</p>
+                    <div
+                      key={index}
+                      className="flex flex-col text-white p-4 gap-0 rounded-t-[42px] rounded-l-[42px] pt-20"
+                      style={{
+                        backgroundColor: driver.color,
+                        width: '100%', // Cards take up 100% width for smaller screens
+                        maxWidth: '350px', // Max width of cards for large screens
+                        minHeight: '450px', // Set a minimum height to prevent card collapse
+                        height: 'auto', // Ensure dynamic height adjustment based on content
+                      }}
+                    >
+                      <h1 className="text-[24px] sm:text-[32px] lg:text-[42px] lg:leading-[50px] font-heading sm:h-[6.8rem] md:h-[6.2rem] lg:h-[130px]">
+                        {driver.title}
+                      </h1>
+                      <p className="text-[18px] sm:text-[16px] font-subHeading leading-[20px] sm:leading-[24px] sm:h-[6.8rem] md:h-[6.2rem] lg:h-[130px]">
+                        {driver.desc}
+                      </p>
                     </div>
                   ))
                 }
@@ -368,13 +426,13 @@ const LifeSciences = () => {
 
             {/* Our Current offering */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
-              <CustomSlider1 title='Our Categories' subTitle='We are passionate about what we do' slides={slides} />
+              <CustomSlider language={language} title={metaFields.our_categories_title} subTitle={metaFields.our_categories_desc} slides={slides} />
             </div>
 
             {/* Our business highlights */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
               <div className='w-full flex flex-col items-start'>
-                <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Lifesciences Highlights</p>
+                <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.lifesciences_highlights_title}</p>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-10 lg:pr-20">
                 {highlights.map((highlight, index) => (
@@ -384,7 +442,7 @@ const LifeSciences = () => {
             </div>
 
             {/* Our Global presence */}
-            <OurGlobalPresence />
+            <OurGlobalPresence language={language}/>
           </div>
         </div>
       </div>

@@ -2,12 +2,12 @@ import EmollientsProducts from "@/sections/EmollientsProducts";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
 import React, { useEffect, useState } from 'react';
 import '../index.css';
-import Footer from "../components/Footer";
+import Loader from "../pages/Loader";
 
-const Emollients = () => {
+const Emollients = ({language, setLoading}) => {
   const [metaFields, setMetaFields] = useState([]); // Initialize as an empty array
   const [bannerVideo, setBannerVideo] = useState(''); // State for the banner video URL
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoadings] = useState(true); // Add loading state
 
   useEffect(() => {
     const fetchEmollients = async () => {
@@ -47,7 +47,7 @@ const Emollients = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ query }),
+          body: JSON.stringify({ query, targetLanguage: language }),
         });
 
         const result = await response.json();
@@ -65,61 +65,26 @@ const Emollients = () => {
               setBannerVideo(videoSource);
             }
           }
+
+          setLoading(false); // Set loading to false once data is fetched
         } else {
           console.error("Metaobjects not found in the response");
         }
         // console.log('Metaobjects response:', result);
-        setLoading(false); // Set loading to false when the data has been fetched
+        setLoadings(false); // Set loading to false when the data has been fetched
       } catch (error) {
         console.error("Error fetching homepage meta fields:", error);
-        setLoading(false); // Set loading to false even if there's an error
+        setLoading(false); // Set loading to false even if there is an error
+        setLoadings(false); // Set loading to false even if there's an error        
       }
     };
 
     fetchEmollients();
-  }, []);
+  }, [language, setLoading]);
 
-  // Check if metaFields is empty and return loading state
   if (loading) {
-    return (
-        <div className="h-screen bg-black flex flex-col items-center justify-center px-8 sm:px-10 md:px-12 lg:px-20">
-            {/* Logo */}
-            <img
-                src="/logos/NavLogoWhite.svg"
-                alt="Loading Logo"
-                className="h-10 sm:h-12 md:h-16 lg:h-20"
-            />
-            <div className="relative mt-6 w-full max-w-4xl">
-                {/* Horizontal Progress Bar with Rounded Edges */}
-                <svg className="h-4 sm:h-6 md:h-8 lg:h-10 w-full" viewBox="0 0 100 10">
-                    {/* Background Rectangle */}
-                    <rect
-                        x="0"
-                        y="0"
-                        width="100"
-                        height="2"
-                        fill="#d1d5db" // Light gray background color
-                        rx="3" // Rounded corners
-                        ry="3" // Rounded corners
-                    />
-                    {/* Filling Rectangle (animated) */}
-                    <rect
-                        x="0"
-                        y="0"
-                        width="0"
-                        height="2"
-                        fill="#4a5568" // Darker color for the progress bar
-                        rx="3" // Rounded corners
-                        ry="3" // Rounded corners
-                        className="animate-fill"
-                    />
-                </svg>
-                {/* Loading text (optional) */}
-                {/* <p className="text-white mt-2 text-center">Loading...</p> */}
-            </div>
-        </div>
-    );
-  } 
+    return <Loader />;
+  }
 
   // Access the values using the correct keys
   const bannerTitle = metaFields.find(field => field.key === 'banner_title')?.value || '';
@@ -197,8 +162,10 @@ const Emollients = () => {
         product4Cas={product4Cas}
         product4Molecular={product4Molecular}
         product4Desc={product4Desc}
+
+        language={language}
       />
-      <OurGlobalPresence />
+      <OurGlobalPresence language={language}/>
 
     </div>
   );

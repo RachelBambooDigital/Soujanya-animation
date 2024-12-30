@@ -26,6 +26,8 @@ const EmollientsProducts = ({
   product4Cas,
   product4Molecular,
   product4Desc,  
+
+  language,
 }) => {
   return (
     <div className="w-full bg-white">
@@ -50,6 +52,7 @@ const EmollientsProducts = ({
             EmpiricalFormula={product1Empirical} // Correctly passing string
             CASNumber={product1Cas} // Correctly passing string
             MolecularWeight={product1Molecular} // Correctly passing string
+            language={language}
           />
           <LifeSciencesAPIProductsCard
             title={product2Title} // Correctly passing string
@@ -57,6 +60,7 @@ const EmollientsProducts = ({
             EmpiricalFormula={product2Empirical} // Correctly passing string
             CASNumber={product2Cas} // Correctly passing string
             MolecularWeight={product2Molecular} // Correctly passing string
+            language={language}
           />
           <LifeSciencesAPIProductsCard
             title={product3Title} // Correctly passing string
@@ -64,6 +68,7 @@ const EmollientsProducts = ({
             EmpiricalFormula={product3Empirical} // Correctly passing string
             CASNumber={product3Cas} // Correctly passing string
             MolecularWeight={product3Molecular} // Correctly passing string
+            language={language}
           />
           <LifeSciencesAPIProductsCard
             title={product4Title} // Correctly passing string
@@ -71,6 +76,7 @@ const EmollientsProducts = ({
             EmpiricalFormula={product4Empirical} // Correctly passing string
             CASNumber={product4Cas} // Correctly passing string
             MolecularWeight={product4Molecular} // Correctly passing string
+            language={language}
           />
         </div>
       </div>
