@@ -94,8 +94,8 @@ const OurGlobalPresence = ({language}) => {
   }
 
   return (
-    <div className="w-full lg:h-[700px]">
-      <div className="w-full top-0 left-0 bg-opacity-10 backdrop-blur-lg bg-white relative h-full">
+    <div className="w-full h-min">
+      <div className="w-full left-0 bg-opacity-10 backdrop-blur-lg bg-white relative h-full">
         <div className="w-full flex flex-col lg:flex-row justify-between h-full px-5 sm:px-8 md:px-10">
           <div className="flex flex-col justify-between gap-10 md:gap-16 lg:gap-0 w-full lg:w-2/3">
             {/* Global Presence Header */}

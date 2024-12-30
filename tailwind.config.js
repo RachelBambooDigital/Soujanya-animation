@@ -4,11 +4,14 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     screens: {
-      sm: "480px",
-      md: "768px",
-      lg: "976px",
-      xl: "1440px",
-    },
+  xs: "375px", // Small phones like iPhone SE
+  sm: "425px", // Most smartphones in portrait mode
+  md: "768px", // Tablets in portrait mode
+  lg: "1024px", // Tablets in landscape and smaller laptops
+  xl: "1280px", // Standard laptops
+  "2xl": "1440px", // Larger desktops
+  "3xl": "1920px", // Full HD and larger monitors
+},
     colors: {
       navyBlue: "#262D31",
       white: "#FFFFFF",

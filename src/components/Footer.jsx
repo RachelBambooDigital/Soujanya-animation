@@ -133,7 +133,7 @@ const Footer = ({language}) => {
       className="w-full px-5 lg:px-10 h-screen bg-black flex flex-col justify-between overflow-y-hidden"
     >
       <Toaster position="bottom-right" /> {/* Toast notification container */}
-      <div className="foot-note flex lg:flex-row flex-col w-full justify-start gap-[30px] lg:gap-[470px] mt-[40px] lg:mt-[72px]">
+      <div className="foot-note flex lg:flex-row flex-col w-full justify-between pr-16 mt-[40px] lg:mt-[72px]">
         <p
           className="text-white font-subHeading hover:underline cursor-pointer"
           onClick={scrollToTop}

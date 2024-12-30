@@ -161,21 +161,15 @@ const ProductListing2 = ({language}) => {
             stroke-width="80"/>
         </g>
         <defs>
-          <filter id="filter0_b_2834_4236" x="-72" y="-72" width="2580" height="5170" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-            <feGaussianBlur in="BackgroundImageFix" stdDeviation="36"/>
-            <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_2834_4236"/>
-            <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_2834_4236" result="shape"/>
-          </filter>
-          <radialGradient id="paint0_angular_2834_4236" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1218.59 2337.99) rotate(-90) scale(2962 3004.37)">
-            <stop offset="0.06" stop-color="#595FB3"/>
-            <stop offset="0.265" stop-color="#BE288C"/>
-            <stop offset="0.515" stop-color="#74BCD3"/>
-            <stop offset="0.76" stop-color="#5B75CA"/>
-            <stop offset="0.96" stop-color="#948EE8"/>
-          </radialGradient>
+        <radialGradient id="paint0_angular_2834_4237" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1218.59 2337.99) rotate(-90) scale(2962 3004.37)">
+        <stop offset="0.06" stop-color="#595FB3"/>
+        <stop offset="0.265" stop-color="#BE288C"/>
+        <stop offset="0.515" stop-color="#74BCD3"/>
+        <stop offset="0.76" stop-color="#5B75CA"/>
+        <stop offset="0.96" stop-color="#948EE8"/>
+        </radialGradient>
         </defs>
-      </svg>
+        </svg>
       <div className="absolute w-full h-full top-[0] z-10 ">
         <div className='w-full bg-cover bg-center relative'>
           <div className='h-[50vh] sm:h-[50vh] md:h-[60vh] lg:h-[80dvh] w-full bg-cover bg-center relative'>
