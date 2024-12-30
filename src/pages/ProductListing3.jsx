@@ -135,7 +135,7 @@ const ProductListing3 = ({language}) => {
   }, []);
 
   return (
-    <div className="scrollContainer w-full lg:h-[3200px] h-[5800px] md:h-[5300px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+    <div className="scrollContainer w-full lg:h-[3080px] h-[5800px] md:h-[5300px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
       <svg 
         width={width}
         height={height}

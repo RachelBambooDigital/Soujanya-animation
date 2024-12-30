@@ -26,6 +26,31 @@
     stroke-miterlimit: 10;
     stroke-width: 28px;
   }
+  .cls-5{
+    fill: none;
+    stroke: url(#paint0_angular_2834_3935);
+    stroke-miterlimit: 10;
+    stroke-width: 28px;
+  }
+  .cls-6{
+    fill: none;
+    stroke: url(#paint0_angular_2834_2821);
+    stroke-miterlimit: 10;
+    stroke-width: 28px;
+  }
+  .cls-7{
+    fill: none;
+    stroke: url(#paint0_angular_2834_4236);
+    stroke-miterlimit: 10;
+    stroke-width: 28px;
+  }
+  .cls-8{
+    fill: none;
+    stroke: url(#paint0_angular_2834_4224);
+    stroke-miterlimit: 10;
+    stroke-width: 28px;
+  }
+  
 /*this animation layer is the one you need to copy into the project*/
 
 @layer Animations {

@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import '../index.css';
 import Loader from "../pages/Loader";
 
+
+
 const HomeCareCosmetics = ({language, setLoading}) => {
   // State to manage selected category
   const [activeCategory, setActiveCategory] = useState('Personal Care Solutions');
@@ -17,9 +19,18 @@ const HomeCareCosmetics = ({language, setLoading}) => {
   const [slides, setSlides] = useState([]);
   const navigate = useNavigate();
 
+  // width="2100" height="5026" viewBox="250 0 2065 2800"
+  const [viewBox, setViewBox] = useState("250 0 2065 4000");
+  const [width, setWidth] = useState("2100");
+  const [height, setHeight] = useState("5026");
+
   const [highlights, setHighlights] = useState([]);
   const [categories, setCategories] = useState({});
   const [showAlternateContent, setShowAlternateContent] = useState(false);
+
+  const handleProductListing = (category) => {
+    navigate(`/product-listing?category=${encodeURIComponent(category)}`);
+  };
 
   const [svgContent, setSvgContent] = useState(""); // State to hold SVG content
   const svgContainerRef = useRef(null);
@@ -37,7 +48,8 @@ const HomeCareCosmetics = ({language, setLoading}) => {
     const handleOffset = (mPercent) => {
       const distance = window.scrollY;
       const totalDistance = document.body.scrollHeight - window.innerHeight;
-      const percentage = typeof mPercent === "number" ? mPercent : distance / totalDistance;
+      const percentage = 
+        typeof mPercent === "number" ? mPercent : distance / totalDistance;
 
       // Clamp percentage value to ensure it doesn't exceed [0, 1] range
       const clampedPercentage = Math.min(Math.max(percentage, 0), 1);
@@ -58,10 +70,6 @@ const HomeCareCosmetics = ({language, setLoading}) => {
       window.removeEventListener("scroll", () => handleOffset());
     };
   }, [metaFields]); // Run this effect only when `metaFields` is set
-
-  const handleProductListing = (category) => {
-    navigate(`/product-listing?category=${encodeURIComponent(category)}`);
-  };
 
   useEffect(() => {
     const fetchLifesciences = async () => {
@@ -283,10 +291,6 @@ const HomeCareCosmetics = ({language, setLoading}) => {
     fetchLifesciences();
   }, [language, setLoading]);
 
-  const [viewBox, setViewBox] = useState("250 0 2065 4000");
-  const [width, setWidth] = useState("2100");
-  const [height, setHeight] = useState("5026");
-
   useEffect(() => {
     const updateSVGSize = () => {
       if (window.innerWidth <= 768) {
@@ -305,7 +309,6 @@ const HomeCareCosmetics = ({language, setLoading}) => {
 
     return () => window.removeEventListener('resize', updateSVGSize);
   }, []);
-  // width="2100" height="5026" viewBox="250 0 2065 2800"
 
   // Function to fetch image URL
   const fetchImage = async (gid) => {
@@ -344,7 +347,7 @@ const HomeCareCosmetics = ({language, setLoading}) => {
           strokeWidth="21"
           speed="2"
           stay=".7"
-          className="scrollPath cls-2"
+          className="scrollPath cls-5"
           style={{ strokeDasharray: "80000", zIndex: 5 }}
           ref={pathRef}
           stroke-width="80"
@@ -356,7 +359,7 @@ const HomeCareCosmetics = ({language, setLoading}) => {
           strokeWidth="21"
           speed="2"
           stay=".7"
-          className="scrollPath cls-2"
+          className="scrollPath cls-5"
           style={{ strokeDasharray: "80000", zIndex: 5 }}
           ref={pathRef}
           stroke-width="80"/>
@@ -418,7 +421,7 @@ const HomeCareCosmetics = ({language, setLoading}) => {
 
             {/* Our Current offering */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
-              <CustomSlider title={metaFields.our_offerings_title} subTitle={metaFields.our_offerings_desc} slides={slides} />
+              <CustomSlider title={metaFields.our_offerings_title} subTitle={metaFields.our_offerings_desc} slides={slides} language={language}/>
             </div>
 
             {/* Our Products highlights */}

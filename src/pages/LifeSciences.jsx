@@ -308,7 +308,7 @@ const LifeSciences = ({language, setLoading}) => {
   }
 
   return (
-    <div className="scrollContainer w-full lg:h-[4675px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+    <div className="scrollContainer w-full lg:h-[4380px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
         <svg 
               width="2436" 
               height="5026" 

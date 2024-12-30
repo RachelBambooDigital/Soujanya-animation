@@ -324,7 +324,7 @@ const Home = ({language, setLoading}) => {
           strokeWidth="21"
           speed="2"
           stay=".7"
-          className="scrollPath cls-1"
+          className="scrollPath cls-6"
           style={{ strokeDasharray: "80000", zIndex: 5 }}
           ref={pathRef}
           stroke-width="80"
@@ -338,7 +338,7 @@ const Home = ({language, setLoading}) => {
             strokeWidth="21"
             speed="2"
             stay=".7"
-            className="scrollPath cls-1"
+            className="scrollPath cls-6"
             style={{ strokeDasharray: "80000", zIndex: 5 }}
             ref={pathRef}
             stroke-width="80"
