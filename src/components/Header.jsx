@@ -50,7 +50,7 @@ const Header = ({ onLanguageChange }) => {
     onLanguageChange(langShort); // Pass selected short language code to parent
     localStorage.setItem("selectedLanguage", langShort); // Store selected language in localStorage
     setIsDropdownOpen(false); // Close dropdown
-    console.log('Language changed to:', newLang);
+    console.log('Language changed to:', langShort);
   };
 
   const toggleDropdown = () => {
