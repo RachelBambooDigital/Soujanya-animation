@@ -30,6 +30,7 @@ const ProductDetail2 = ({ language, setLoading }) => {
   const svgContainerRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const pathRef = useRef(null);
+  const previousProductIdRef = useRef(null);
 
   useEffect(() => {
     if (!productData) return; // Only run animation after data is loaded
@@ -67,6 +68,13 @@ const ProductDetail2 = ({ language, setLoading }) => {
   }, [productData]); // Depend on productData instead of key
 
   useEffect(() => {
+    // Set loading to true whenever productId changes
+    if (previousProductIdRef.current !== productId) {
+      setLoading(true);
+      setProductData(null); // Reset product data to ensure loader shows
+      previousProductIdRef.current = productId;
+    }
+    
     const fetchProductData = async () => {
       try {
         const response = await fetch(

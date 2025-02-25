@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
-import { benefitImg, useCaseImg, guideImg } from "../lib/images";
-import ButtonSlider from "../sections/ButtonSlider";
+// import { benefitImg, useCaseImg, guideImg } from "../lib/images";
+// import ButtonSlider from "../sections/ButtonSlider";
 import "../index.css";
 import Loader from "../pages/Loader";
 
@@ -25,10 +25,11 @@ const ProductDetail = ({ language, setLoading }) => {
   const [cards1, setCards1] = useState({ heading: "", description: "" });
   const [secondImageUrl, setSecondImageUrl] = useState("");
 
-  const [svgContent, setSvgContent] = useState(""); // State to hold SVG content
+  // const [svgContent, setSvgContent] = useState(""); // State to hold SVG content
   const svgContainerRef = useRef(null);
-  const scrollContainerRef = useRef(null);
+  // const scrollContainerRef = useRef(null);
   const pathRef = useRef(null);
+  const previousProductIdRef = useRef(null);
 
   useEffect(() => {
     if (!productData) return; // Only run animation after data is loaded
@@ -66,6 +67,13 @@ const ProductDetail = ({ language, setLoading }) => {
   }, [productData]); // Depend on productData instead of key
 
   useEffect(() => {
+    // Set loading to true whenever productId changes
+    if (previousProductIdRef.current !== productId) {
+      setLoading(true);
+      setProductData(null); // Reset product data to ensure loader shows
+      previousProductIdRef.current = productId;
+    }
+
     const fetchProductData = async () => {
       try {
         const response = await fetch(
@@ -336,6 +344,9 @@ const ProductDetail = ({ language, setLoading }) => {
     ]);
     setActiveCategory(`button${buttonIndex}`);
   };
+
+  console.log(productData);
+  
 
   if (!productData) {
     return <Loader />;
