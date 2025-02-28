@@ -31,6 +31,8 @@ const ProductDetail = ({ language, setLoading }) => {
   const pathRef = useRef(null);
   const previousProductIdRef = useRef(null);
 
+  const [benefitImageUrl, setBenefitImageUrl] = useState("");
+
   useEffect(() => {
     if (!productData) return; // Only run animation after data is loaded
 
@@ -131,6 +133,17 @@ const ProductDetail = ({ language, setLoading }) => {
                 heading: benefitsTitle.node.value,
                 description: benefitsDesc.node.value,
               });
+            }
+
+            // Check benefit and usecase images for initial load
+            const benefitImage1 = metafields.find(
+              (mf) => mf.node.key === "benefitimage1"
+            );
+
+            console.log("Initial benefit image 1:", benefitImage1?.node.value);
+
+            if (benefitImage1) {
+              setBenefitImageUrl(benefitImage1.node.value || "");
             }
 
             // Retrieve the bulletpoints metafield
@@ -328,21 +341,35 @@ const ProductDetail = ({ language, setLoading }) => {
   }, []);
 
   const handleButtonClick = async (buttonIndex, metafields) => {
+    console.log(`Button ${buttonIndex} clicked. Looking for related metafields.`);
+
     const titleMetafield = `benefitstitle${buttonIndex}`;
     const descMetafield = `benefitsdesc${buttonIndex}`;
+    const benefitImageMetafield = `benefitimage${buttonIndex}`;
 
     const title = metafields.find((mf) => mf.node.key === titleMetafield)?.node
       .value;
     const desc = metafields.find((mf) => mf.node.key === descMetafield)?.node
       .value;
+    const benefitImageMeta = metafields.find((mf) => mf.node.key === benefitImageMetafield);
 
-    setActiveCards([
+    const benefitImage = benefitImageMeta?.node.value;
+    console.log(`Benefits Image ${buttonIndex}:`, benefitImage);
+
+    // Create array with both cards
+    const cardsData = [
       {
         heading: title || "Default Title",
         description: desc || "Default Description",
       },
-    ]);
+    ];
+
+    // Set active cards and category
+    setActiveCards(cardsData);
     setActiveCategory(`button${buttonIndex}`);
+
+    // Set image URLs
+    setBenefitImageUrl(benefitImage || "");
   };
 
   console.log(productData);
@@ -596,13 +623,19 @@ const ProductDetail = ({ language, setLoading }) => {
 
                             {/* Right Side: Image */}
                             <div className="w-full lg:w-1/2">
-                              {secondImageUrl && (
-                                <img
-                                  src={secondImageUrl}
-                                  alt="Product Image"
-                                  className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
-                                />
-                              )}
+                              {index === 0 ? (
+                                benefitImageUrl ? (
+                                  <img
+                                    src={benefitImageUrl}
+                                    alt="Benefit Image"
+                                    className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
+                                  />
+                                ) : (
+                                  <div className="w-full h-[340px] bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <p>No benefit image available</p>
+                                  </div>
+                                )
+                              ) : null}
                             </div>
                           </div>
                         </div>
@@ -610,13 +643,19 @@ const ProductDetail = ({ language, setLoading }) => {
                         {/* For smaller screens, show image above title and description without the background */}
                         <div className="lg:hidden">
                           <div className="flex flex-col items-start mb-16">
-                            {secondImageUrl && (
-                              <img
-                                src={secondImageUrl}
-                                alt="Product Image"
-                                className="w-full object-cover rounded-lg mb-5"
-                              />
-                            )}
+                            {index === 0 ? (
+                              benefitImageUrl ? (
+                                <img
+                                  src={benefitImageUrl}
+                                  alt="Benefit Image"
+                                  className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
+                                />
+                              ) : (
+                                <div className="w-full h-[340px] bg-gray-200 rounded-lg flex items-center justify-center">
+                                  <p>No benefit image available</p>
+                                </div>
+                              )
+                            ) : null}
                             <h1 className="font-semibold text-[22px] mt-5 text-start">
                               {card.heading}
                             </h1>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
-import { benefitImg, useCaseImg, guideImg } from "../lib/images";
-import ButtonSlider from "../sections/ButtonSlider";
+// import { benefitImg, useCaseImg, guideImg } from "../lib/images";
+// import ButtonSlider from "../sections/ButtonSlider";
 import "../index.css";
 import Loader from "../pages/Loader";
 
@@ -31,6 +31,9 @@ const ProductDetail2 = ({ language, setLoading }) => {
   const scrollContainerRef = useRef(null);
   const pathRef = useRef(null);
   const previousProductIdRef = useRef(null);
+
+  const [benefitImageUrl, setBenefitImageUrl] = useState("");
+  const [useCaseImageUrl, setUseCaseImageUrl] = useState("");
 
   useEffect(() => {
     if (!productData) return; // Only run animation after data is loaded
@@ -153,6 +156,28 @@ const ProductDetail2 = ({ language, setLoading }) => {
 
             console.log("Usecase Title:", usecaseTitle?.node.value);
             console.log("Usecase Desc:", usecaseDesc?.node.value);
+
+            // Check benefit and usecase images for initial load
+            const benefitImage1 = metafields.find(
+              (mf) => mf.node.key === "benefitimage1"
+            );
+            const useCaseImage1 = metafields.find(
+              (mf) => mf.node.key === "usecaseimage1"
+            );
+
+            console.log("Initial benefit image 1:", benefitImage1?.node.value);
+            console.log("Initial usecase image 1:", useCaseImage1?.node.value);
+
+            if (benefitImage1) {
+              setBenefitImageUrl(benefitImage1.node.value || "");
+            }
+            if (useCaseImage1) {
+              setUseCaseImageUrl(useCaseImage1.node.value || "");
+            }
+
+            // Add this debugging code after you fetch metafields
+            const useCaseImage3Test = metafields.find(mf => mf.node.key === "usecaseimage3");
+            console.log("usecaseimage3 metafield:", useCaseImage3Test);
 
             // Retrieve the bulletpoints metafield
             const bulletpointMetafield = data.metafields.edges.find(
@@ -348,25 +373,40 @@ const ProductDetail2 = ({ language, setLoading }) => {
     return () => window.removeEventListener("resize", updateSVGSize);
   }, []);
 
-  const handleButtonClick = async (buttonIndex, metafields) => {
+  const handleButtonClick = (buttonIndex, metafields) => {
+    console.log(`Button ${buttonIndex} clicked. Looking for related metafields.`);
+    
     // Get keys for both benefits and use cases
     const titleMetafield = `benefitstitle${buttonIndex}`;
     const descMetafield = `benefitsdesc${buttonIndex}`;
     const useCaseTitleMetafield = `usecasetitle${buttonIndex}`;
     const useCaseDescMetafield = `usecasedesc${buttonIndex}`;
+    const benefitImageMetafield = `benefitimage${buttonIndex}`;
+    const useCaseImageMetafield = `usecaseimage${buttonIndex}`;
+  
+    // Find metafield objects for both benefits and use cases
+    const titleMeta = metafields.find((mf) => mf.node.key === titleMetafield);
+    const descMeta = metafields.find((mf) => mf.node.key === descMetafield);
+    const useCaseTitleMeta = metafields.find((mf) => mf.node.key === useCaseTitleMetafield);
+    const useCaseDescMeta = metafields.find((mf) => mf.node.key === useCaseDescMetafield);
+    const benefitImageMeta = metafields.find((mf) => mf.node.key === benefitImageMetafield);
+    const useCaseImageMeta = metafields.find((mf) => mf.node.key === useCaseImageMetafield);
+    
+    // Get values
+    const title = titleMeta?.node.value;
+    const desc = descMeta?.node.value;
+    const useCaseTitle = useCaseTitleMeta?.node.value;
+    const useCaseDesc = useCaseDescMeta?.node.value;
+    const benefitImage = benefitImageMeta?.node.value;
+    
+    const useCaseImage = useCaseImageMeta?.node.value || useCaseImageMeta?.node.reference?.image?.url || "";
 
-    // Find values for both benefits and use cases
-    const title = metafields.find((mf) => mf.node.key === titleMetafield)?.node
-      .value;
-    const desc = metafields.find((mf) => mf.node.key === descMetafield)?.node
-      .value;
-    const useCaseTitle = metafields.find(
-      (mf) => mf.node.key === useCaseTitleMetafield
-    )?.node.value;
-    const useCaseDesc = metafields.find(
-      (mf) => mf.node.key === useCaseDescMetafield
-    )?.node.value;
-
+    console.log(`Use Case Image ${buttonIndex} meta:`, useCaseImageMeta);
+    console.log(`Use Case Image ${buttonIndex}:`, useCaseImage);
+  
+    console.log(`Benefits Image ${buttonIndex}:`, benefitImage);
+    // console.log(`Use Case Image ${buttonIndex}:`, useCaseImage);
+  
     // Create array with both cards
     const cardsData = [
       {
@@ -374,7 +414,7 @@ const ProductDetail2 = ({ language, setLoading }) => {
         description: desc || "Default Description",
       },
     ];
-
+  
     // Add use case card if data exists
     if (useCaseTitle && useCaseDesc) {
       cardsData.push({
@@ -382,10 +422,14 @@ const ProductDetail2 = ({ language, setLoading }) => {
         description: useCaseDesc,
       });
     }
-
+  
     // Set active cards and category
     setActiveCards(cardsData);
     setActiveCategory(`button${buttonIndex}`);
+  
+    // Set image URLs
+    setBenefitImageUrl(benefitImage || "");
+    setUseCaseImageUrl(useCaseImage || "");
   };
 
   if (!productData) {
@@ -676,12 +720,30 @@ const ProductDetail2 = ({ language, setLoading }) => {
 
                             {/* Right Side: Image */}
                             <div className="w-full lg:w-1/2">
-                              {secondImageUrl && (
-                                <img
-                                  src={secondImageUrl}
-                                  alt="Product Image"
-                                  className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
-                                />
+                              {index === 0 ? (
+                                benefitImageUrl ? (
+                                  <img
+                                    src={benefitImageUrl}
+                                    alt="Benefit Image"
+                                    className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
+                                  />
+                                ) : (
+                                  <div className="w-full h-[340px] bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <p>No benefit image available</p>
+                                  </div>
+                                )
+                              ) : (
+                                useCaseImageUrl ? (
+                                  <img
+                                    src={useCaseImageUrl}
+                                    alt="Use Case Image"
+                                    className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
+                                  />
+                                ) : (
+                                  <div className="w-full h-[340px] bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <p>No use case image available</p>
+                                  </div>
+                                )
                               )}
                             </div>
                           </div>
@@ -690,12 +752,30 @@ const ProductDetail2 = ({ language, setLoading }) => {
                         {/* For smaller screens, show image above title and description without the background */}
                         <div className="lg:hidden">
                           <div className="flex flex-col items-start mb-16">
-                            {secondImageUrl && (
-                              <img
-                                src={secondImageUrl}
-                                alt="Product Image"
-                                className="w-full object-cover rounded-lg mb-5"
-                              />
+                            {index === 0 ? (
+                              benefitImageUrl ? (
+                                <img
+                                  src={benefitImageUrl}
+                                  alt="Benefit Image"
+                                  className="w-full object-cover rounded-lg mb-5"
+                                />
+                              ) : (
+                                <div className="w-full h-[200px] bg-gray-200 rounded-lg flex items-center justify-center">
+                                  <p>No benefit image available</p>
+                                </div>
+                              )
+                            ) : (
+                              useCaseImageUrl ? (
+                                <img
+                                  src={useCaseImageUrl}
+                                  alt="Use Case Image"
+                                  className="w-full object-cover rounded-lg mb-5"
+                                />
+                              ) : (
+                                <div className="w-full h-[200px] bg-gray-200 rounded-lg flex items-center justify-center">
+                                  <p>No use case image available</p>
+                                </div>
+                              )
                             )}
                             <h1 className="font-semibold text-[22px] mt-5 text-start">
                               {card.heading}

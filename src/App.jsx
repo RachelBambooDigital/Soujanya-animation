@@ -31,13 +31,14 @@ function App() {
 
   // Step 1: Initialize the language state with the value from localStorage
   const [selectedLanguage, setSelectedLanguage] = useState(
-    localStorage.getItem("selectedLanguage") || "Eng" // Default to "Eng" if nothing is in localStorage
+    localStorage.getItem("selectedLanguage") || "en" // Default to "Eng" if nothing is in localStorage
   );
 
   // Step 2: Update the selected language and store it in localStorage
   const handleLanguageChange = (langShort) => {
-    setSelectedLanguage(langShort);
-    localStorage.setItem("selectedLanguage", langShort); // Save selected language to localStorage
+    const validLanguageCode = langShort === "Eng" ? "en" : langShort;
+    setSelectedLanguage(validLanguageCode);
+    localStorage.setItem("selectedLanguage", validLanguageCode); // Save selected language to localStorage
   };
 
   useEffect(() => {
