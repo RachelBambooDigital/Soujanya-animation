@@ -434,7 +434,7 @@ const Home = ({language, setLoading}) => {
 
       {/* Main content */}
       <div className="absolute w-full h-full top-[0] z-10 ">
-        <div className="w-full h-screen bg-cover bg-center relative">
+        <div className="w-full h-[100dvh] bg-cover bg-center relative">
           <video
             className="w-full h-screen xl:h-full object-cover"
             autoPlay
