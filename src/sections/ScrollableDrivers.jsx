@@ -275,48 +275,46 @@ const ScrollableDrivers = ({ drivers2, language }) => {
         </div> */}
 
         {/* Scrollable container */}
-        <div className='w-full overflow-hidden'>
-          <div
-            ref={scrollContainerRef}
-            className='flex gap-4 no-scrollbar transition-all fast-scroll'
-            onScroll={handleScroll}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onMouseMove={handleMouseMove}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            onTouchMove={handleTouchMove}
-            style={{ 
-              overflowX: 'auto', 
-              scrollSnapType: 'x mandatory',
-              WebkitOverflowScrolling: 'touch',
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
-              transitionDuration: `${scrollSpeed}ms`,
-              transitionTimingFunction: 'ease-out'
-            }}
-          >
-            <div ref={cardContainerRef} className="flex gap-4">
-              {extendedDrivers.map((driver, index) => (
-                <div
-                  key={index}
-                  className={`flex-shrink-0 min-h-[450px] bg-opacity-45 backdrop-blur-lg flex flex-col items-start justify-start text-black p-4 gap-4 ${driver.color} rounded-t-[42px] rounded-l-[42px]`}
-                  style={{ 
-                    backgroundColor: 'rgba(44, 41, 130, 0.08)',
-                    width: `${cardWidth}px`,
-                    scrollSnapAlign: 'start'
-                  }}
-                >
-                  <div className="flex flex-col justify-start h-[70px] mt-28">
-                    <h1 className='text-[45px] font-heading text-left'>{driver.title}</h1>
-                  </div>
-                  <p className='text-[16px] font-subHeading leading-[24px] whitespace-normal text-left overflow-hidden'>
-                    {driver.desc}
-                  </p>
+        <div
+          ref={scrollContainerRef}
+          className='flex gap-4 no-scrollbar transition-all fast-scroll'
+          onScroll={handleScroll}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onTouchMove={handleTouchMove}
+          style={{ 
+            overflowX: 'auto', 
+            scrollSnapType: 'x mandatory',
+            WebkitOverflowScrolling: 'touch', // Enable momentum scrolling
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            transitionDuration: `${scrollSpeed}ms`,
+            transitionTimingFunction: 'ease-out'
+          }}
+        >
+          <div ref={cardContainerRef} className="flex gap-4">
+            {extendedDrivers.map((driver, index) => (
+              <div
+                key={index}
+                className={`flex-shrink-0 min-h-[450px] bg-opacity-45 backdrop-blur-lg flex flex-col items-start justify-start text-black p-4 gap-4 ${driver.color} rounded-t-[42px] rounded-l-[42px]`}
+                style={{ 
+                  backgroundColor: 'rgba(44, 41, 130, 0.08)',
+                  width: `${cardWidth}px`,
+                  scrollSnapAlign: 'start'
+                }}
+              >
+                <div className="flex flex-col justify-start h-[70px] mt-28">
+                  <h1 className='text-[45px] font-heading text-left'>{driver.title}</h1>
                 </div>
-              ))}
-            </div>
+                <p className='text-[16px] font-subHeading leading-[24px] whitespace-normal text-left overflow-hidden'>
+                  {driver.desc}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 

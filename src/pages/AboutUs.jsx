@@ -456,25 +456,26 @@ const AboutUs = ({language, setLoading}) => {
                 {businessHighlights.map((highlight, index) => (
                   <div
                     key={index}
-                    className="flex flex-col text-white p-6 gap-6 rounded-t-[42px] rounded-l-[42px] pt-20"
+                    className="flex flex-col text-white p-6 gap-6 rounded-t-[42px] rounded-l-[42px] pt-20 items-start justify-start"
                     style={{
                       backgroundColor: highlight.color,
                       width: '100%', // Cards take up 100% width for smaller screens
                       maxWidth: '350px', // Max width of cards for large screens
-                      minHeight: '450px', // Set a minimum height to prevent card collapse
+                      minHeight: '550px', // Set a minimum height to prevent card collapse
                       height: 'auto', // Ensure dynamic height adjustment based on content
                     }}
                   >
-                    <h1 className="text-[24px] sm:text-[32px] lg:text-[42px] lg:leading-[50px] font-heading sm:h-[6.8rem] md:h-[6.2rem] lg:h-[130px]">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-heading hyphens-auto break-all">
                       {highlight.title}
                     </h1>
-                    <p className="text-[18px] sm:text-[16px] font-subHeading leading-[20px] sm:leading-[24px] sm:h-[6.8rem] md:h-[6.2rem] lg:h-[130px]">
+                    <p className="text-base sm:text-lg lg:text-xl font-subHeading leading-relaxed">
                       {highlight.desc}
                     </p>
                   </div>
                 ))}
               </div>
             </div>
+
           </div>
           
           <div ref={historyRef}>
