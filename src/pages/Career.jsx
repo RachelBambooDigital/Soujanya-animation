@@ -86,7 +86,7 @@ const Career = ({ language, setLoading }) => {
 
   return (
     <div>
-      <div className="w-full h-[700px] lg:h-[880px] bg-cover bg-center bg-white relative">
+      <div className="w-full h-[700px] lg:h-[880px] bg-cover bg-center bg-white relative md:mb-28">
         <div className="hidden lg:flex inset-x-0 top-20 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8 relative z-10">
           <Link
             to="/"
@@ -123,18 +123,18 @@ const Career = ({ language, setLoading }) => {
             </div>
 
             {/* Images Section */}
-            <div className="flex gap-3 lg:gap-8 justify-center lg:justify-start mt-5 lg:mt-0 px-3 lg:px-0 w-full max-w-full overflow-hidden">
-              <div className="w-[100%] lg:w-[350px] lg:h-[500px] bg-cover bg-center max-w-full overflow-hidden">
+            <div className="flex gap-3 lg:gap-8 justify-center lg:justify-start mt-5 lg:mt-0 w-3/4 md:1/3 lg:w-1/2">
+              <div className="w-1/2 relative overflow-hidden rounded-md">
                 <img
                   src={metaFields.banner_img_1}
-                  className="w-full h-auto max-w-full rounded-md"
+                  className="w-full h-full object-fill"
                   alt="Hero Image 1"
                 />
               </div>
-              <div className="w-[100%] lg:w-[350px] lg:h-[500px] bg-cover bg-center max-w-full overflow-hidden">
+              <div className="w-1/2 relative overflow-hidden rounded-md">
                 <img
                   src={metaFields.banner_img_2}
-                  className="w-full h-auto max-w-full rounded-md"
+                  className="w-full h-full object-fill"
                   alt="Hero Image 2"
                 />
               </div>

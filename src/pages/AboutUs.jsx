@@ -152,6 +152,8 @@ const AboutUs = ({language, setLoading}) => {
             },
           },
         };
+
+        console.log("combinedResult", combinedResult);
       
         if (combinedResult && combinedResult.data && combinedResult.data.metaobjects) {
           const fields = {};
@@ -384,42 +386,44 @@ const AboutUs = ({language, setLoading}) => {
             </div>
             
             {/* Banner */}
-            <div className="w-full flex h-full relative pt-28">
+            <div className="w-full relative pt-28 pb-16 mb-10 lg:mb-20">
               <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 w-full items-center lg:items-start px-5 lg:px-10">
-
-                {/* Text Section */}
-                <div className="flex flex-col gap-4 lg:gap-6 text-black items-start w-full max-w-full lg:pt-20">
-                  <h1 className="font-heading leading-7 text-[24px] lg:text-[50px] lg:leading-[65px]">
-                    {metaFields.banner_title}
-                  </h1>
-                  <p className="text-[16px] lg:text-[18px] font-subHeading leading-[24px] lg:w-[500px] text-[#667085]">
-                    {metaFields.banner_desc}
-                  </p>
+                  {/* Text Section */}
+                  <div className="flex flex-col gap-4 lg:gap-6 text-black items-start w-full lg:w-1/2 lg:pt-20 z-10">
+                      <h1 className="font-heading leading-7 text-[24px] lg:text-[50px] lg:leading-[65px]">
+                          {metaFields.banner_title}
+                      </h1>
+                      <p className="text-[16px] lg:text-[18px] font-subHeading leading-[24px] text-[#667085]">
+                          {metaFields.banner_desc}
+                      </p>
+                  </div>
+                  {/* Images Section */}
+                  <div className="flex gap-3 lg:gap-8 justify-center lg:justify-start mt-5 lg:mt-0 w-3/4 lg:w-1/2">
+                    <div className="w-1/2 relative overflow-hidden rounded-md">
+                        <img
+                            src={metaFields.banner_img_1}
+                            className="w-full h-full object-fill"
+                            alt="Hero Image 1"
+                        />
+                    </div>
+                    <div className="w-1/2 relative overflow-hidden rounded-md">
+                        <img
+                            src={metaFields.banner_img_2}
+                            className="w-full h-full object-fill"
+                            alt="Hero Image 2"
+                        />
+                    </div>
                 </div>
 
-                {/* Images Section */}
-                <div className="flex gap-3 lg:gap-8 justify-center lg:justify-start mt-5 lg:mt-0 px-3 lg:px-0 w-full max-w-full overflow-hidden">
-                  <div className="w-[100%] lg:w-[350px] lg:h-[500px] bg-cover bg-center max-w-full overflow-hidden">
-                    <img
-                      src={metaFields.banner_img_1}
-                      className="w-full h-auto max-w-full rounded-md"
-                      alt="Hero Image 1"
-                    />
-                  </div>
-                  <div className="w-[100%] lg:w-[350px] lg:h-[500px] bg-cover bg-center max-w-full overflow-hidden">
-                    <img
-                      src={metaFields.banner_img_2}
-                      className="w-full h-auto max-w-full rounded-md"
-                      alt="Hero Image 2"
-                    />
-                  </div>
-                </div>
               </div>
             </div>
           </div>
-          
+
+          {/* Clear separator */}
+          <div className="w-full"></div>
+
           {/* Who are we */}
-          <div className='w-full flex flex-col px-5 lg:px-10'>
+          <div className='w-full flex flex-col px-5 lg:px-10 mt-16 pt-10 relative z-20 bg-white '>
             <div className='w-[85%] flex flex-col items-start'>
               <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.who_we_are_1_title}</p>
               <h1 className='font-heading text-[28px] lg:text-[36px] leading-10 lg:leading-[45px]'>{metaFields.who_we_are_desc}</h1>

@@ -6,7 +6,7 @@ import { apiBaseUrl } from "@/config";
 import { Link, useLocation } from "react-router-dom";
 import Loader from "../pages/Loader";
 
-const ContactUs = ({language, setLoading}) => {
+const ContactUs = ({ language, setLoading }) => {
   const [metaFields, setMetaFields] = useState(null);
 
   // State to store form data
@@ -136,7 +136,7 @@ const ContactUs = ({language, setLoading}) => {
           }
         }
       }`;
-  
+
       try {
         const response = await fetch(
           `${import.meta.env.VITE_BASE_URL}/shopify/homepage-meta`,
@@ -148,15 +148,16 @@ const ContactUs = ({language, setLoading}) => {
             body: JSON.stringify({ query, targetLanguage: language }),
           }
         );
-  
+
         const result = await response.json();
         console.log("result", result);
-  
+
         if (result && result.data && result.data.metaobjects) {
-            const fields = {};
-        
-            const imageFetchPromises = result.data.metaobjects.edges.map(async (edge) => {
-              for (const field of edge.node.fields) {            
+          const fields = {};
+
+          const imageFetchPromises = result.data.metaobjects.edges.map(
+            async (edge) => {
+              for (const field of edge.node.fields) {
                 if (field.reference?.image?.url) {
                   fields[field.key] = field.reference.image.url;
                 } else if (field.reference?.sources) {
@@ -165,13 +166,13 @@ const ContactUs = ({language, setLoading}) => {
                   fields[field.key] = field.value;
                 }
               }
-            });
-        
-            await Promise.all(imageFetchPromises);
-            setMetaFields(fields);  
-            setLoading(false); // Set loading to false once data is fetched
-        }
-        else {
+            }
+          );
+
+          await Promise.all(imageFetchPromises);
+          setMetaFields(fields);
+          setLoading(false); // Set loading to false once data is fetched
+        } else {
           console.error("Metaobjects not found in the response");
         }
       } catch (error) {
@@ -179,9 +180,9 @@ const ContactUs = ({language, setLoading}) => {
         setLoading(false); // Set loading to false even if there is an error
       }
     };
-  
+
     fetchContact();
-  }, [language, setLoading]); 
+  }, [language, setLoading]);
 
   if (!metaFields) {
     return <Loader />;
@@ -190,27 +191,31 @@ const ContactUs = ({language, setLoading}) => {
   return (
     <div>
       <Toaster position="bottom-right" />
-      <div className="w-full h-[1200px] lg:h-[880px] bg-cover bg-center bg-white relative py-20 ">
+      <div className="w-full min-h-screen bg-cover bg-center bg-white relative py-10 md:py-20">
         <div className="hidden lg:flex inset-x-0 top-12 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8">
-          <Link 
-            to="/" 
-            className={`hover:text-blue-500 ${location.pathname === "/" ? "font-bold" : ""}`}
+          <Link
+            to="/"
+            className={`hover:text-blue-500 ${
+              location.pathname === "/" ? "font-bold" : ""
+            }`}
           >
             Home
           </Link>
           <span className="text-gray-400"> &gt; </span>
-          <Link 
-            to="/contact-us" 
-            className={`hover:text-blue-500 ${location.pathname === "/contact-us" ? "font-bold" : ""}`}
+          <Link
+            to="/contact-us"
+            className={`hover:text-blue-500 ${
+              location.pathname === "/contact-us" ? "font-bold" : ""
+            }`}
           >
             Contact us
           </Link>
         </div>
 
-        <div className="w-full flex h-full lg:h-[800px] relative bg-white">
-          <div className="absolute inset-0 flex lg:flex-row flex-col-reverse gap-24 lg:justify-between w-full lg:w-auto items-end lg:items-center px-10 lg:px-10">
-            <div className="flex flex-col gap-6 text-black font-medium md:px-12 lg:px-14">
-              <h1 className="text-[28px] md:text-[32px] lg:text-[40px] font-subHeading text-black leading-[30px] md:leading-[40px] lg:leading-[45px]">
+        <div className="w-full flex flex-col lg:flex-row h-full lg:min-h-[800px] relative bg-white items-center">
+          <div className="relative inset-0 flex lg:flex-row flex-col-reverse gap-12 lg:justify-between w-full lg:w-auto items-center px-5 md:px-10 lg:px-10">
+            <div className="flex flex-col gap-6 text-black font-medium md:px-12 lg:px-14 w-full lg:w-auto">
+              <h1 className="text-[24px] md:text-[32px] lg:text-[40px] font-subHeading text-black leading-[30px] md:leading-[40px] lg:leading-[45px] text-start lg:text-left">
                 {metaFields.banner_title} <br />
                 {metaFields.banner_title_2} <br />
                 <span className="text-red">#{metaFields.red_color_text}</span>
@@ -310,14 +315,6 @@ const ContactUs = ({language, setLoading}) => {
                         required
                       />
                       <label className="text-sm">
-                        {/* I accept the{" "}
-                        <a href="#" className="underline">
-                          Privacy Policy
-                        </a>{" "}
-                        and{" "}
-                        <a href="#" className="underline">
-                          Terms & Conditions
-                        </a> */}
                         {metaFields.accept_terms}
                       </label>
                     </div>
@@ -332,17 +329,17 @@ const ContactUs = ({language, setLoading}) => {
               </div>
             </div>
 
-            <div className="w-[60%] lg:w-[35%]">
+            <div className="w-[60%] md:w-[40%] lg:w-[35%] mt-10">
               <img
                 src={metaFields.banner_img}
-                alt="Contat Us"
+                alt="Contact Us"
+                className="w-full h-auto object-contain"
               />
             </div>
           </div>
         </div>
       </div>
-      <OurGlobalPresence language={language}/>
-      {/* <Footer /> */}
+      <OurGlobalPresence language={language} />
     </div>
   );
 };
