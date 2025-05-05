@@ -506,6 +506,8 @@ const Home = ({language, setLoading}) => {
             />
           </div>
 
+          <OurProducts language={language}/>
+
           {/* Our business highlights */}
           <div className="w-full flex flex-col px-5 sm:px-8 md:px-10 lg:px-10">
             <div className="w-full flex flex-col items-start mb-5">
@@ -522,7 +524,7 @@ const Home = ({language, setLoading}) => {
             </div>
           </div>
 
-          <OurProducts language={language}/>
+          
           <OurGlobalPresence language={language}/>
         </div>
       </div>

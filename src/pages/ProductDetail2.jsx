@@ -793,7 +793,7 @@ const ProductDetail2 = ({ language, setLoading }) => {
           </div>
         </div>
 
-        <OurGlobalPresence language={language} />
+        {/* <OurGlobalPresence language={language} /> */}
       </div>
     </div>
   );

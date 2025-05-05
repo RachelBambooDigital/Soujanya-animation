@@ -133,17 +133,17 @@ const Footer = ({language}) => {
       className="w-full px-5 lg:px-10 h-screen bg-black flex flex-col justify-between overflow-y-hidden"
     >
       <Toaster position="bottom-right" /> {/* Toast notification container */}
-      <div className="foot-note flex lg:flex-row flex-col w-full justify-between pr-16 mt-[40px] lg:mt-[72px]">
+      <div className="foot-note relative w-full h-full">
         <p
-          className="text-white font-subHeading hover:underline cursor-pointer"
+          className="absolute top-0 left-0 text-white font-subHeading hover:underline cursor-pointer mt-[40px] lg:mt-[72px] ml-5 lg:ml-10"
           onClick={scrollToTop}
-        >    
+        >
           {metaFields.back_to_top_text}
         </p>
-        <div className="flex flex-col">
-          <h1 className="font-subHeading text-white text-[40px] leading-[45px] tracking-[-3%] font-light lg:text-[52px] lg:w-[600px] lg:leading-[60px] w-600px">
+
+        <div className="flex flex-col items-start justify-center text-left w-full h-full lg:w-[800px] mx-auto">
+          <h1 className="font-subHeading text-white text-[40px] leading-[45px] tracking-[-3%] font-light lg:text-[52px] lg:leading-[60px]">
             {metaFields.footer_desc}
-            <span className="font-heading text-red">#{metaFields.red_color_text}</span>
           </h1>
           <form onSubmit={handleSubmit}>
             <div className="inputs flex flex-col lg:flex-row gap-4 mt-6 font-subHeading font-normal">
@@ -158,9 +158,7 @@ const Footer = ({language}) => {
                   required
                 />
                 <br />
-                {errors.email && (
-                  <span className="text-red">{errors.email}</span>
-                )}
+                {errors.email && <span className="text-red">{errors.email}</span>}
               </div>
 
               <button
@@ -173,7 +171,8 @@ const Footer = ({language}) => {
           </form>
         </div>
       </div>
-      <div className="footer-links max-w-screen-xl mx-auto w-full flex flex-col lg:flex-row justify-between items-center gap-6 lg:gap-20 mb-8 px-5 lg:px-10">
+
+      <div className="footer-links max-w-screen-2xl mx-auto w-full flex flex-col lg:flex-row justify-between items-center gap-6 lg:gap-20 mb-8 px-5 lg:px-10">
         <Link
           to="/"
           className="flex justify-center lg:justify-start mb-4 lg:mb-0 w-full lg:w-auto"
@@ -181,16 +180,18 @@ const Footer = ({language}) => {
           <img
             src="/logos/navLogo.png"
             alt="soujanya-logo"
-            className="w-[180px] lg:w-[200px]"
+            className="w-[200px]"
           />
         </Link>
 
-        <nav className="text-white flex flex-row gap-6 lg:gap-10 text-[0.8rem] sm:text-[0.8rem] md:text-[1rem] lg:text-[1.1rem] w-full lg:w-auto justify-center items-center text-center">
+        <nav className="text-white flex flex-row gap-6 lg:gap-10 text-[0.8rem] sm:text-[0.8rem] md:text-[1rem] lg:text-[1rem] w-full lg:w-auto justify-center items-center text-center">
           <Link to="/about-us" className="mr-1">
             {metaFields.aboutus_link_text}
           </Link>
           <Link to="/home-care-cosmetics">{metaFields.homecare_link_text}</Link>
+          <Link to="/coatings-inks">Coatings & Inks</Link>
           <Link to="/life-sciences">{metaFields.lifesciences_link_text}</Link>
+          <Link to="/career">Careers</Link>
         </nav>
 
         <p className="text-white text-center lg:text-left lg:mt-0 w-full lg:w-auto text-[0.8rem] sm:text-[0.8rem] md:text-[1rem] lg:text-[1.1rem]">

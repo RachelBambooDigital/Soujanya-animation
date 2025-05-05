@@ -672,7 +672,7 @@ const ProductDetail = ({ language, setLoading }) => {
           </div>
         </div>
 
-        <OurGlobalPresence language={language} />
+        {/* <OurGlobalPresence language={language} /> */}
       </div>
     </div>
   );

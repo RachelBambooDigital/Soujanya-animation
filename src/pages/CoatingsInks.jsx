@@ -659,7 +659,7 @@ const CoatingsInks = ({language, setLoading}) => {
             </div>
 
             {/* Our Global presence */}
-            <OurGlobalPresence language={language}/>
+            {/* <OurGlobalPresence language={language}/> */}
           </div>
         </div>
       </div>

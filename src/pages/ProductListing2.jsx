@@ -195,7 +195,7 @@ const ProductListing2 = ({language}) => {
             ))}
           </div>
           <br />
-          <OurGlobalPresence language={language} />
+          {/* <OurGlobalPresence language={language} /> */}
           <Footer language={language} />
         </div>
       </div>      

@@ -142,7 +142,7 @@ const Career = ({ language, setLoading }) => {
           </div>
         </div>
       </div>
-      <OurGlobalPresence language={language} />
+      {/* <OurGlobalPresence language={language} /> */}
     </div>
   );
 };

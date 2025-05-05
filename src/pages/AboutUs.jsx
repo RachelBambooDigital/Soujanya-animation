@@ -252,7 +252,7 @@ const AboutUs = ({language, setLoading}) => {
         setWidth("1000");
         setHeight("8600");
       } else {
-        setViewBox("250 0 2436 4500");
+        setViewBox("250 0 1800 4500");
         setWidth("2100");
         setHeight("5800");
       }
@@ -290,7 +290,7 @@ const AboutUs = ({language, setLoading}) => {
 
   return (
     <div
-    className="scrollContainer w-full pt-16 lg:h-[6150px] overflow-hidden bg-no-repeat"
+    className="scrollContainer w-full pt-16 lg:h-[4050px] overflow-hidden bg-no-repeat"
     ref={svgContainerRef}>
           <svg 
                 width={width}
@@ -423,7 +423,7 @@ const AboutUs = ({language, setLoading}) => {
           <div className="w-full"></div>
 
           {/* Who are we */}
-          <div className='w-full flex flex-col px-5 lg:px-10 mt-16 pt-10 relative z-20 bg-white '>
+          <div className='w-full flex flex-col px-5 lg:px-10 mt-16 pt-10 relative z-20 '>
             <div className='w-[85%] flex flex-col items-start'>
               <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.who_we_are_1_title}</p>
               <h1 className='font-heading text-[28px] lg:text-[36px] leading-10 lg:leading-[45px]'>{metaFields.who_we_are_desc}</h1>
@@ -438,7 +438,7 @@ const AboutUs = ({language, setLoading}) => {
             </div>
           </div>
 
-          <OurPurposeAboutUs language={language}/>
+          {/* <OurPurposeAboutUs language={language}/> */}
 
           {/* Business Highlights */}
           <div className="w-full flex flex-col gap-16 mb-16 px-5 lg:px-10">
@@ -483,29 +483,25 @@ const AboutUs = ({language, setLoading}) => {
           </div>
 
           {/* Who we are about us */} 
-          <div className='hidden w-full  lg:flex flex-col px-5 lg:px-10 bg-white'>
+          {/* <div className='hidden w-full  lg:flex flex-col px-5 lg:px-10 bg-white'>
             <div className='w-full flex flex-col items-start'>
               <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.who_we_are_2_title}</p>
               <h1 className='font-heading leading-10 text-[28px] lg:text-[54px] lg:leading-[70px]'>{metaFields.who_we_are_title}</h1>
             </div>
 
             <div className='w-full flex gap-5 lg:gap-8 justify-between lg:justify-end mb-5 lg:mb-10 px-3 lg:px-0 mt-40'>
-              {/* Image 1 */}
               <div className='w-full lg:w-[580px] h-auto max-h-[380px]'>
                 <img src={metaFields.who_we_are_imgs_line_1[0]} className='w-full h-auto object-contain' alt="Who are we Image 1" />
               </div>
-              {/* Image 2 */}
               <div className='w-full lg:w-[260px] h-auto max-h-[380px]'>
                 <img src={metaFields.who_we_are_imgs_line_1[1]} className='w-full h-auto object-contain' alt="Who are we Image 2" />
               </div>
-              {/* Image 3 */}
               <div className='w-full lg:w-[580px] h-auto max-h-[380px]'>
                 <img src={metaFields.who_we_are_imgs_line_1[2]} className='w-full h-auto object-contain' alt="Who are we Image 3" />
               </div>
             </div>
 
             <div className="flex flex-col lg:flex-row gap-10 mt-10 ">
-              {/* Left content - Description */}
               <div className="w-full flex lg:flex-row flex-col lg:justify-start items-center">
                 <div className='flex flex-col text-black'>
                   <h2 className="w-full font-heading text-2xl lg:text-4xl">{metaFields.who_we_are_heading}</h2>
@@ -516,13 +512,10 @@ const AboutUs = ({language, setLoading}) => {
                 </div>
               </div>
 
-              {/* Right content - Images */}
               <div className="w-full flex gap-6 mt-12 mb-14">
-                {/* Image 1 */}
                 <div className='w-full lg:w-[580px] h-auto max-h-[380px]'>
                   <img src={metaFields.who_we_are_imgs_line_2[0]} className='w-full h-auto object-contain' alt="Who are we Image 2" />
                 </div>
-                {/* Image 2 */}
                 <div className='w-full lg:w-[260px] h-auto max-h-[380px]'>
                   <img src={metaFields.who_we_are_imgs_line_2[1]} className='w-full h-auto object-contain' alt="Who are we Image 1" />
                 </div>
@@ -530,7 +523,6 @@ const AboutUs = ({language, setLoading}) => {
             </div>
           </div>
 
-          {/* Who we are about us small screen*/} 
           <div className='lg:hidden w-full sm:flex flex-col px-5 lg:px-10 bg-white'>
             <div className='w-full flex flex-col items-start'>
               <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>Who we are</p>
@@ -538,24 +530,20 @@ const AboutUs = ({language, setLoading}) => {
             </div>
 
             <div className='w-full flex gap-5 lg:gap-8 justify-between lg:justify-end px-3 lg:px-0 mt-12'>
-              {/* Image 1 */}
               <div className='w-full object-contain'>
                 <img src={metaFields.who_we_are_imgs_line_1[0]} className='w-full h-full' alt="Who are we Image 1" />
               </div>
-              {/* Image 2 */}
               <div className='w-[50%] object-contain'>
                 <img src={metaFields.who_we_are_imgs_line_1[1]} className='w-full h-full' alt="Who are we Image 2" />
               </div>
             </div>
             <div className='w-full flex gap-5 lg:gap-8 justify-between lg:justify-end px-3 lg:px-0 mt-5'>
-              {/* Image 3 */}
               <div className='w-full lg:w-[580px] h-auto max-h-[380px]'>
                 <img src={metaFields.who_we_are_imgs_line_1[2]} className='w-full h-auto object-contain' alt="Who are we Image 3" />
               </div>
             </div>
 
             <div className="flex flex-col lg:flex-row gap-10 mt-10 ">
-              {/* Left content - Description */}
               <div className="w-full flex lg:flex-row flex-col lg:justify-start items-center">
                 <div className='flex flex-col text-black'>
                   <h2 className="w-full font-heading text-2xl lg:text-4xl">{metaFields.who_we_are_heading}</h2>
@@ -566,19 +554,16 @@ const AboutUs = ({language, setLoading}) => {
                 </div>
               </div>
 
-              {/* Right content - Images */}
               <div className="w-full flex gap-6 mt-5 mb-14">
-                {/* Image 1 */}
                 <div className='w-full object-contain'>
                   <img src={metaFields.who_we_are_imgs_line_2[0]} className='w-full h-full' alt="Who are we Image 2" />
                 </div>
-                {/* Image 2 */}
                 <div className='w-[50%] object-contain'>
                   <img src={metaFields.who_we_are_imgs_line_2[1]} className='w-full h-full' alt="Who are we Image 1" />
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <OurGlobalPresence language={language}/>
 

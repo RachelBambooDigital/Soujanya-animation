@@ -266,7 +266,7 @@ const Intermediate = ({language, setLoading}) => {
 
           language={language}
         />
-        <OurGlobalPresence language={language}/>
+        {/* <OurGlobalPresence language={language}/> */}
       </div>
     </div>
   );
