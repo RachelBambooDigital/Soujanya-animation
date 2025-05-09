@@ -130,7 +130,7 @@ const Footer = ({language}) => {
   return (
     <footer
       id="footer"
-      className="w-full px-5 lg:px-10 h-screen bg-black flex flex-col justify-between overflow-y-hidden"
+      className="w-full px-5 lg:px-10 h-screen lg:h-[600px] bg-black flex flex-col justify-between overflow-y-hidden"
     >
       <Toaster position="bottom-right" /> {/* Toast notification container */}
       <div className="foot-note relative w-full h-full">
@@ -159,6 +159,10 @@ const Footer = ({language}) => {
                 />
                 <br />
                 {errors.email && <span className="text-red">{errors.email}</span>}
+                <p className="text-white text-[12px] mt-2 font-subHeading">
+                  For inquiries, contact us at <a href="mailto:info@soujanya.com" className="underline hover:text-gray-300">info@yourbrand.com</a>
+                </p>
+
               </div>
 
               <button

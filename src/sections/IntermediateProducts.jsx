@@ -45,6 +45,30 @@ const IntermediateProducts = ({
   product7Molecular,
   product7Desc,
 
+  product8Title,
+  product8Empirical,
+  product8Cas,
+  product8Molecular,
+  product8Desc,
+
+  product9Title,
+  product9Empirical,
+  product9Cas,
+  product9Molecular,
+  product9Desc,
+
+  product10Title,
+  product10Empirical,
+  product10Cas,
+  product10Molecular,
+  product10Desc,
+
+  product11Title,
+  product11Empirical,
+  product11Cas,
+  product11Molecular,
+  product11Desc,
+
   language,
 
 }) => {
@@ -121,7 +145,38 @@ const IntermediateProducts = ({
             MolecularWeight={product7Molecular} // Correctly passing string
             language={language}
           />
-          {/* Add more product cards if necessary */}
+          <LifeSciencesAPIProductsCard
+            title={product8Title} // Correctly passing string
+            description={product8Desc} // Correctly passing string
+            EmpiricalFormula={product8Empirical} // Correctly passing string
+            CASNumber={product8Cas} // Correctly passing string
+            MolecularWeight={product8Molecular} // Correctly passing string
+            language={language}
+          />
+          <LifeSciencesAPIProductsCard
+            title={product9Title} // Correctly passing string
+            description={product9Desc} // Correctly passing string
+            EmpiricalFormula={product9Empirical} // Correctly passing string
+            CASNumber={product9Cas} // Correctly passing string
+            MolecularWeight={product9Molecular} // Correctly passing string
+            language={language}
+          />
+          <LifeSciencesAPIProductsCard
+            title={product10Title} // Correctly passing string
+            description={product10Desc} // Correctly passing string
+            EmpiricalFormula={product10Empirical} // Correctly passing string
+            CASNumber={product10Cas} // Correctly passing string
+            MolecularWeight={product10Molecular} // Correctly passing string
+            language={language}
+          />
+          <LifeSciencesAPIProductsCard
+            title={product11Title} // Correctly passing string
+            description={product11Desc} // Correctly passing string
+            EmpiricalFormula={product11Empirical} // Correctly passing string
+            CASNumber={product11Cas} // Correctly passing string
+            MolecularWeight={product11Molecular} // Correctly passing string
+            language={language}
+          />
         </div>
       </div>
     </div>

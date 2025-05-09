@@ -307,6 +307,18 @@ const Home = ({language, setLoading}) => {
     navigate("/about-us");
   };
 
+  const handleButtonClick = () => {
+
+    navigate("/");
+
+    setTimeout(() => {
+      const section = document.getElementById("whatWeOffer");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  };
+
   return (
     <div
       className="scrollContainer w-full lg:h-[4850px] h-[5250px] overflow-hidden bg-no-repeat"
@@ -451,12 +463,12 @@ const Home = ({language, setLoading}) => {
               {metaFields.banner_title}
             </h1>
             <button
-              onClick={handleContactUs}
+              onClick={handleButtonClick}
               className="bg-red text-white text-base font-subHeading h-[42px] w-[175px] lg:w-[192px] rounded-lg hover:underline"
             >
-              {/* {JSON.parse(metaFields.banner_button_link).text} */}
+              {JSON.parse(metaFields.banner_button_link).text}
               {/* {buttonLink.text} */}
-              {metaFields.banner_button}
+              {/* {metaFields.banner_button} */}
             </button>
           </div>
         </div>
@@ -498,7 +510,7 @@ const Home = ({language, setLoading}) => {
           </div>
 
           {/* What we offer */}
-          <div className="w-full flex flex-col px-5 lg:px-10 ">
+          <div className="w-full flex flex-col px-5 lg:px-10" id="whatWeOffer">
             <CustomSlider language={language}
               title={metaFields.what_we_offer_title}
               subTitle={metaFields.what_we_offer_heading}
