@@ -160,7 +160,7 @@ const Footer = ({language}) => {
                 <br />
                 {errors.email && <span className="text-red">{errors.email}</span>}
                 <p className="text-white text-[12px] mt-2 font-subHeading">
-                  For inquiries, contact us at <a href="mailto:info@soujanya.com" className="underline hover:text-gray-300">info@yourbrand.com</a>
+                  For inquiries, contact us at <a href="mailto:info@soujanya.com" className="underline hover:text-gray-300">info@soujanya.com</a>
                 </p>
 
               </div>

@@ -100,11 +100,7 @@ const Header1 = ({onLanguageChange}) => {
         onMouseLeave={handleMouseLeaveTop}
         className="fixed top-0 left-0 w-full h-[20px] z-50"
       ></div>
-      <header
-        className={`fixed w-full px-5 lg:px-10 h-[62px] z-40 bg-opacity-90 backdrop-blur-lg transition-all duration-300 ${
-          isVisible ? "top-0" : "-top-[62px]"
-        }`}
-      >
+      <header className="fixed top-0 w-full px-5 lg:px-10 h-[62px] z-40 bg-opacity-90 backdrop-blur-lg">
         <div className="w-full flex items-center justify-between h-full">
           <div className="text-white flex items-center gap-5">
             <div>

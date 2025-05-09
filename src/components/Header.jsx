@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
-import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md"; // Import the arrow icons
+import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
 import Sidebar from "./Sidebar";
 import Sidebar2 from "./Sidebar2";
 import { Link } from "react-router-dom";
@@ -9,8 +9,9 @@ import { useNavigate } from "react-router-dom";
 const Header = ({ onLanguageChange }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebar2Open, setIsSidebar2Open] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("en"); // State for short language code
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to toggle dropdown
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false); // New state to track scroll position
   const navigate = useNavigate();
 
   // Full language names and short codes
@@ -35,6 +36,26 @@ const Header = ({ onLanguageChange }) => {
     navigate('/contact-us');
   };
 
+  // Add scroll event listener to track scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      // You can adjust this value to determine when the color change happens
+      const firstSectionHeight = 700; // Adjust based on your first section's height
+      if (window.scrollY > firstSectionHeight) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    // Clean up event listener
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   // Set the initial language from localStorage if available
   useEffect(() => {
     const savedLanguage = localStorage.getItem("selectedLanguage");
@@ -46,50 +67,59 @@ const Header = ({ onLanguageChange }) => {
 
   // Update the language when it's selected and save it to localStorage
   const handleLanguageChange = (langShort) => {
-    setSelectedLanguage(langShort); // Update selected language short code
-    onLanguageChange(langShort); // Pass selected short language code to parent
-    localStorage.setItem("selectedLanguage", langShort); // Store selected language in localStorage
-    setIsDropdownOpen(false); // Close dropdown
+    setSelectedLanguage(langShort);
+    onLanguageChange(langShort);
+    localStorage.setItem("selectedLanguage", langShort);
+    setIsDropdownOpen(false);
     console.log('Language changed to:', langShort);
   };
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown visibility
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   // Get full name of the selected language
   const getSelectedLanguageName = () => {
     const selectedLang = languages.find(lang => lang.short === selectedLanguage);
-    return selectedLang ? selectedLang.name : "English"; // Default to English if not found
+    return selectedLang ? selectedLang.name : "English";
   };
+
+  // Determine colors based on scroll position
+  const textColor = scrolled ? "text-black" : "text-white";
+  const borderColor = scrolled ? "border-black" : "border-white";
+  const iconColor = scrolled ? "text-black" : "text-white";
 
   return (
     <>
       <header
-        className={`fixed w-full px-5 lg:px-10 h-[62px] z-40 bg-opacity-90 backdrop-blur-lg transition-all duration-300`}>
+        className={`fixed w-full px-5 lg:px-10 h-[62px] z-40 backdrop-blur-lg transition-all duration-300`}>
         <div className="w-full flex items-center justify-between h-full">
-          <div className="text-white flex items-center gap-5">
+          <div className={`${textColor} flex items-center gap-5`}>
             <button className="w-8" onClick={toggleSidebar}>
-              <img src="/logos/menu.png" alt="menu" />
+              <img src={scrolled ? "/logos/menuBlack.png" : "/logos/menu.png"} alt="menu" />
             </button>
             <Link to="/">
-              <img src="/logos/NavLogoWhite.svg" className="w-36" alt="logo" />
+              <img 
+                src={scrolled ? "/logos/NavLogoBlack.svg" : "/logos/NavLogoWhite.svg"} 
+                className="w-36" 
+                alt="logo" 
+              />
             </Link>
           </div>
 
           {/* For larger screens */}
           <div className="lg:flex gap-5 items-center hidden">
             {/* Language Dropdown */}
-            <div className="relative border border-white rounded-md">
+            <div className={`relative border ${borderColor} rounded-md`}>
               <button
-                className="text-xs font-semibold py-2 px-3 h-full text-white flex items-center gap-2"
+                className={`text-xs font-semibold py-2 px-3 h-full ${textColor} flex items-center gap-2`}
                 onClick={toggleDropdown}>
-                {getSelectedLanguageName()} {/* Display full language name */}
+                {getSelectedLanguageName()}
                 <span className="ml-2">
                   {isDropdownOpen ? (
-                    <MdOutlineKeyboardArrowUp className="text-white" /> // Up arrow when dropdown is open
+                    <MdOutlineKeyboardArrowUp className={iconColor} />
                   ) : (
-                    <MdOutlineKeyboardArrowDown className="text-white" /> // Down arrow when dropdown is closed
+                    <MdOutlineKeyboardArrowDown className={iconColor} />
                   )}
                 </span>
               </button>
@@ -100,41 +130,41 @@ const Header = ({ onLanguageChange }) => {
                   {languages.map((lang) => (
                     <button
                       key={lang.short}
-                      className="w-full text-left px-2 py-2 text-sm text-black hover:bg-red hover:text-white" // Red background on hover
+                      className="w-full text-left px-2 py-2 text-sm text-black hover:bg-red hover:text-white"
                       onClick={() => handleLanguageChange(lang.short)}>
-                      {lang.name} {/* Display the full name of the language */}
+                      {lang.name}
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            <div className="flex relative border border-white rounded-md">
-              <button className={`text-xs font-semibold py-2 px-4 h-full text-white`} onClick={handleContactUs}>
+            <div className={`flex relative border ${borderColor} rounded-md`}>
+              <button className={`text-xs font-semibold py-2 px-4 h-full ${textColor}`} onClick={handleContactUs}>
                 Contact
               </button>
             </div>
-            <div className="flex relative border border-white rounded-md">
+            <div className={`flex relative border ${borderColor} rounded-md`}>
               <button
-                className={`text-xs font-semibold py-2 px-4 h-full text-white`}  
+                className={`text-xs font-semibold py-2 px-4 h-full ${textColor}`}  
                 onClick={toggleSidebar2}>
-                <CiSearch className="text-white text-lg" />
+                <CiSearch className={`${iconColor} text-lg`} />
               </button>
             </div>
           </div>
 
           {/* For small screens */}
           <div className="lg:hidden flex gap-3 items-center">
-            <div className="relative border border-white rounded-md">
+            <div className={`relative border ${borderColor} rounded-md`}>
               <button 
-                className="text-xs font-semibold py-1 px-1 h-full text-white flex items-center" // Added flex and gap
-                onClick={toggleDropdown}> {/* Open dropdown when clicked */}
-                {getSelectedLanguageName()} {/* Display full language name */}
+                className={`text-xs font-semibold py-1 px-1 h-full ${textColor} flex items-center`}
+                onClick={toggleDropdown}>
+                {getSelectedLanguageName()}
                 <span className="ml-2">
                   {isDropdownOpen ? (
-                    <MdOutlineKeyboardArrowUp className="text-white" />
+                    <MdOutlineKeyboardArrowUp className={iconColor} />
                   ) : (
-                    <MdOutlineKeyboardArrowDown className="text-white" />
+                    <MdOutlineKeyboardArrowDown className={iconColor} />
                   )}
                 </span>
               </button>
@@ -154,11 +184,11 @@ const Header = ({ onLanguageChange }) => {
               )}
             </div>
 
-            <div className="flex relative border border-white rounded-md">
+            <div className={`flex relative border ${borderColor} rounded-md`}>
               <button
-                className={`text-xs font-semibold py-1 px-2 h-full text-white`}  
+                className={`text-xs font-semibold py-1 px-2 h-full ${textColor}`}  
                 onClick={toggleSidebar2}>
-                <CiSearch className="text-white text-sm" />
+                <CiSearch className={`${iconColor} text-sm`} />
               </button>
             </div>
           </div>
