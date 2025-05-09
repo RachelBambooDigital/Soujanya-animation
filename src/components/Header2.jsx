@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md"; // Import the arrow icons
 
-const Header1 = ({onLanguageChange}) => {
+const Header2 = ({onLanguageChange}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Track sidebar state
   const [isSidebar2Open, setIsSidebar2Open] = useState(false);
   const [isVisible, setIsVisible] = useState(true); // Track header visibility
@@ -101,11 +101,8 @@ const Header1 = ({onLanguageChange}) => {
         onMouseLeave={handleMouseLeaveTop}
         className="fixed top-0 left-0 w-full h-[20px] z-50"
       ></div>
-      <header
-        className={`fixed w-full px-5 lg:px-10 h-[62px] z-40 transition-all duration-300 bg-white ${
-          isVisible ? "top-0" : "-top-[62px]"
-        }`}
-      >
+      <header className="fixed top-0 w-full px-5 lg:px-10 h-[62px] z-40 bg-white">
+
         <div className="w-full flex items-center justify-between h-full">
           <div className="text-white flex items-center gap-5">
             <div>
@@ -228,4 +225,4 @@ const Header1 = ({onLanguageChange}) => {
   );
 };
 
-export default Header1;
+export default Header2;
