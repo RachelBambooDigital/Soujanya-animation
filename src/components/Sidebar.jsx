@@ -18,7 +18,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     setActiveSubMenu(null); // Reset the submenu when switching main menus
   };
 
-  const handleSubMenuClick = (submenu) => {
+  const handleSubMenuClick = (submenu, event) => {
+    event.stopPropagation(); // Prevent triggering parent click events
     setActiveSubMenu(submenu === activeSubMenu ? null : submenu); // Toggle submenu visibility
   };
 
@@ -89,10 +90,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
               {/* What We Offer Menu */}
               <div
-                onClick={() => handleMenuClick("offer")}
                 className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer"
               >
-                <p>What we offer</p>
+                <p onClick={() => handleMenuClick("offer")}>What we offer</p>
                 {activeMenu === "offer" ? (
                   <MdOutlineKeyboardArrowRight className="text-2xl" />
                 ) : (
@@ -104,16 +104,17 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               {/* Submenu for "What we offer" */}
               {activeMenu === "offer" && (
                 <div className="lg:hidden flex flex-col gap-2 font-subHeading text-[14px] lg:text-[18px] leading-[150%] text-black pl-2">
-                  <div
-                    onClick={() => handleSubMenuClick("coatings")}
-                    className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer"
-                  >
-                    <p>Coatings and Inks</p>
-                    {activeSubMenu === "coatings" ? (
-                      <MdRemove className="text-2xl" />
-                    ) : (
-                      <MdAdd className="text-2xl" />
-                    )}
+                  <div className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
+                    <Link to="/coatings-inks" className="flex-grow" onClick={toggleSidebar}>
+                      <p>Coatings and Inks</p>
+                    </Link>
+                    <div onClick={(e) => handleSubMenuClick("coatings", e)}>
+                      {activeSubMenu === "coatings" ? (
+                        <MdRemove className="text-2xl" />
+                      ) : (
+                        <MdAdd className="text-2xl" />
+                      )}
+                    </div>
                   </div>
                   {activeSubMenu === "coatings" && (
                     <div className="flex flex-col pl-5">
@@ -192,16 +193,17 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     </div>
                   )}
 
-                  <div
-                    onClick={() => handleSubMenuClick("personalCare")}
-                    className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer"
-                  >
-                    <p>Home, Personal Care & Cosmetics</p>
-                    {activeSubMenu === "personalCare" ? (
-                      <MdRemove className="text-2xl" />
-                    ) : (
-                      <MdAdd className="text-2xl" />
-                    )}
+                  <div className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
+                    <Link to="/home-care-cosmetics" className="flex-grow" onClick={toggleSidebar}>
+                      <p>Home, Personal Care & Cosmetics</p>
+                    </Link>
+                    <div onClick={(e) => handleSubMenuClick("personalCare", e)}>
+                      {activeSubMenu === "personalCare" ? (
+                        <MdRemove className="text-2xl" />
+                      ) : (
+                        <MdAdd className="text-2xl" />
+                      )}
+                    </div>
                   </div>
                   {activeSubMenu === "personalCare" && (
                     <div className="flex flex-col pl-5">
@@ -264,16 +266,17 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     </div>
                   )}
 
-                  <div
-                    onClick={() => handleSubMenuClick("lifeSciences")}
-                    className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer"
-                  >
-                    <p>Life Sciences</p>
-                    {activeSubMenu === "lifeSciences" ? (
-                      <MdRemove className="text-2xl" />
-                    ) : (
-                      <MdAdd className="text-2xl" />
-                    )}
+                  <div className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
+                    <Link to="/life-sciences" className="flex-grow" onClick={toggleSidebar}>
+                      <p>Life Sciences</p>
+                    </Link>
+                    <div onClick={(e) => handleSubMenuClick("lifeSciences", e)}>
+                      {activeSubMenu === "lifeSciences" ? (
+                        <MdRemove className="text-2xl" />
+                      ) : (
+                        <MdAdd className="text-2xl" />
+                      )}
+                    </div>
                   </div>
                   {activeSubMenu === "lifeSciences" && (
                     <div className="flex flex-col pl-5">
@@ -324,12 +327,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <div className="mt-10">
               <div className="flex flex-col w-full gap-5 lg:gap-0">
                 <h1 className="font-heading text-[32px] leading-[40px] lg:text-[33px] lg:leading-[45px]">
-                  Asia’s largest Color Manufacturing unit, located in Navi
-                  Mumbai
+                  A Global Leader in Color, Care and Cure
                 </h1>
-                {/* <p className="font-subHeading text-[14px] leading-5 lg:text-[18px] lg:leading-[26px] mt-5">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis esse quo excepturi labore et itaque
-                            </p> */}
               </div>
             </div>
           </div>
@@ -339,42 +338,45 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <div className="hidden lg:flex flex-grow basis-[500px] pr-4">
               <div className="flex flex-col gap-2 font-subHeading text-[14px] lg:text-[18px] leading-[150%] text-black">
                 {/* Coatings and Inks */}
-                <div
-                  onClick={() => handleSubMenuClick("coatings")}
-                  className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer"
-                >
-                  <p>Coatings and Inks</p>
-                  {activeSubMenu === "coatings" ? (
-                    <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
-                  ) : (
-                    <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
-                  )}
+                <div className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
+                  <Link to="/coatings-inks" className="flex-grow" onClick={toggleSidebar}>
+                    <p>Coatings and Inks</p>
+                  </Link>
+                  <div onClick={(e) => handleSubMenuClick("coatings", e)}>
+                    {activeSubMenu === "coatings" ? (
+                      <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
+                    ) : (
+                      <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
+                    )}
+                  </div>
                 </div>
 
                 {/* Home, Personal Care & Cosmetics */}
-                <div
-                  onClick={() => handleSubMenuClick("personalCare")}
-                  className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer"
-                >
-                  <p>Home, Personal Care & Cosmetics</p>
-                  {activeSubMenu === "personalCare" ? (
-                    <MdOutlineKeyboardArrowRight className="text-2xl" />
-                  ) : (
-                    <MdOutlineKeyboardArrowRight className="text-2xl" />
-                  )}
+                <div className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
+                  <Link to="/home-care-cosmetics" className="flex-grow" onClick={toggleSidebar}>
+                    <p>Home, Personal Care & Cosmetics</p>
+                  </Link>
+                  <div onClick={(e) => handleSubMenuClick("personalCare", e)}>
+                    {activeSubMenu === "personalCare" ? (
+                      <MdOutlineKeyboardArrowRight className="text-2xl" />
+                    ) : (
+                      <MdOutlineKeyboardArrowRight className="text-2xl" />
+                    )}
+                  </div>
                 </div>
 
                 {/* Life Sciences */}
-                <div
-                  onClick={() => handleSubMenuClick("lifeSciences")}
-                  className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer"
-                >
-                  <p>Life Sciences</p>
-                  {activeSubMenu === "lifeSciences" ? (
-                    <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
-                  ) : (
-                    <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
-                  )}
+                <div className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
+                  <Link to="/life-sciences" className="flex-grow" onClick={toggleSidebar}>
+                    <p>Life Sciences</p>
+                  </Link>
+                  <div onClick={(e) => handleSubMenuClick("lifeSciences", e)}>
+                    {activeSubMenu === "lifeSciences" ? (
+                      <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
+                    ) : (
+                      <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

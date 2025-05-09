@@ -6,6 +6,7 @@ import Loader from "../pages/Loader";
 
 const Intermediate = ({language, setLoading}) => {
   const [metaFields, setMetaFields] = useState([]); // Initialize as an empty array
+  const [additionalProducts, setAdditionalProducts] = useState([]); // New state for additional products
   const [bannerVideo, setBannerVideo] = useState(''); // State for the banner video URL
   const [loading, setLoadings] = useState(true); // Add loading state
 
@@ -47,6 +48,7 @@ const Intermediate = ({language, setLoading}) => {
 
   useEffect(() => {
     const fetchIntermediate = async () => {
+      // First query for products 1-7
       const query = `query {
           metaobjects(type: "intermediate", first: 50) {
               edges {
@@ -77,7 +79,39 @@ const Intermediate = ({language, setLoading}) => {
           }
       }`;
 
+      // Second query for products 8-12
+      const query2 = `query {
+          metaobjects(type: "intermediate2", first: 50) {
+              edges {
+                  node {
+                      id
+                      displayName
+                      fields {
+                          key
+                          value
+                          reference {
+                              ... on MediaImage {
+                                  image {
+                                      id
+                                      url
+                                  }
+                              }
+                              ... on Video {
+                                  id
+                                  sources {
+                                      url
+                                      mimeType
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }`;
+
       try {
+        // First fetch for main products data
         const response = await fetch(`${import.meta.env.VITE_BASE_URL}/shopify/intermediate-api`, {
           method: "POST",
           headers: {
@@ -87,6 +121,17 @@ const Intermediate = ({language, setLoading}) => {
         });
 
         const result = await response.json();
+
+        // Second fetch for additional products data
+        const response2 = await fetch(`${import.meta.env.VITE_BASE_URL}/shopify/intermediate-api`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ query: query2, targetLanguage: language }),
+        });
+
+        const result2 = await response2.json();
 
         if (result && result.data && result.data.metaobjects) {
           const fields = result.data.metaobjects.edges[0].node.fields;
@@ -101,14 +146,23 @@ const Intermediate = ({language, setLoading}) => {
               setBannerVideo(videoSource);
             }
           }
-          setLoading(false); // Set loading to false once data is fetched
         } else {
           console.error("Metaobjects not found in the response");
         }
+
+        // Process additional products data from second query
+        if (result2 && result2.data && result2.data.metaobjects && result2.data.metaobjects.edges.length > 0) {
+          const additionalFields = result2.data.metaobjects.edges[0].node.fields;
+          console.log("Fetched additional products:", additionalFields);
+          setAdditionalProducts(additionalFields);
+        } else {
+          console.error("Additional products metaobjects not found in the response");
+        }
+
         setLoadings(false); // Set loading to false when the data has been fetched
-        // console.log('Metaobjects response:', result);
+        setLoading(false); // Set loading to false once data is fetched
       } catch (error) {
-        console.error("Error fetching homepage meta fields:", error);
+        console.error("Error fetching intermediate data:", error);
         setLoading(false); // Set loading to false even if there is an error
         setLoadings(false); // Set loading to false even if there's an error
       }
@@ -121,7 +175,7 @@ const Intermediate = ({language, setLoading}) => {
     return <Loader />;
   }
 
-  // Access the values using the correct keys
+  // Access the values using the correct keys for primary products (1-7)
   const bannerTitle = metaFields.find(field => field.key === 'banner_title')?.value || '';
   const bannerDesc = metaFields.find(field => field.key === 'banner_desc')?.value || '';
   const applicationTitle = metaFields.find(field => field.key === 'application_title')?.value || '';
@@ -150,23 +204,48 @@ const Intermediate = ({language, setLoading}) => {
   const product4Molecular = metaFields.find(field => field.key === 'product_4_molecular')?.value || '';
   const product4Desc = metaFields.find(field => field.key === 'product_4_desc')?.value || '';
 
-  const product5Title = metaFields.find(field => field.key === 'product_2_title')?.value || '';
-  const product5Empirical = metaFields.find(field => field.key === 'product_2_empirical')?.value || '';
-  const product5Cas = metaFields.find(field => field.key === 'product_2_cas')?.value || '';
-  const product5Molecular = metaFields.find(field => field.key === 'product_2_molecular')?.value || '';
-  const product5Desc = metaFields.find(field => field.key === 'product_2_desc')?.value || '';
+  const product5Title = metaFields.find(field => field.key === 'product_5_title')?.value || '';
+  const product5Empirical = metaFields.find(field => field.key === 'product_5_empirical')?.value || '';
+  const product5Cas = metaFields.find(field => field.key === 'product_5_cas')?.value || '';
+  const product5Molecular = metaFields.find(field => field.key === 'product_5_molecular')?.value || '';
+  const product5Desc = metaFields.find(field => field.key === 'product_5_desc')?.value || '';
 
-  const product6Title = metaFields.find(field => field.key === 'product_3_title')?.value || '';
-  const product6Empirical = metaFields.find(field => field.key === 'product_3_empirical')?.value || '';
-  const product6Cas = metaFields.find(field => field.key === 'product_3_cas')?.value || '';
-  const product6Molecular = metaFields.find(field => field.key === 'product_3_molecular')?.value || '';
-  const product6Desc = metaFields.find(field => field.key === 'product_3_desc')?.value || '';
+  const product6Title = metaFields.find(field => field.key === 'product_6_title')?.value || '';
+  const product6Empirical = metaFields.find(field => field.key === 'product_6_empirical')?.value || '';
+  const product6Cas = metaFields.find(field => field.key === 'product_6_cas')?.value || '';
+  const product6Molecular = metaFields.find(field => field.key === 'product_6_molecular')?.value || '';
+  const product6Desc = metaFields.find(field => field.key === 'product_6_desc')?.value || '';
 
-  const product7Title = metaFields.find(field => field.key === 'product_4_title')?.value || '';
-  const product7Empirical = metaFields.find(field => field.key === 'product_4_empirical')?.value || '';
-  const product7Cas = metaFields.find(field => field.key === 'product_4_cas')?.value || '';
-  const product7Molecular = metaFields.find(field => field.key === 'product_4_molecular')?.value || '';
-  const product7Desc = metaFields.find(field => field.key === 'product_4_desc')?.value || '';
+  const product7Title = metaFields.find(field => field.key === 'product_7_title')?.value || '';
+  const product7Empirical = metaFields.find(field => field.key === 'product_7_empirical')?.value || '';
+  const product7Cas = metaFields.find(field => field.key === 'product_7_cas')?.value || '';
+  const product7Molecular = metaFields.find(field => field.key === 'product_7_molecular')?.value || '';
+  const product7Desc = metaFields.find(field => field.key === 'product_7_desc')?.value || '';
+
+  // Access the values for additional products (8-12) from additionalProducts state
+  const product8Title = additionalProducts.find(field => field.key === 'product8title')?.value || '';
+  const product8Empirical = additionalProducts.find(field => field.key === 'product8empirical')?.value || '';
+  const product8Cas = additionalProducts.find(field => field.key === 'product8cas')?.value || '';
+  const product8Molecular = additionalProducts.find(field => field.key === 'product8molecular')?.value || '';
+  const product8Desc = additionalProducts.find(field => field.key === 'product8desc')?.value || '';
+
+  const product9Title = additionalProducts.find(field => field.key === 'product9title')?.value || '';
+  const product9Empirical = additionalProducts.find(field => field.key === 'product9empirical')?.value || '';
+  const product9Cas = additionalProducts.find(field => field.key === 'product9cas')?.value || '';
+  const product9Molecular = additionalProducts.find(field => field.key === 'product9molecular')?.value || '';
+  const product9Desc = additionalProducts.find(field => field.key === 'product9desc')?.value || '';
+
+  const product10Title = additionalProducts.find(field => field.key === 'product10title')?.value || '';
+  const product10Empirical = additionalProducts.find(field => field.key === 'product10empirical')?.value || '';
+  const product10Cas = additionalProducts.find(field => field.key === 'product10cas')?.value || '';
+  const product10Molecular = additionalProducts.find(field => field.key === 'product10molecular')?.value || '';
+  const product10Desc = additionalProducts.find(field => field.key === 'product10desc')?.value || '';
+
+  const product11Title = additionalProducts.find(field => field.key === 'product11title')?.value || '';
+  const product11Empirical = additionalProducts.find(field => field.key === 'product11empirical')?.value || '';
+  const product11Cas = additionalProducts.find(field => field.key === 'product11cas')?.value || '';
+  const product11Molecular = additionalProducts.find(field => field.key === 'product11molecular')?.value || '';
+  const product11Desc = additionalProducts.find(field => field.key === 'product11desc')?.value || '';
 
   return (
     <div className="scrollContainer w-full lg:h-[3150px] h-[5000px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
@@ -263,6 +342,30 @@ const Intermediate = ({language, setLoading}) => {
           product7Cas={product7Cas}
           product7Molecular={product7Molecular}
           product7Desc={product7Desc}
+
+          product8Title={product8Title}
+          product8Empirical={product8Empirical}
+          product8Cas={product8Cas}
+          product8Molecular={product8Molecular}
+          product8Desc={product8Desc}
+
+          product9Title={product9Title}
+          product9Empirical={product9Empirical}
+          product9Cas={product9Cas}
+          product9Molecular={product9Molecular}
+          product9Desc={product9Desc}
+
+          product10Title={product10Title}
+          product10Empirical={product10Empirical}
+          product10Cas={product10Cas}
+          product10Molecular={product10Molecular}
+          product10Desc={product10Desc}
+
+          product11Title={product11Title}
+          product11Empirical={product11Empirical}
+          product11Cas={product11Cas}
+          product11Molecular={product11Molecular}
+          product11Desc={product11Desc}
 
           language={language}
         />
