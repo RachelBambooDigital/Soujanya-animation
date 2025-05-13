@@ -482,16 +482,16 @@ const Home = ({language, setLoading}) => {
               <h1 className="font-heading leading-10 text-[28px] lg:text-[54px] lg:leading-[70px]">
                 {metaFields.who_we_are_heading}
               </h1>
-              <button
+              {/* <button
                 className="bg-red text-white text-base font-subHeading h-[42px] w-[175px] lg:w-[192px] my-10 rounded-lg hover:underline"
                 onClick={handleAboutUs}
               >
-                {/* {JSON.parse(metaFields.who_we_are_link).text} */}
+                {JSON.parse(metaFields.who_we_are_link).text}
                 {metaFields.who_we_are_button}
-              </button>
+              </button> */}
             </div>
 
-            <div className="w-full flex gap-5 lg:gap-8 justify-between lg:justify-end mb-5 lg:mb-10 px-3 lg:px-0">
+            {/* <div className="w-full flex gap-5 lg:gap-8 justify-between lg:justify-end mb-5 lg:mb-10 px-3 lg:px-0">
               <div className="w-[110px] sm:w-[170px] md:w-[200px] lg:w-[250px] h-[160px] sm:h-[250px] md:h-[300px] lg:h-[400px] bg-cover bg-center">
                 <img
                   src={metaFields.who_we_are_image[0]}
@@ -506,7 +506,24 @@ const Home = ({language, setLoading}) => {
                   alt="Who are we Image 2"
                 />
               </div>
+            </div> */}
+
+            {/* Our business highlights */}
+            <div className="w-full flex flex-col px-5 sm:px-8 md:px-10 lg:px-10">
+              <div className="w-full flex flex-col items-start mb-5">
+                {/* <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
+                  {metaFields.business_highlights_title}
+                </p> */}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-5 lg:gap-10">
+                {highlights.map((highlight, index) => (
+                  <div key={index} className="flex flex-col w-full h-full">
+                    <Cards title={highlight.title} desc={highlight.desc} />
+                  </div>
+                ))}
+              </div>
             </div>
+
           </div>
 
           {/* What we offer */}
@@ -519,23 +536,6 @@ const Home = ({language, setLoading}) => {
           </div>
 
           <OurProducts language={language}/>
-
-          {/* Our business highlights */}
-          <div className="w-full flex flex-col px-5 sm:px-8 md:px-10 lg:px-10">
-            <div className="w-full flex flex-col items-start mb-5">
-              <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
-                {metaFields.business_highlights_title}
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-5 lg:gap-10">
-              {highlights.map((highlight, index) => (
-                <div key={index} className="flex flex-col w-full h-full">
-                  <Cards title={highlight.title} desc={highlight.desc} />
-                </div>
-              ))}
-            </div>
-          </div>
-
           
           <OurGlobalPresence language={language}/>
         </div>

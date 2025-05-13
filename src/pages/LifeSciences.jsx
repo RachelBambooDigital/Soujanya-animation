@@ -308,7 +308,7 @@ const LifeSciences = ({language, setLoading}) => {
   }
 
   return (
-    <div className="scrollContainer w-full lg:h-[4380px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+    <div className="scrollContainer w-full lg:h-[3800px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
         <svg 
               width="2436" 
               height="5026" 
@@ -408,11 +408,6 @@ const LifeSciences = ({language, setLoading}) => {
               </div>
             </div>
 
-            {/* Our Current offering */}
-            <div className='w-full flex flex-col px-5 lg:px-10'>
-              <CustomSlider language={language} title={metaFields.our_categories_title} subTitle={metaFields.our_categories_desc} slides={slides} />
-            </div>
-
             {/* Our business highlights */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
               <div className='w-full flex flex-col items-start'>
@@ -423,6 +418,11 @@ const LifeSciences = ({language, setLoading}) => {
                   <Cards key={index} title={highlight.title} desc={highlight.desc} />
                 ))}
               </div>
+            </div>
+
+            {/* Our Current offering */}
+            <div className='w-full flex flex-col px-5 lg:px-10'>
+              <CustomSlider language={language} title={metaFields.our_categories_title} subTitle={metaFields.our_categories_desc} slides={slides} />
             </div>
 
             {/* Our Global presence */}
