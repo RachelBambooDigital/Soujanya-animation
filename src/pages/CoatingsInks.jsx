@@ -374,7 +374,7 @@ const CoatingsInks = ({language, setLoading}) => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[4500px] h-[5600px] md:h-[5700px]  overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[5000px] h-[5600px] md:h-[5700px]  overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
       <svg
@@ -467,6 +467,9 @@ const CoatingsInks = ({language, setLoading}) => {
                 <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
                   {metaFields.excellence_title}
                 </p>
+                <h1 className="font-heading text-[28px] lg:text-4xl leading-10 lg:leading-[60px]">
+                  {metaFields.our_offerings_descrip}
+                </h1>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-10 lg:pr-20">
                 {highlights.map((highlight, index) => (

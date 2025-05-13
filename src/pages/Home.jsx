@@ -321,7 +321,7 @@ const Home = ({language, setLoading}) => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[4850px] h-[5250px] overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[4000px] h-[5250px] overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
       {/* <svg
