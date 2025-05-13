@@ -374,7 +374,7 @@ const CoatingsInks = ({language, setLoading}) => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[5200px] h-[5600px] md:h-[5700px]  overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[4500px] h-[5600px] md:h-[5700px]  overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
       <svg
@@ -459,11 +459,6 @@ const CoatingsInks = ({language, setLoading}) => {
                   ></img>
                 </div>
               </div>
-            </div>
-
-            {/* Our Current offering */}
-            <div className='w-full flex flex-col px-5 lg:px-10'>
-              <CustomSlider language={language} title={metaFields.our_offerings_title} subTitle={metaFields.our_offerings_desc} slides={slides} />
             </div>
 
             {/* Our Products highlights */}
@@ -656,6 +651,11 @@ const CoatingsInks = ({language, setLoading}) => {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Our Current offering */}
+            <div className='w-full flex flex-col px-5 lg:px-10'>
+              <CustomSlider language={language} title={metaFields.our_offerings_title} subTitle={metaFields.our_offerings_desc} slides={slides} />
             </div>
 
             {/* Our Global presence */}

@@ -336,7 +336,7 @@ const HomeCareCosmetics = ({language, setLoading}) => {
   }
 
   return (
-    <div className="scrollContainer w-full lg:h-[5200px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+    <div className="scrollContainer w-full lg:h-[4500px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
       <svg width={width}
             height={height}
             viewBox={viewBox} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -417,11 +417,6 @@ const HomeCareCosmetics = ({language, setLoading}) => {
                   <img src={metaFields.who_we_are_imgs[1]} className='w-full h-full'></img>
                 </div>
               </div>
-            </div>
-
-            {/* Our Current offering */}
-            <div className='w-full flex flex-col px-5 lg:px-10'>
-              <CustomSlider title={metaFields.our_offerings_title} subTitle={metaFields.our_offerings_desc} slides={slides} language={language}/>
             </div>
 
             {/* Our Products highlights */}
@@ -570,6 +565,11 @@ const HomeCareCosmetics = ({language, setLoading}) => {
                     </div>
                   </div>
                 </div>
+            </div>
+
+            {/* Our Current offering */}
+            <div className='w-full flex flex-col px-5 lg:px-10'>
+              <CustomSlider title={metaFields.our_offerings_title} subTitle={metaFields.our_offerings_desc} slides={slides} language={language}/>
             </div>
 
             {/* Our Global presence */}
