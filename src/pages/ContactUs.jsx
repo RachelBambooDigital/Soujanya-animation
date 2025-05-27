@@ -213,12 +213,13 @@ const ContactUs = ({ language, setLoading }) => {
         </div>
 
         <div className="w-full flex flex-col lg:flex-row h-full lg:min-h-[800px] relative bg-white items-center">
-          <div className="relative inset-0 flex lg:flex-row flex-col-reverse gap-12 lg:justify-between w-full lg:w-auto items-center px-5 md:px-10 lg:px-10">
-            <div className="flex flex-col gap-6 text-black font-medium md:px-12 lg:px-14 w-full lg:w-auto">
+          <div className="relative inset-0 flex lg:flex-row flex-col-reverse gap-12 lg:gap-0 lg:justify-between w-full items-center px-5 md:px-10 lg:px-0">
+            {/* Form Section - Left Side */}
+            <div className="flex flex-col gap-6 text-black font-medium md:px-12 lg:pl-28 lg:pr-8 w-full lg:w-[55%]">
               <h1 className="text-[24px] md:text-[32px] lg:text-[40px] font-subHeading text-black leading-[30px] md:leading-[40px] lg:leading-[45px] text-start lg:text-left">
                 {metaFields.banner_title} <br />
                 {metaFields.banner_title_2} <br />
-                <span className="text-red">#{metaFields.red_color_text}</span>
+                {/* <span className="text-red">#{metaFields.red_color_text}</span> */}
               </h1>
               <div>
                 <form className="space-y-4" onSubmit={handleSubmit}>
@@ -307,7 +308,7 @@ const ContactUs = ({ language, setLoading }) => {
                   </div>
 
                   <div className="flex flex-col lg:flex-row justify-between items-start space-y-4 lg:space-y-0">
-                    <div className="flex items-start space-x-2">
+                    {/* <div className="flex items-start space-x-2">
                       <input
                         type="checkbox"
                         name="privacyPolicyAccepted"
@@ -317,7 +318,7 @@ const ContactUs = ({ language, setLoading }) => {
                       <label className="text-sm">
                         {metaFields.accept_terms}
                       </label>
-                    </div>
+                    </div> */}
                     <button
                       type="submit"
                       className="bg-red text-white py-2 px-10 rounded-lg"
@@ -329,7 +330,8 @@ const ContactUs = ({ language, setLoading }) => {
               </div>
             </div>
 
-            <div className="w-[60%] md:w-[40%] lg:w-[35%] mt-10">
+            {/* Image Section - Right Side */}
+            <div className="w-[60%] md:w-[40%] lg:w-[35%] lg:pr-28 mt-10 lg:mt-0">
               <img
                 src={metaFields.banner_img}
                 alt="Contact Us"

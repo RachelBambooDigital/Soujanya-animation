@@ -91,8 +91,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               {/* What We Offer Menu */}
               <div
                 className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer"
+                onClick={() => handleMenuClick("offer")}
               >
-                <p onClick={() => handleMenuClick("offer")}>What we offer</p>
+                <p>What we offer</p>
                 {activeMenu === "offer" ? (
                   <MdOutlineKeyboardArrowRight className="text-2xl" />
                 ) : (

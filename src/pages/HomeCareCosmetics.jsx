@@ -118,6 +118,29 @@ const HomeCareCosmetics = ({language, setLoading}) => {
             }
           }
         }`;
+
+        const cosmeticsQuery1 = `query {
+          metaobjects(type: "homecarecosmetics2", first: 50) {
+            edges {
+              node {
+                id
+                displayName
+                fields {
+                  key
+                  value
+                  reference {
+                    ... on MediaImage {
+                      image {
+                        id
+                        url
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }`;
     
         try {
             // Fetch cosmetics
@@ -141,9 +164,19 @@ const HomeCareCosmetics = ({language, setLoading}) => {
             });
     
             const categoriesResult = await categoriesResponse.json();
-            // console.log('Categories Response:', categoriesResult);      
+            // console.log('Categories Response:', categoriesResult); 
+            
+            const cosmeticsResponse1 = await fetch(`${import.meta.env.VITE_BASE_URL}/shopify/home-care-cosmetics`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ query: cosmeticsQuery1, targetLanguage: language  }),
+            });
+
+            const cosmeticsResult1 = await cosmeticsResponse1.json();
     
-            if (cosmeticsResult?.data && categoriesResult?.data) {
+            if (cosmeticsResult?.data && categoriesResult?.data && cosmeticsResult1?.data) {
               // Process cosmetics
                 const fields = {};
                 const slidesArray1 = [];
@@ -191,6 +224,26 @@ const HomeCareCosmetics = ({language, setLoading}) => {
                   }
                 }
 
+                for (const edge of cosmeticsResult1.data.metaobjects.edges) {
+                  for (const field of edge.node.fields) {
+                    if (field.key.startsWith('our_offerings_card')) {
+                      const cardIndex = parseInt(field.key.split('_').pop(), 10) - 1;
+
+                      if (!slidesArray1[cardIndex]) {
+                          slidesArray1[cardIndex] = { id: cardIndex + 1 };
+                      }
+
+                      if (field.key.includes('title')) {
+                          slidesArray1[cardIndex].title = field.value;
+                      } else if (field.key.includes('image') && field.reference?.image?.url) {
+                          slidesArray1[cardIndex].image = field.reference.image.url;
+                      } else if (field.key.includes('link')) {
+                          slidesArray1[cardIndex].link = field.value;
+                      }
+                    }                     
+                  }
+                }
+
                 // Process home care categories
                 for (const edge of categoriesResult.data.metaobjects.edges) {
                   const node = edge.node;
@@ -200,36 +253,22 @@ const HomeCareCosmetics = ({language, setLoading}) => {
                       title: node.displayName,
                       title1: '', // New title field
                       description1: '', // Initialize with empty string
-                      description2: '',
                       description3: '', 
-                      description4: '', 
                       images1: [],
-                      images2: [],
                       images3: [], 
-                      images4: [],
                   };
               
                   for (const field of node.fields) {
                     if (field.key === 'description_1') {
                       categories[categoryKey].description1 = field.value;
-                    } else if (field.key === 'description_2') {
-                      categories[categoryKey].description2 = field.value;
                     } else if (field.key === 'description_3') {
                       categories[categoryKey].description3 = field.value;
-                    } else if (field.key === 'description_4') {
-                      categories[categoryKey].description4 = field.value; 
                     } else if (field.key === 'images_1' && field.value) {
                       const parsedImages1 = JSON.parse(field.value);
                       categories[categoryKey].images1 = await Promise.all(parsedImages1.map(gid => fetchImage(gid)));
-                    } else if (field.key === 'images_2' && field.value) {
-                      const parsedImages2 = JSON.parse(field.value);
-                      categories[categoryKey].images2 = await Promise.all(parsedImages2.map(gid => fetchImage(gid)));
                     } else if (field.key === 'images_3' && field.value) {
                       const parsedImages3 = JSON.parse(field.value);
                       categories[categoryKey].images3 = await Promise.all(parsedImages3.map(gid => fetchImage(gid))); 
-                    } else if (field.key === 'images_4' && field.value) {
-                      const parsedImages4 = JSON.parse(field.value);
-                      categories[categoryKey].images4 = await Promise.all(parsedImages4.map(gid => fetchImage(gid))); 
                     } else if (field.key === 'title_1') {
                       categories[categoryKey].title1 = field.value; 
                     } else if (field.key === 'title') {
@@ -433,9 +472,9 @@ const HomeCareCosmetics = ({language, setLoading}) => {
 
             {/* Applications Section */}
             <div className='p-5 lg:p-10 w-full items-start grid grid-cols-12'>
-              <p className='col-span-12 lg:col-span-5 py-3 sm:py-5 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[15px]'>
+              <h1 className='col-span-12 lg:col-span-5 py-3 sm:py-5 lg:py-10 font-heading font-medium text-2xl sm:text-3xl lg:text-4xl xl:text-[38px]'>
                 {metaFields.application_header || 'Applications'} {/* Use fetched title */}
-              </p>
+              </h1>
               <div className='col-span-12 lg:col-span-7 py-3 sm:py-5 lg:py-10'>
                 <p className='font-subHeading font-light text-[28px] lg:text-[20px] leading-8 sm:leading-10 md:leading-[60px] lg:leading-[30px]'>
                   {metaFields.application_desc || 'No description available.'} {/* Use fetched description */}
@@ -524,44 +563,6 @@ const HomeCareCosmetics = ({language, setLoading}) => {
                         ) : (
                           <p>No images available for this category.</p>
                         )}
-                    </div>
-                  </div>
-
-                  {/* New section for Images2 and Description2 */}
-                  <div className="flex flex-col lg:flex-row gap-10 mt-10">
-                    {/* Left content - Images2 */}
-                    <div className="w-full flex gap-6 mt-12 lg:mt-0 order-2 lg:order-1 mb-10">
-                      {showAlternateContent
-                        ? categories[activeCategory]?.images4 && categories[activeCategory].images4.length > 0 ? (
-                          categories[activeCategory].images4.map((img, index) => (
-                            <div key={index}>
-                              <img src={img} alt={activeCategory} className="object-cover" />
-                            </div>
-                          ))
-                        ) : (
-                          <p>No images available for this category.</p>
-                        )
-                        : categories[activeCategory]?.images2 && categories[activeCategory].images2.length > 0 ? (
-                          categories[activeCategory].images2.map((img, index) => (
-                            <div key={index}>
-                              <img src={img} alt={activeCategory} className="object-cover" />
-                            </div>
-                          ))
-                        ) : (
-                          <p>No images available for this category.</p>
-                        )}
-                    </div>
-
-                    {/* Right content - Description2 */}
-                    <div className="w-full flex lg:flex-row flex-col lg:justify-between items-center lg:w-1/2 order-1 lg:order-2">
-                      <div className='flex flex-col text-black'>
-                        <h2 className="w-full font-heading text-2xl lg:text-4xl">{metaFields.use_case_title}</h2>
-                        <p className="text-[#667085] font-subHeading text-[16px] mt-4">
-                          {showAlternateContent
-                            ? categories[activeCategory]?.description4 || 'No description available for this category.'
-                            : categories[activeCategory]?.description2 || 'No description available for this category.'}
-                        </p>
-                      </div>
                     </div>
                   </div>
                 </div>

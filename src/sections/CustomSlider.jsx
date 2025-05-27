@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 const CustomArrow = ({ className, style, onClick, icon }) => {
   return (
     <button
-      className={`${className} bg-transparent border border-gray-400 py-1 px-3 rounded-sm hover:bg-black hover:text-white transition-all duration-300 ease-in-out`}
+      className={`${className} bg-transparent border border-gray-400 py-2 px-3 sm:py-2 sm:px-4 rounded-sm hover:bg-black hover:text-white transition-all duration-300 ease-in-out text-sm sm:text-base`}
       style={{ ...style }}
       onClick={onClick}
     >
@@ -20,7 +20,6 @@ const CustomArrow = ({ className, style, onClick, icon }) => {
 
 const CustomSlider = ({ title, subTitle, slides, language }) => {
   const [metaFields, setMetaFields] = useState(null);
-
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = React.useRef(null);
 
@@ -93,59 +92,91 @@ const CustomSlider = ({ title, subTitle, slides, language }) => {
   }, [language]);  
 
   const nextSlide = () => {
-    sliderRef.current.slickNext();
+    if (sliderRef.current) {
+      sliderRef.current.slickNext();
+    }
   };
 
   const prevSlide = () => {
-    sliderRef.current.slickPrev();
+    if (sliderRef.current) {
+      sliderRef.current.slickPrev();
+    }
   };
 
   const slideCount = slides.length;
-  const slidesToShowCount = slideCount < 3 ? slideCount : 3; // Show only the available number of slides
 
   const settings = {
     dots: false,
-    infinite: slideCount > slidesToShowCount,
+    infinite: slideCount > 1,
     speed: 500,
     slidesToShow: 3, // Default for larger screens
     slidesToScroll: 1,
     arrows: false, // Disable default arrows
-    swipe: false, // Disable swipe for desktop
-    touchMove: false, // Disable touch gestures for desktop
     beforeChange: (oldIndex, newIndex) => {
       setCurrentSlide(newIndex);
     },
     responsive: [
       {
-        breakpoint: 1024, // For tablets and smaller screens
+        breakpoint: 1280, // xl breakpoint
         settings: {
-          slidesToShow: 2,
+          slidesToShow: slideCount >= 3 ? 3 : slideCount,
           slidesToScroll: 1,
-          swipe: true, // Enable swipe for tablet
+          infinite: slideCount > 3,
+          swipe: true,
           touchMove: true,
-          arrows: false,
         },
       },
       {
-        breakpoint: 769, // For mobile screens
+        breakpoint: 1024, // lg breakpoint
+        settings: {
+          slidesToShow: slideCount >= 2 ? 2 : slideCount,
+          slidesToScroll: 1,
+          infinite: slideCount > 2,
+          swipe: true,
+          touchMove: true,
+        },
+      },
+      {
+        breakpoint: 768, // md breakpoint
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          swipe: true, // Enable swipe for mobile
+          infinite: slideCount > 1,
+          swipe: true,
           touchMove: true,
-          arrows: false,
+        },
+      },
+      {
+        breakpoint: 640, // sm breakpoint
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: slideCount > 1,
+          swipe: true,
+          touchMove: true,
         },
       },
     ],
   };
 
-  const centerIndex = Math.floor(settings.slidesToShow / 2) + currentSlide;
+  // Calculate center index based on current breakpoint
+  const getCurrentSlidesToShow = () => {
+    if (typeof window !== 'undefined') {
+      const width = window.innerWidth;
+      if (width >= 1280) return Math.min(3, slideCount);
+      if (width >= 1024) return Math.min(2, slideCount);
+      return 1;
+    }
+    return 3;
+  };
+
+  const centerIndex = Math.floor(getCurrentSlidesToShow() / 2) + currentSlide;
   
   const parseLink = (link, language) => {
     try {
       // Sanitize the string by replacing non-standard quotes with standard quotes
       let sanitizedLink = link
-        .replace(/[“”„»«]/g, '"')  // Replace non-standard quotes with standard double quotes
+        .replace(/[""„»«]/g, '"')  // Replace non-standard quotes with standard double quotes
         .trim(); // Remove leading/trailing spaces
   
       // If the link looks like a JSON string, try to parse it
@@ -169,79 +200,108 @@ const CustomSlider = ({ title, subTitle, slides, language }) => {
   };   
   
   if (!metaFields) {
-    return <div>Loading...</div>; // Loading state
+    return (
+      <div className="flex justify-center items-center py-10">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+    );
   }
   
+  // Determine if arrows should be shown based on screen size and slide count
+  const shouldShowArrows = () => {
+    if (typeof window !== 'undefined') {
+      const width = window.innerWidth;
+      if (width >= 1280) return slideCount > 3; // xl: show arrows if more than 3 slides
+      if (width >= 1024) return slideCount > 2; // lg: show arrows if more than 2 slides
+      return slideCount > 1; // md and below: show arrows if more than 1 slide
+    }
+    return slideCount > 3;
+  };
+  
   return (
-    <div className="mb-5 lg:mb-10">
+    <div className="mb-5 lg:mb-10 px-2 sm:px-4 lg:px-0">
+      {/* Header Section */}
       <div className="w-full flex flex-col items-start mb-5 lg:mb-10">
-        <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
+        <p className="py-4 sm:py-6 lg:py-10 font-subHeading font-medium text-base sm:text-lg md:text-xl lg:text-[22px]">
           {title}
         </p>
-        <h1 className="font-heading text-[28px] lg:text-[54px] leading-10 lg:leading-[70px]">
+        <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[54px] leading-tight sm:leading-8 md:leading-10 lg:leading-[60px] xl:leading-[70px]">
           {subTitle}
         </h1>
       </div>
 
-      <Slider ref={sliderRef} {...settings}>
-      {slides.map((slide, index) => {
-        const isCenter = index === centerIndex % slides.length;
+      {/* Slider Container */}
+      <div className="relative">
+        <Slider ref={sliderRef} {...settings}>
+          {slides.map((slide, index) => {
+            const isCenter = index === centerIndex % slides.length;
 
-        // Parse the link using the updated parseLink function
-        const { url, isExternal } = parseLink(slide.link, language);
+            // Parse the link using the updated parseLink function
+            const { url, isExternal } = parseLink(slide.link, language);
 
-        return (
-          <div className="w-full px-2 lg:px-4 py-8" key={slide.id}>
-            {isExternal ? (
-              // For external URLs, use <a> tag with target="_self" to open in the same tab
-              <a href={url} target="_self" rel="noopener noreferrer">
-                <div
-                  className={`w-full h-[300px] md:h-[400px] xl:h-[500px] bg-center bg-cover relative rounded-xl transition-transform duration-300 ${
-                    isCenter ? "lg:scale-110" : "lg:scale-100"
-                  }`}
-                >
-                  <img
-                    src={slide.image}
-                    className="w-full h-full object-cover object-center rounded-xl"
-                    alt={slide.title}
-                  />
-                  <div className="absolute inset-0 flex items-end text-white font-medium p-5 xl:p-7">
-                    <h1 className="w-[270px] font-heading text-[24px] md:text-[32px] leading-[40px]">
-                      {slide.title}
-                    </h1>
-                  </div>
-                </div>
-              </a>
-            ) : (
-              // For internal URLs, use <Link> component from react-router-dom
-              <Link to={url}>
-                <div
-                  className={`w-full h-[300px] md:h-[400px] xl:h-[500px] bg-center bg-cover relative rounded-xl transition-transform duration-300 ${
-                    isCenter ? "lg:scale-110" : "lg:scale-100"
-                  }`}
-                >
-                  <img
-                    src={slide.image}
-                    className="w-full h-full object-cover object-center rounded-xl"
-                    alt={slide.title}
-                  />
-                  <div className="absolute inset-0 flex items-end text-white font-medium p-5 xl:p-7">
-                    <h1 className="w-[270px] font-heading text-[24px] md:text-[32px] leading-[40px]">
-                      {slide.title}
-                    </h1>
-                  </div>
-                </div>
-              </Link>
-            )}
+            return (
+              <div className="px-1 sm:px-2 lg:px-4 py-4 sm:py-6 lg:py-8" key={slide.id}>
+                {isExternal ? (
+                  // For external URLs, use <a> tag with target="_self" to open in the same tab
+                  <a href={url} target="_self" rel="noopener noreferrer">
+                    <div
+                      className={`w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] xl:h-[500px] bg-center bg-cover relative rounded-lg sm:rounded-xl transition-transform duration-300 ${
+                        isCenter ? "lg:scale-110" : "lg:scale-100"
+                      }  shadow-md`}
+                    >
+                      <img
+                        src={slide.image}
+                        className="w-full h-full object-cover object-center rounded-lg sm:rounded-xl"
+                        alt={slide.title}
+                      />
+                      <div className="absolute inset-0 flex items-end text-white font-medium p-3 sm:p-4 md:p-5 xl:p-7 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-lg sm:rounded-xl">
+                        <h1 className="w-full max-w-[250px] sm:max-w-[270px] font-heading text-lg sm:text-xl md:text-2xl lg:text-[28px] xl:text-[32px] leading-6 sm:leading-7 md:leading-8 lg:leading-9 xl:leading-[40px]">
+                          {slide.title}
+                        </h1>
+                      </div>
+                    </div>
+                  </a>
+                ) : (
+                  // For internal URLs, use <Link> component from react-router-dom
+                  <Link to={url}>
+                    <div
+                      className={`w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] xl:h-[500px] bg-center bg-cover relative rounded-lg sm:rounded-xl transition-transform duration-300 ${
+                        isCenter ? "lg:scale-110" : "lg:scale-100"
+                      } shadow-md`}
+                    >
+                      <img
+                        src={slide.image}
+                        className="w-full h-full object-cover object-center rounded-lg sm:rounded-xl"
+                        alt={slide.title}
+                      />
+                      <div className="absolute inset-0 flex items-end text-white font-medium p-3 sm:p-4 md:p-5 xl:p-7 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-lg sm:rounded-xl">
+                        <h1 className="w-full max-w-[250px] sm:max-w-[270px] font-heading text-lg sm:text-xl md:text-2xl lg:text-[28px] xl:text-[32px] leading-6 sm:leading-7 md:leading-8 lg:leading-9 xl:leading-[40px]">
+                          {slide.title}
+                        </h1>
+                      </div>
+                    </div>
+                  </Link>
+                )}
+              </div>
+            );
+          })}
+        </Slider>
+
+        {/* Custom Arrows - Show based on screen size and slide count */}
+        {shouldShowArrows() && (
+          <div className="flex justify-between items-center mt-4 sm:mt-6 px-2 sm:px-0">
+            <CustomArrow 
+              className="cursor-pointer flex-shrink-0" 
+              icon={<HiOutlineArrowNarrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />} 
+              onClick={prevSlide} 
+            />
+            <CustomArrow 
+              className="cursor-pointer flex-shrink-0" 
+              icon={<HiOutlineArrowNarrowRight className="w-4 h-4 sm:w-5 sm:h-5" />} 
+              onClick={nextSlide} 
+            />
           </div>
-        );
-      })}
-      </Slider>
-
-      {/* Custom Arrows for desktop */}
-      <div className="flex justify-between px-4">
-        <CustomArrow icon={<HiOutlineArrowNarrowLeft />} onClick={prevSlide} />
-        <CustomArrow icon={<HiOutlineArrowNarrowRight />} onClick={nextSlide} />
+        )}
       </div>
     </div>
   );

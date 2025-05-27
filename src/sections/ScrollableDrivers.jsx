@@ -2,34 +2,38 @@ import { useState, useEffect, useRef } from 'react';
 
 const ScrollableDrivers = ({ drivers2, language }) => {
   const [metaFields, setMetaFields] = useState(null);
-  const [cardWidth, setCardWidth] = useState(350); // Default card width
+  const [cardWidth, setCardWidth] = useState(350);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
+  const [hasAutoScrolled, setHasAutoScrolled] = useState(false);
   
   const scrollContainerRef = useRef(null);
   const cardContainerRef = useRef(null);
-  const autoScrollInterval = 3000; // Decreased from 4000ms to 3000ms for faster auto-scrolling
-  const scrollSpeed = 300; // Animation duration in ms (lower = faster)
+  const autoScrollInterval = 3000;
 
-  // Create a new array with duplicated items for seamless scrolling
-  const extendedDrivers = [...drivers2, ...drivers2]; // Duplicate entire array
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return function(...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func.apply(this, args), delay);
+    };
+  };
 
   // Calculate the card width based on screen size
   useEffect(() => {
     const updateCardWidth = () => {
-      if (window.innerWidth < 640) { // sm breakpoint
-        setCardWidth(window.innerWidth - 40); // Adjust for padding
-      } else if (window.innerWidth < 1024) { // lg breakpoint
+      if (window.innerWidth < 640) {
+        setCardWidth(window.innerWidth - 40);
+      } else if (window.innerWidth < 1024) {
         setCardWidth(300);
       } else {
         setCardWidth(350);
       }
     };
 
-    // Set initial width and update on resize
     updateCardWidth();
     window.addEventListener('resize', updateCardWidth);
     
@@ -43,60 +47,98 @@ const ScrollableDrivers = ({ drivers2, language }) => {
     }
   }, [drivers2]);
 
-  // Auto-scroll functionality
+  // Auto-scroll functionality - scrolls through all cards once when component loads
   useEffect(() => {
-    if (!scrollContainerRef.current || isDragging) return;
+    // Start auto-scroll only after component has mounted and cards are available
+    if (!scrollContainerRef.current || isDragging || hasAutoScrolled || totalItems === 0 || !metaFields) return;
 
-    const scrollInterval = setInterval(() => {
-      scrollToCard((currentIndex + 1) % totalItems);
-    }, autoScrollInterval);
+    // Add a small delay to ensure everything is rendered
+    const startAutoScroll = setTimeout(() => {
+      let scrollIndex = 0;
+      
+      const scrollInterval = setInterval(() => {
+        scrollIndex++;
+        scrollToCard(scrollIndex);
+        
+        // Stop auto-scrolling when we reach the last card
+        if (scrollIndex >= totalItems - 1) {
+          setHasAutoScrolled(true);
+          clearInterval(scrollInterval);
+        }
+      }, autoScrollInterval);
 
-    return () => clearInterval(scrollInterval);
-  }, [currentIndex, totalItems, isDragging]);
+      return () => clearInterval(scrollInterval);
+    }, 500); // 500ms delay to ensure rendering is complete
 
-  // Scroll to a specific card index with custom speed
+    return () => clearTimeout(startAutoScroll);
+  }, [totalItems, isDragging, hasAutoScrolled, cardWidth, metaFields]);
+
+  // Scroll to a specific card index
   const scrollToCard = (index) => {
     if (!scrollContainerRef.current) return;
     
-    const newScrollPosition = index * (cardWidth + 16); // 16px is the gap
+    const clampedIndex = Math.max(0, Math.min(index, totalItems - 1));
+    const newScrollPosition = clampedIndex * (cardWidth + 16);
+    
     scrollContainerRef.current.scrollTo({
       left: newScrollPosition,
-      behavior: 'smooth',
-      // Setting a custom duration isn't directly possible with scrollTo,
-      // but we control the overall speed by manipulating the scroll interval
+      behavior: 'smooth'
     });
     
-    setCurrentIndex(index);
+    setCurrentIndex(clampedIndex);
   };
 
   // Scroll to the next card
   const scrollNext = () => {
-    scrollToCard((currentIndex + 1) % totalItems);
+    const nextIndex = Math.min(currentIndex + 1, totalItems - 1);
+    scrollToCard(nextIndex);
   };
 
   // Scroll to the previous card
   const scrollPrev = () => {
-    scrollToCard((currentIndex - 1 + totalItems) % totalItems);
+    const prevIndex = Math.max(currentIndex - 1, 0);
+    scrollToCard(prevIndex);
   };
 
   // Handle scroll events to update the current index
-  const handleScroll = () => {
+  const handleScroll = debounce(() => {
     if (!scrollContainerRef.current || isDragging) return;
     
     const scrollPosition = scrollContainerRef.current.scrollLeft;
-    const newIndex = Math.round(scrollPosition / (cardWidth + 16));
+    const containerWidth = scrollContainerRef.current.offsetWidth;
+    const totalWidth = cardWidth * totalItems + 16 * (totalItems - 1);
     
-    // Check if we've reached the end of the first set
-    if (newIndex >= totalItems) {
-      // Reset to start of first set
-      scrollContainerRef.current.scrollLeft = 0;
-      setCurrentIndex(0);
-    } else {
-      setCurrentIndex(newIndex);
+    // Check if we've reached the end
+    if (scrollPosition + containerWidth >= totalWidth - 1) {
+      setCurrentIndex(totalItems - 1);
+      return;
     }
-  };
+    
+    const newIndex = Math.round(scrollPosition / (cardWidth + 16));
+    const clampedIndex = Math.max(0, Math.min(newIndex, totalItems - 1));
+    
+    if (currentIndex !== clampedIndex) {
+      setCurrentIndex(clampedIndex);
+    }
+  }, 100);
 
-  // Mouse and touch event handlers with increased speed
+  // Add a scroll end listener to ensure final position is captured
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScrollEnd = () => {
+      const scrollPosition = container.scrollLeft;
+      const newIndex = Math.round(scrollPosition / (cardWidth + 16));
+      const clampedIndex = Math.max(0, Math.min(newIndex, totalItems - 1));
+      setCurrentIndex(clampedIndex);
+    };
+
+    container.addEventListener('scrollend', handleScrollEnd);
+    return () => container.removeEventListener('scrollend', handleScrollEnd);
+  }, [cardWidth, totalItems]);
+
+  // Mouse and touch event handlers
   const handleMouseDown = (e) => {
     setIsDragging(true);
     setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
@@ -105,10 +147,10 @@ const ScrollableDrivers = ({ drivers2, language }) => {
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    // Snap to nearest card with faster animation
     if (scrollContainerRef.current) {
       const closestIndex = Math.round(scrollContainerRef.current.scrollLeft / (cardWidth + 16));
-      scrollToCard(closestIndex % totalItems);
+      const clampedIndex = Math.max(0, Math.min(closestIndex, totalItems - 1));
+      scrollToCard(clampedIndex);
     }
   };
 
@@ -117,7 +159,7 @@ const ScrollableDrivers = ({ drivers2, language }) => {
     e.preventDefault();
     
     const x = e.pageX - scrollContainerRef.current.offsetLeft;
-    const walk = (x - startX) * 3; // Increased from 2 to 3 for faster manual scrolling
+    const walk = (x - startX) * 2;
     scrollContainerRef.current.scrollLeft = scrollLeft - walk;
   };
 
@@ -129,10 +171,10 @@ const ScrollableDrivers = ({ drivers2, language }) => {
 
   const handleTouchEnd = () => {
     setIsDragging(false);
-    // Snap to nearest card with faster animation
     if (scrollContainerRef.current) {
       const closestIndex = Math.round(scrollContainerRef.current.scrollLeft / (cardWidth + 16));
-      scrollToCard(closestIndex % totalItems);
+      const clampedIndex = Math.max(0, Math.min(closestIndex, totalItems - 1));
+      scrollToCard(clampedIndex);
     }
   };
 
@@ -140,34 +182,9 @@ const ScrollableDrivers = ({ drivers2, language }) => {
     if (!isDragging) return;
     
     const x = e.touches[0].pageX - scrollContainerRef.current.offsetLeft;
-    const walk = (x - startX) * 3; // Increased from 2 to 3 for faster touch scrolling
+    const walk = (x - startX) * 2;
     scrollContainerRef.current.scrollLeft = scrollLeft - walk;
   };
-
-  // Apply CSS transition style for faster scrolling
-  useEffect(() => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.style.scrollBehavior = 'smooth';
-      // This sets the CSS scroll-behavior property which we manually override for speed
-      
-      // Add a style tag to customize the scroll animation speed
-      const styleTag = document.createElement('style');
-      styleTag.innerHTML = `
-        .fast-scroll {
-          scroll-behavior: smooth;
-          scroll-timeline: auto;
-          transition: all ${scrollSpeed}ms ease-out !important;
-        }
-      `;
-      document.head.appendChild(styleTag);
-      
-      scrollContainerRef.current.classList.add('fast-scroll');
-      
-      return () => {
-        document.head.removeChild(styleTag);
-      };
-    }
-  }, [scrollSpeed]);
 
   // Fetch meta fields
   useEffect(() => {
@@ -237,11 +254,11 @@ const ScrollableDrivers = ({ drivers2, language }) => {
   }, [language]); 
     
   if (!metaFields) {
-    return <div>Loading...</div>; // Loading state
+    return <div>Loading...</div>;
   }
 
   return (
-    <div className='w-full flex flex-col gap-16 mb-16 px-5 lg:px-10'>
+    <div className='w-full flex flex-col gap-16 mb-16 px-5 lg:px-10 relative'>
       <div className='w-full flex flex-col items-start'>
         <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>
           {metaFields.our_story_title}
@@ -251,33 +268,45 @@ const ScrollableDrivers = ({ drivers2, language }) => {
         </h1>
       </div>
 
-      <div className='w-full'>
-        {/* Navigation buttons */}
-        {/* <div className="flex justify-end mb-4 gap-2">
-          <button 
-            onClick={scrollPrev}
-            className="bg-gray-200 rounded-full p-2 hover:bg-gray-300"
-            aria-label="Previous card"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-          </button>
-          <button 
-            onClick={scrollNext}
-            className="bg-gray-200 rounded-full p-2 hover:bg-gray-300"
-            aria-label="Next card"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 18l6-6-6-6" />
-            </svg>
-          </button>
-        </div> */}
+      <div className='w-full relative'>
+        {/* Left Navigation Arrow */}
+        <button 
+          onClick={scrollPrev}
+          disabled={currentIndex === 0}
+          className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full p-3 transition-all duration-200 ${
+            currentIndex === 0 
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-50' 
+              : 'bg-white text-gray-700 hover:bg-gray-50 shadow-lg hover:shadow-xl'
+          }`}
+          style={{ transform: 'translateY(-50%) translateX(-50%)' }}
+          aria-label="Previous card"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+
+        {/* Right Navigation Arrow */}
+        <button 
+          onClick={scrollNext}
+          disabled={currentIndex >= totalItems - 1}
+          className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full p-3 transition-all duration-200 ${
+            currentIndex >= totalItems - 1 
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-70' 
+              : 'bg-white text-gray-700 hover:bg-gray-50 shadow-lg hover:shadow-xl'
+          }`}
+          style={{ transform: 'translateY(-50%) translateX(50%)' }}
+          aria-label="Next card"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
 
         {/* Scrollable container */}
         <div
           ref={scrollContainerRef}
-          className='flex gap-4 no-scrollbar transition-all fast-scroll'
+          className='flex gap-4 no-scrollbar'
           onScroll={handleScroll}
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
@@ -289,15 +318,13 @@ const ScrollableDrivers = ({ drivers2, language }) => {
           style={{ 
             overflowX: 'auto', 
             scrollSnapType: 'x mandatory',
-            WebkitOverflowScrolling: 'touch', // Enable momentum scrolling
+            WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            transitionDuration: `${scrollSpeed}ms`,
-            transitionTimingFunction: 'ease-out'
+            msOverflowStyle: 'none'
           }}
         >
           <div ref={cardContainerRef} className="flex gap-4">
-            {extendedDrivers.map((driver, index) => (
+            {drivers2.map((driver, index) => (
               <div
                 key={index}
                 className={`flex-shrink-0 min-h-[450px] bg-opacity-45 backdrop-blur-lg flex flex-col items-start justify-start text-black p-4 gap-4 ${driver.color} rounded-t-[42px] rounded-l-[42px]`}
