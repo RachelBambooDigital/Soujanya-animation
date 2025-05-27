@@ -34,26 +34,12 @@ const OurProducts = ({language}) => {
         dots: false,
         infinite: true,
         speed: 500,
-        slidesToShow: 3,
+        slidesToShow: 1,
         slidesToScroll: 1,
         arrows: false,
         swipe: true,
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                },
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                },
-            },
-        ],
+        centerMode: false,
+        variableWidth: false,
     };
 
     const [metaFields, setMetaFields] = useState(null);
@@ -216,97 +202,131 @@ const OurProducts = ({language}) => {
         return <div>Loading...</div>; // Loading state
     }
 
-    // console.log("Product 2 Image Titles:", metaFields.product_2_image_title);
+    // Product cards data for easier management
+    const cardData = [
+        {
+            title: metaFields.our_products_card_1_title,
+            desc: metaFields.our_products_card_1_desc,
+            title1: metaFields.our_products_card_1_title_1,
+            desc1: metaFields.our_products_card_1_desc_1,
+            gradient: 'bg-gradient-to-tr from-blue to-green',
+            link: '/product-listing3?category=CoatingsInks'
+        },
+        {
+            title: metaFields.our_products_cards_2_title,
+            desc: metaFields.our_products_cards_2_desc,
+            title1: metaFields.our_products_card_2_title_1,
+            desc1: metaFields.our_products_card_2_desc_1,
+            gradient: 'bg-gradient-to-tl from-lightOrange to-darkOrange',
+            link: '/product-listing?category=HomeCareCosmetics'
+        },
+        {
+            title: metaFields.our_products_cards_3_title,
+            desc: metaFields.our_products_cards_3_desc,
+            title1: metaFields.our_products_card_3_title_1,
+            desc1: metaFields.our_products_card_3_desc_1,
+            gradient: 'bg-gradient-to-bl from-violet to-purple',
+            link: '/product-listing2?category=LifeSciences'
+        }
+    ];
+
+    // Card component to avoid repetition
+    const ProductCard = ({ card, isDesktop = false }) => (
+        <div className={`w-full ${isDesktop ? 'p-2 xl:p-3' : 'px-2'}`}>
+            <div className={`w-full flex flex-col ${card.gradient} gap-4 sm:gap-6 p-4 sm:p-6 text-white font-subHeading rounded-2xl h-full`}>
+                <div className='flex flex-col gap-3 sm:gap-4 flex-grow'>
+                    <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-[36px] 2xl:text-[38px] font-heading break-words leading-tight whitespace-pre-line'>
+                        {card.title}
+                    </h1>
+                    <p className='text-sm sm:text-base lg:text-lg xl:text-xl font-subHeading leading-relaxed break-words'>
+                        {card.desc}
+                    </p>
+                </div>
+                
+                <div className='flex flex-col gap-3 sm:gap-4 flex-grow'>
+                    <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-[36px] 2xl:text-[38px] font-heading break-words leading-tight whitespace-pre-line'>
+                        {card.title1}
+                    </h1>
+                    <p className='text-sm sm:text-base lg:text-lg xl:text-xl font-subHeading leading-relaxed break-words'>
+                        {card.desc1}
+                    </p>
+                </div>
+                
+                <Link to={card.link} className="mt-auto">
+                    <button className='w-full flex items-center justify-center gap-3 rounded-lg border border-white py-2 px-4 font-subHeading text-sm sm:text-[16px] text-white font-light hover:bg-white hover:text-black transition-all duration-300'>
+                        Explore Products <HiOutlineArrowNarrowRight />
+                    </button>
+                </Link>
+            </div>
+        </div>
+    );
+
     return (
         <div className='w-full mb-5 lg:mb-10'>
-            <div className='w-full flex flex-col gap-16 px-5 lg:px-10'>
+            <div className='w-full flex flex-col gap-8 sm:gap-12 lg:gap-16 px-4 sm:px-5 lg:px-10'>
                 <div className='w-full flex flex-col items-start'>
-                    <p className='py-5 lg:py-10 font-subHeading font-medium text-[14px] lg:text-[18px]'>{metaFields.our_products_main_title}</p>
-                    <h1 className='font-heading text-[32px] leading-10 lg:text-[62px] lg:leading-[70px]'>{metaFields.our_products_title}</h1>
+                    <p className='py-3 sm:py-5 lg:py-10 font-subHeading font-medium text-sm sm:text-[14px] lg:text-[18px]'>
+                        {metaFields.our_products_main_title}
+                    </p>
+                    <h1 className='font-heading text-2xl sm:text-[32px] leading-8 sm:leading-10 lg:text-[62px] lg:leading-[70px]'>
+                        {metaFields.our_products_title}
+                    </h1>
                 </div>
 
-                <div className='w-full gap-96'>
-                    <Slider ref={sliderRef} {...settings}>
-                        {/* Card 1 */}
-                        <div className='p-1 lg:p-3'>
-                            <div className="w-full flex flex-col bg-gradient-to-tr from-blue to-green gap-6 lg:gap-10 p-5 lg:p-8 text-white font-subHeading rounded-2xl">
-                                <div className='flex flex-col lg:gap-4'>
-                                    <h1 className='w-[250px] lg:w-[350px] h-[130px] lg:h-[100px] font-heading text-[32px] leading-[40px] lg:text-[42px] lg:leading-[50px]'>{metaFields.our_products_card_1_title}</h1>
-                                    <p className='w-full lg:w-[350px] h-[130px] lg:h-[70px] text-[14px] leading-5 lg:text-[18px] lg:leading-[26px]'>{metaFields.our_products_card_1_desc}</p>
+                <div className='w-full'>
+                    {/* Desktop Grid Layout - 3 cards in a row */}
+                    <div className='hidden xl:block'>
+                        <div className='grid grid-cols-3 gap-6'>
+                            {cardData.map((card, index) => (
+                                <div key={index}>
+                                    <div className={`${card.gradient} p-6 rounded-2xl text-white font-subHeading`}
+                                         style={{ minHeight: '600px' }}>
+                                        <div className='flex flex-col h-full'>
+                                            <div className='flex flex-col gap-4 mb-10 flex-grow'>
+                                                <h1 className='text-3xl xl:text-[36px] 2xl:text-[38px] font-heading break-words leading-tight whitespace-pre-line'>
+                                                    {card.title}
+                                                </h1>
+                                                <p className='text-lg xl:text-xl font-subHeading leading-relaxed break-words'>
+                                                    {card.desc}
+                                                </p>
+                                            </div>
+                                            
+                                            <div className='flex flex-col gap-4 mb-24 flex-grow'>
+                                                <h1 className='text-3xl xl:text-[36px] 2xl:text-[38px] font-heading break-words leading-tight whitespace-pre-line'>
+                                                    {card.title1}
+                                                </h1>
+                                                <p className='text-lg xl:text-xl font-subHeading leading-relaxed break-words'>
+                                                    {card.desc1}
+                                                </p>
+                                            </div>
+                                            
+                                            <Link to={card.link} className="mt-auto">
+                                                <button className='w-full flex items-center justify-center gap-3 rounded-lg border border-white py-2 px-4 font-subHeading text-[16px] text-white font-light hover:bg-white hover:text-black transition-all duration-300'>
+                                                    Explore Products <HiOutlineArrowNarrowRight />
+                                                </button>
+                                            </Link>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className='flex flex-col gap-3'>
-                                    <div className='flex gap-6 items-center'>
-                                        <img src={metaFields.our_products_card_1_img_1} className='w-16 h-16' alt="Product 1" />
-                                        <h1>{metaFields.our_products_card_1_img_1_title}</h1>
-                                    </div>
-                                    <div className='flex gap-6 items-center'>
-                                        <img src={metaFields.our_products_card_1_img_2} className='w-16 h-16' alt="Product 2" />
-                                        <h1>{metaFields.our_products_card_1_img_2_title}</h1>
-                                    </div>
-                                    <div className='flex gap-6 items-center'>
-                                        <img src={metaFields.our_products_card_1_img_3} className='w-16 h-16' alt="Product 5" />
-                                        <h1>{metaFields.our_products_card_1_img_3_title}</h1>
-                                    </div>
-                                </div>
-                                <Link to="/product-listing3?category=CoatingsInks"><button className='w-full flex items-center justify-center gap-3 rounded-lg border border-white py-2 font-subHeading text-[16px] text-white font-light  hover:bg-white hover:text-black transition-all duration-300'>See More <HiOutlineArrowNarrowRight /></button></Link>
-                            </div>
+                            ))}
                         </div>
+                    </div>
 
-                        {/* Card 2 */}
-                        <div className='p-1 lg:p-3'>
-                            <div className="w-full flex flex-col bg-gradient-to-tl from-lightOrange to-darkOrange gap-6 lg:gap-10 p-5 lg:p-8 text-white font-subHeading rounded-2xl">
-                                <div className='flex flex-col lg:gap-4'>
-                                    <h1 className='w-[250px] lg:w-[350px] h-[130px] lg:h-[100px] font-heading text-[32px] leading-[40px] lg:text-[42px] lg:leading-[50px]'>{metaFields.our_products_cards_2_title}</h1>
-                                    <p className='w-full lg:w-[350px] h-[130px] lg:h-[70px] text-[14px] leading-5 lg:text-[18px] lg:leading-[26px]'>{metaFields.our_products_cards_2_desc}</p>
+                    {/* Slider Layout - One card visible for all other screen sizes */}
+                    <div className='xl:hidden'>
+                        <Slider ref={sliderRef} {...settings}>
+                            {cardData.map((card, index) => (
+                                <div key={index}>
+                                    <ProductCard card={card} />
                                 </div>
-                                <div className='flex flex-col gap-3'>
-                                    <div className='flex gap-6 items-center'>
-                                        <img src={metaFields.our_products_card_2_img_1} className='w-16 h-16' alt="Product 3" />
-                                        <h1>{metaFields.our_products_card_2_img_1_title}</h1>
-                                    </div>
-                                    <div className='flex gap-6 items-center'>
-                                        <img src={metaFields.our_products_card_2_img_2} className='w-16 h-16' alt="Product 4" />
-                                        <h1>{metaFields.our_products_card_2_img_2_title}</h1>
-                                    </div>
-                                    <div className='flex gap-6 items-center'>
-                                        <img src={metaFields.our_products_card_2_img_3} className='w-16 h-16' alt="Product 5" />
-                                        <h1>{metaFields.our_products_card_2_img_3_title}</h1>
-                                    </div>
-                                </div>
-                                <Link to="/product-listing?category=HomeCareCosmetics"><button className='w-full flex items-center justify-center gap-3 rounded-lg border border-white py-2 font-subHeading text-[16px] text-white font-light  hover:bg-white hover:text-black transition-all duration-300'>See More <HiOutlineArrowNarrowRight /></button></Link>
-                            </div>
+                            ))}
+                        </Slider>
+
+                        {/* Custom Arrows */}
+                        <div className="flex justify-between px-2 mt-6 mb-5">
+                            <CustomArrow icon={<HiOutlineArrowNarrowLeft />} onClick={prevSlide} />
+                            <CustomArrow icon={<HiOutlineArrowNarrowRight />} onClick={nextSlide} />
                         </div>
-
-                        {/* Card 3 */}
-                        <div className='p-1 lg:p-3'>
-                            <div className="w-full flex flex-col bg-gradient-to-bl from-violet to-purple gap-6 lg:gap-10 p-5 lg:p-8 text-white font-subHeading rounded-2xl">
-                                <div className='flex flex-col lg:gap-4'>
-                                    <h1 className='w-[250px] lg:w-[350px] h-[130px] lg:h-[100px] font-heading text-[32px] leading-[40px] lg:text-[42px] lg:leading-[50px]'>{metaFields.our_products_cards_3_title}</h1>
-                                    <p className='w-full lg:w-[350px] h-[130px] lg:h-[70px] text-[14px] leading-5 lg:text-[18px] lg:leading-[26px]'>{metaFields.our_products_cards_3_desc}</p>
-                                </div>
-                                <div className='flex flex-col gap-3'>
-                                    <div className='flex gap-6 items-center'>
-                                        <img src={metaFields.our_products_card_3_img_1} className='w-16 h-16' alt="Product 5" />
-                                        <h1>{metaFields.our_products_card_3_img_1_title}</h1>
-                                    </div>
-                                    <div className='flex gap-6 items-center'>
-                                        <img src={metaFields.our_products_card_3_img_2} className='w-16 h-16' alt="Product 6" />
-                                        <h1>{metaFields.our_products_card_3_img_2_title}</h1>
-                                    </div>
-                                    <div className='flex gap-6 items-center'>
-                                        <img src={metaFields.our_products_card_3_img_3} className='w-16 h-16' alt="Product 5" />
-                                        <h1>{metaFields.our_products_card_3_img_3_title}</h1>
-                                    </div>
-                                </div>
-                                <Link to="/product-listing2?category=LifeSciences"><button className='w-full flex items-center justify-center gap-3 rounded-lg border border-white py-2 font-subHeading text-[16px] text-white font-light hover:bg-white hover:text-black transition-all duration-300'>See More <HiOutlineArrowNarrowRight /></button></Link>
-                            </div>
-                        </div>
-                    </Slider>
-
-                    {/* Custom Arrows */}
-                    <div className="flex justify-between px-2 mt-6 lg:hidden mb-5">
-                        <CustomArrow icon={<HiOutlineArrowNarrowLeft />} onClick={prevSlide} />
-                        <CustomArrow icon={<HiOutlineArrowNarrowRight />} onClick={nextSlide} />
                     </div>
                 </div>
             </div>

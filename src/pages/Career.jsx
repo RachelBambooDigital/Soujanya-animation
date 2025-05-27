@@ -86,7 +86,8 @@ const Career = ({ language, setLoading }) => {
 
   return (
     <div>
-      <div className="w-full h-[700px] lg:h-[880px] bg-cover bg-center bg-white relative md:mb-28">
+      <div className="w-full h-screen">
+        {/* Breadcrumb */}
         <div className="hidden lg:flex inset-x-0 top-20 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8 relative z-10">
           <Link
             to="/"
@@ -104,11 +105,11 @@ const Career = ({ language, setLoading }) => {
         </div>
 
         {/* Banner */}
-        <div className="w-full flex h-full relative pt-28">
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 w-full items-center lg:items-start px-5 lg:px-10">
+        <div className="w-full max-w-full px-12 pt-28 pb-20">
+          <div className="flex flex-col lg:flex-row w-full gap-16">
             {/* Text Section */}
-            <div className="flex flex-col gap-4 lg:gap-6 text-black items-start w-full max-w-full lg:pt-20">
-              <h1 className="font-heading leading-7 text-[24px] lg:text-[50px] lg:leading-[65px]">
+            <div className="w-full lg:w-1/2 flex flex-col gap-8 pt-10">
+              <h1 className="font-heading leading-7 text-[24px] lg:text-[40px] lg:leading-[50px]">
                 {metaFields.banner_title}
               </h1>
               <p className="text-[16px] lg:text-[18px] font-subHeading leading-[24px] lg:w-[500px] text-[#667085]">
@@ -120,6 +121,7 @@ const Career = ({ language, setLoading }) => {
               >
                 {metaFields.banner_button_text}
               </button>
+              <p className="text-[12px] lg:text-[14px] font-subHeading  text-[#667085]">For inquiries, contact us at <a href="mailto:hr@soujanya.com" className="underline hover:text-gray-300">hr@soujanya.com</a></p>
             </div>
 
             {/* Images Section */}

@@ -367,7 +367,7 @@ const AboutUs = ({language, setLoading}) => {
       {/* Main cotent */}
       <div className="absolute w-full h-full top-[0] z-10 ">
         <div className="w-full bg-cover bg-center relative" >
-          <div className="w-full h-[635px] lg:h-[880px] bg-cover bg-center relative">
+          <div className="w-full h-[635px] lg:h-[650px] bg-cover bg-center relative">
             {/* Breadcrumbs for Large Screens */}
             <div className="hidden lg:flex inset-x-0 top-20 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8 relative z-10">
             <Link 
@@ -427,13 +427,19 @@ const AboutUs = ({language, setLoading}) => {
             <div className='w-[85%] flex flex-col items-start'>
               <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.who_we_are_1_title}</p>
               <h1 className='font-heading text-[28px] lg:text-[36px] leading-10 lg:leading-[45px]'>{metaFields.who_we_are_desc}</h1>
-              <button className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg mt-10 mb-10' 
+              <button 
+                className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg mt-10 mb-10' 
                 onClick={() => {
                   if (historyRef.current) {
-                    historyRef.current.scrollIntoView({ behavior: 'smooth' });
+                    // Use smooth scroll behavior
+                    window.scrollTo({
+                      top: historyRef.current.offsetTop,
+                      behavior: 'smooth'
+                    });
                   }
-                }}>
-                  {metaFields.who_we_are_1_button_text}
+                }}
+              >
+                {metaFields.who_we_are_1_button_text}
               </button>
             </div>
           </div>
@@ -465,17 +471,16 @@ const AboutUs = ({language, setLoading}) => {
                       height: 'auto', // Ensure dynamic height adjustment based on content
                     }}
                   >
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-heading hyphens-auto break-all">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-[42px] font-heading break-words">
                       {highlight.title}
                     </h1>
-                    <p className="text-base sm:text-lg lg:text-xl font-subHeading leading-relaxed">
+                    <p className="text-base sm:text-lg lg:text-xl font-subHeading leading-relaxed break-words">
                       {highlight.desc}
                     </p>
                   </div>
                 ))}
               </div>
             </div>
-
           </div>
           
           <div ref={historyRef}>
