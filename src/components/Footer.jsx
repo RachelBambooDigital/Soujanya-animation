@@ -141,7 +141,7 @@ const Footer = ({language}) => {
           {metaFields.back_to_top_text}
         </p>
 
-        <div className="flex flex-col items-start justify-start text-left w-full h-full lg:w-[800px] mx-auto mt-[100px] lg:mt-[72px] lg:mr-56">
+        <div className="flex flex-col items-start justify-start text-left w-full lg:w-[800px] mx-auto mt-[100px] lg:mt-[72px] lg:mr-56">
           <h1 className="font-subHeading text-white text-[40px] leading-[45px] tracking-[-3%] font-light lg:text-[52px] lg:leading-[60px]">
             {metaFields.footer_desc}
           </h1>
