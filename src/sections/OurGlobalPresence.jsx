@@ -172,7 +172,7 @@ const OurGlobalPresence = ({ language }) => {
           </div>
 
           {/* Phone Numbers - Bottom */}
-          <div className="">
+          <div className="mt-16">
             <p className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
               T: {data.country_phone_1} / {data.country_phone_2} / {data.country_phone_3}
             </p>
