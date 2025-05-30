@@ -415,7 +415,7 @@ const CoatingsInks = ({language, setLoading}) => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[5000px] h-[5600px] md:h-[5700px]  overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[4500px] h-[5600px] md:h-[5700px]  overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
       <svg
@@ -449,13 +449,15 @@ const CoatingsInks = ({language, setLoading}) => {
 
       <div className="absolute w-full h-full top-[0] z-10 ">
         <div className="w-full bg-cover bg-center relative">
-          <div className="w-full flex h-[820px] lg:h-[800px] relative">
-            <div className="absolute inset-0 flex lg:flex-row flex-col gap-24 lg:justify-between items-center pt-28 lg:pt-10 px-5 lg:px-10">
-              <div className="flex flex-col gap-6 text-black font-medium">
+          <div className="w-full flex items-center justify-center py-28 px-5 lg:px-10">
+            <div className="max-w-[1440px] w-full flex flex-col lg:flex-row items-center gap-10 lg:gap-24">
+              
+              {/* Left: Text Content */}
+              <div className="flex flex-col gap-6 text-black font-medium lg:w-1/2 w-full">
                 <h1 className="w-full lg:text-[62px] text-[40px] lg:leading-[70px] leading-[50px] font-heading">
                   {metaFields.banner_title}
                 </h1>
-                <p className="text-[18px] font-subHeading leading-[26px] lg:w-[500px]">
+                <p className="text-[18px] font-subHeading leading-[26px]">
                   Colorants for industrial and architectural excellence. <br /><br />
                   {metaFields.banner_desc}
                 </p>
@@ -466,14 +468,19 @@ const CoatingsInks = ({language, setLoading}) => {
                   {metaFields.banner_button_text}
                 </button>
               </div>
-              <div className="w-full lg:w-[60%] h-[300px] lg:h-[600px] bg-cover bg-center">
+
+              {/* Right: Image */}
+              <div className="w-full lg:w-1/2 flex justify-center items-center">
                 <img
                   src={metaFields.banner_img}
-                  className="w-full h-full"
-                ></img>
+                  alt="Banner"
+                  className="max-w-full max-h-[600px] w-auto h-auto object-contain"
+                />
               </div>
+
             </div>
           </div>
+
 
           <div className="w-full">
             {/* Who are we */}
