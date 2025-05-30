@@ -308,7 +308,7 @@ const LifeSciences = ({language, setLoading}) => {
   }
 
   return (
-    <div className="scrollContainer w-full lg:h-[3800px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+    <div className="scrollContainer w-full lg:h-[4000px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
         <svg 
               width="2436" 
               height="5026" 
@@ -341,16 +341,34 @@ const LifeSciences = ({language, setLoading}) => {
 
       <div className="absolute w-full h-full top-[0] z-10 ">
         <div className='w-full bg-cover bg-center relative'>
-          <div className='w-full flex h-[820px] lg:h-[800px] relative bg-opacity-10 backdrop-blur-lg bg-white' >
-            <div className='absolute inset-0 flex lg:flex-row flex-col gap-24 lg:justify-between items-center pt-28 lg:pt-10 px-5 lg:px-10 '>
-              <div className=' flex flex-col gap-6 text-black font-medium '>
-                <h1 className='w-full lg:text-[62px] text-[40px] lg:leading-[70px] leading-[50px] font-heading'>{metaFields.banner_title}</h1>
-                <p className='text-[18px] font-subHeading leading-[26px] lg:w-[500px]'>{metaFields.banner_desc}</p>
-                <button className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg' onClick={() => handleProductListing('LifeSciences')}>{metaFields.banner_button_text}</button>
+          <div className="w-full flex items-center justify-center py-28 px-5 lg:px-10 bg-opacity-10 backdrop-blur-lg bg-white">
+            <div className="max-w-[1440px] w-full flex flex-col lg:flex-row items-center gap-10 lg:gap-24">
+              
+              {/* Left: Text Content */}
+              <div className="flex flex-col gap-6 text-black font-medium lg:w-1/2 w-full">
+                <h1 className="w-full lg:text-[62px] text-[40px] lg:leading-[70px] leading-[50px] font-heading max-w-md">
+                  {metaFields.banner_title}
+                </h1>
+                <p className="text-[18px] font-subHeading leading-[26px]">
+                  {metaFields.banner_desc}
+                </p>
+                <button
+                  className="bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg"
+                  onClick={() => handleProductListing("LifeSciences")}
+                >
+                  {metaFields.banner_button_text}
+                </button>
               </div>
-              <div className='w-full lg:w-[60%] h-[300px] lg:h-[600px] bg-cover bg-center'>
-                <img src={metaFields.banner_img} className='w-full h-full'></img>
+
+              {/* Right: Image */}
+              <div className="w-full lg:w-1/2 flex justify-center items-center">
+                <img
+                  src={metaFields.banner_img}
+                  alt="Banner"
+                  className="max-w-full max-h-[600px] w-auto h-auto object-contain"
+                />
               </div>
+
             </div>
           </div>
 
@@ -382,7 +400,7 @@ const LifeSciences = ({language, setLoading}) => {
                 <h1 className='font-heading text-[28px] lg:text-[54px] leading-[38px] lg:leading-[70px]'>{metaFields.our_drivers_desc}</h1>
               </div>
 
-              <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:px-20 gap-[16px] h-800px lg:h-[400px] '>
+              <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:px-20 gap-[16px] h-800px lg:h-[500px] '>
                 {
                   drivers.map((driver, index) => (
                     <div
@@ -392,7 +410,7 @@ const LifeSciences = ({language, setLoading}) => {
                         backgroundColor: driver.color,
                         width: '100%', // Cards take up 100% width for smaller screens
                         maxWidth: '350px', // Max width of cards for large screens
-                        minHeight: '450px', // Set a minimum height to prevent card collapse
+                        minHeight: '500px', // Set a minimum height to prevent card collapse
                         height: 'auto', // Ensure dynamic height adjustment based on content
                       }}
                     >

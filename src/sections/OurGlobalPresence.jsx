@@ -1,8 +1,8 @@
-import { globalPresence } from "@/lib/images";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-const OurGlobalPresence = ({language}) => {
+const OurGlobalPresence = ({ language }) => {
   const [metaFields, setMetaFields] = useState(null);
+
   useEffect(() => {
     const fetchGlobalPresence = async () => {
       const query = `query {
@@ -47,36 +47,25 @@ const OurGlobalPresence = ({language}) => {
           }
         );
 
-        // Check if the response is ok (status code 200-299)
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        // Log the response text to inspect what it contains
         const responseText = await response.text();
-        // console.log("Response text:", responseText);
-
-        // Try parsing the response as JSON
         const result = JSON.parse(responseText);
-        console.log("Parsed result:", result);
+        console.log("result", result);
 
         if (result?.data?.metaobjects) {
           const fields = {};
           for (const edge of result.data.metaobjects.edges) {
             for (const field of edge.node.fields) {
               if (field.reference?.image?.url) {
-                fields[field.key] = field.reference.image.url;  // Correctly set the image URL
+                fields[field.key] = field.reference.image.url;
               } else {
                 fields[field.key] = field.value;
               }
-
-              // Handle GID for the global_presence_img field
-              if (field.key === "global_presence_img") {
-                // console.log("GIDs for global_presence_img:", fields[field.key]);
-              }
             }
           }
-
           setMetaFields(fields);
         } else {
           console.error("Metaobjects not found in the response");
@@ -89,82 +78,104 @@ const OurGlobalPresence = ({language}) => {
     fetchGlobalPresence();
   }, [language]);
 
-  if (!metaFields) {
-    return <div>Loading...</div>; // Loading state
+  // Mock data for demo purposes
+  const mockData = {
+    global_presence_title: "Our Workplace",
+    country_name_1: "Our Factory",
+    country_addr_1: "Soujarya Color Pvt. Ltd.\nC 35/36, TTC Industrial Area,\nMIDC Pawne\nNavi Mumbai - 400 705,\nMaharashtra, India",
+    country_name_2: "Corporate Office", 
+    country_addr_2: "Soujarya Color Pvt. Ltd.\nC 35/36, TTC Industrial Area,\nMIDC Pawne\nNavi Mumbai - 400 705,\nMaharashtra, India",
+    country_name_3: "Upcoming Factory Site",
+    country_addr_3: "Plot No.hdbkhasdkhjbd\nSawarkhar, jhdbcjkhsdhjk",
+    country_phone_1: "+91 22 6006 1234",
+    country_phone_2: "+91 22 6006 1234", 
+    country_phone_3: "+91 22 6006 1234",
+    global_presence_img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop"
+  };
+
+  const data = metaFields || mockData;
+
+  if (!data) {
+    return <div className="flex items-center justify-center h-64">Loading...</div>;
   }
 
   return (
-    <div className="w-full h-min">
-      <div className="w-full left-0 bg-opacity-10 backdrop-blur-lg bg-white relative h-full">
-        <div className="w-full flex flex-col lg:flex-row justify-between h-full px-5 sm:px-8 md:px-10">
-          <div className="flex flex-col justify-between gap-10 md:gap-16 lg:gap-0 w-full lg:w-2/3">
-            {/* Global Presence Header */}
-            <div className="w-full flex flex-col items-start">
-              <p className="py-3 sm:py-5 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
-                {metaFields.global_presence_title}
-              </p>
-            </div>
+    <div className="w-full min-h-screen bg-gray-50">
+      <div className="w-full bg-opacity-10 backdrop-blur-lg bg-white relative">
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-16">
+          {/* Title */}
+          <div className="mb-8 lg:mb-12">
+            <h2 className="font-medium text-lg sm:text-xl lg:text-2xl text-gray-800">
+              {data.global_presence_title}
+            </h2>
+          </div>
 
-            {/* Locations Grid */}
-            <div className="w-full flex flex-col justify-between mb-5 lg:mb-36">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-2 lg:gap-16">
-                {/* India */}
-                <div className="address flex flex-col">
-                  <h1 className="font-subHeading font-light text-[24px] sm:text-[28px] md:text-[32px] lg:text-[48px] leading-tight h-32">
-                    {metaFields.country_name_1}
-                  </h1>
-                  <div className="font-subHeading text-[12px] sm:text-[14px] md:text-[16px] lg:text-base lg:leading-6 font-medium">
-                    <div className="h-auto sm:h-[170px] lg:h-[180px]">
-                      {metaFields.country_addr_1.split('\n').map((line, i) => (
-                        <p key={i}>{line}</p>
+          {/* Main Content Grid */}
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center justify-center">
+            {/* Left Section - Content */}
+            <div className="flex-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+                {/* Factory */}
+                <div className="space-y-6">
+                  <div>
+                    <h1 className="font-light text-2xl sm:text-3xl lg:text-4xl xl:text-5xl leading-tight text-gray-900 mb-4 lg:mb-6 whitespace-pre-line">
+                      {data.country_name_1}
+                    </h1>
+                    <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700 leading-relaxed max-w-64">
+                      {data.country_addr_1.split('\n').map((line, i) => (
+                        <p key={i} className="mb-1">{line}</p>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Brazil */}
-                <div className="address flex flex-col">
-                  <h1 className="font-subHeading font-light text-[24px] sm:text-[28px] md:text-[32px] lg:text-[48px] leading-tight h-32">
-                    {metaFields.country_name_2}
-                  </h1>
-                  <div className="font-subHeading text-[12px] sm:text-[14px] md:text-[16px] lg:text-base lg:leading-6 font-medium">
-                    <div className="h-auto sm:h-[120px] lg:h-[140px]">
-                      {metaFields.country_addr_2.split('\n').map((line, i) => (
-                        <p key={i}>{line}</p>
+                {/* Corporate Office */}
+                <div className="space-y-6">
+                  <div>
+                    <h1 className="font-light text-2xl sm:text-3xl lg:text-4xl xl:text-5xl leading-tight text-gray-900 mb-4 lg:mb-6">
+                      {data.country_name_2}
+                    </h1>
+                    <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700 leading-relaxed max-w-64">
+                      {data.country_addr_2.split('\n').map((line, i) => (
+                        <p key={i} className="mb-1">{line}</p>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Mexico */}
-                <div className="address flex flex-col">
-                  <h1 className="font-subHeading font-light text-[24px] sm:text-[28px] md:text-[32px] lg:text-[48px] leading-tight h-32">
-                    {metaFields.country_name_3}
-                  </h1>
-                  <div className="font-subHeading text-[12px] sm:text-[14px] md:text-[16px] lg:text-base lg:leading-6 font-medium">
-                    <div className="h-auto sm:h-[120px] lg:h-[140px]">
-                      {metaFields.country_addr_3.split('\n').map((line, i) => (
-                        <p key={i}>{line}</p>
+                {/* Upcoming Factory */}
+                <div className="space-y-6">
+                  <div>
+                    <h1 className="font-light text-2xl sm:text-3xl lg:text-4xl xl:text-5xl leading-tight text-gray-900 mb-4 lg:mb-6">
+                      {data.country_name_3}
+                    </h1>
+                    <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700 leading-relaxed max-w-64">
+                      {data.country_addr_3.split('\n').map((line, i) => (
+                        <p key={i} className="mb-1">{line}</p>
                       ))}
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Phone numbers in single line below the columns */}
-              <div className="mt-6 font-subHeading text-[12px] sm:text-[14px] md:text-[16px] lg:text-base font-medium">
-                <p>T: {metaFields.country_phone_1} / {metaFields.country_phone_2} / {metaFields.country_phone_3}</p>
+            {/* Right Section - Image */}
+            <div className="lg:w-80 xl:w-96 flex items-end">
+              <div className="w-full">
+                <img
+                  src={data.global_presence_img}
+                  alt="Factory colorful materials"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
 
-          {/* Image Section */}
-          <div className="flex lg:items-end pb-10 lg:w-1/3">
-            <img
-              src={metaFields.global_presence_img}
-              alt="section-img"
-              className="w-full lg:w-[412px] h-full object-cover"
-            />
+          {/* Phone Numbers - Bottom */}
+          <div className="">
+            <p className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
+              T: {data.country_phone_1} / {data.country_phone_2} / {data.country_phone_3}
+            </p>
           </div>
         </div>
       </div>

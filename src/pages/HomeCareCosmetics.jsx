@@ -423,18 +423,34 @@ const HomeCareCosmetics = ({language, setLoading}) => {
 
       <div className="absolute w-full h-full top-[0] z-10 ">
         <div className='w-full bg-cover bg-center relative'>
-          <div className='w-full flex h-[820px] lg:h-[800px] relative'>
-            <div className='absolute inset-0 flex lg:flex-row flex-col gap-24 lg:justify-between items-center pt-28 lg:pt-10 px-5 lg:px-10'>
-              <div className='flex flex-col gap-6 text-black font-medium'>
-                <h1 className='w-full lg:text-[62px] text-[40px] lg:leading-[70px] leading-[50px] font-heading'>{metaFields.banner_title}</h1>
-                <p className='text-[18px] font-subHeading leading-[26px] lg:w-[500px]'>
+          <div className="w-full flex items-center justify-center py-28 px-5 lg:px-10">
+            <div className="max-w-[1440px] w-full flex flex-col lg:flex-row items-center gap-10 lg:gap-24">
+              
+              {/* Left: Text Content */}
+              <div className="flex flex-col gap-6 text-black font-medium lg:w-1/2 w-full">
+                <h1 className="w-full lg:text-[62px] text-[40px] lg:leading-[70px] leading-[50px] font-heading">
+                  {metaFields.banner_title}
+                </h1>
+                <p className="text-[18px] font-subHeading leading-[26px] whitespace-pre-line">
                   {metaFields.banner_desc}
                 </p>
-                <button className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg' onClick={() => handleProductListing('HomeCareCosmetics')}>{metaFields.banner_button_text}</button>
+                <button
+                  className="bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg"
+                  onClick={() => handleProductListing("HomeCareCosmetics")}
+                >
+                  {metaFields.banner_button_text}
+                </button>
               </div>
-              <div className='w-full lg:w-[60%] h-[300px] lg:h-[600px] bg-cover bg-center'>
-                <img src={metaFields.banner_img} className='w-full h-full'></img>
+
+              {/* Right: Image */}
+              <div className="w-full lg:w-1/2 flex justify-center items-center">
+                <img
+                  src={metaFields.banner_img}
+                  alt="Banner"
+                  className="max-w-full max-h-[600px] w-auto h-auto object-contain"
+                />
               </div>
+
             </div>
           </div>
 
@@ -462,6 +478,9 @@ const HomeCareCosmetics = ({language, setLoading}) => {
             <div className='w-full flex flex-col px-5 lg:px-10'>
               <div className='w-full flex flex-col items-start'>
                 <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.colorant_title}</p>
+                <h1 className="font-heading text-[28px] lg:text-[54px] leading-10 lg:leading-[70px]">
+                  We deliver layered value through advanced colorant solutions designed for performance, consistency, and brand alignment
+                </h1>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-10 lg:pr-20">
                 {highlights.map((highlight, index) => (
