@@ -412,7 +412,8 @@ console.log('New highlights:', newHighlights); // Debug log to see processed hig
               onClick={handleButtonClick}
               className="bg-red text-white text-base font-subHeading h-[42px] w-[175px] lg:w-[192px] rounded-lg hover:underline"
             >
-              {JSON.parse(metaFields.banner_button_link).text}
+              Explore Products
+              {/* {JSON.parse(metaFields.banner_button_link).text} */}
               {/* {buttonLink.text} */}
               {/* {metaFields.banner_button} */}
             </button>
