@@ -415,7 +415,7 @@ const CoatingsInks = ({language, setLoading}) => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[4500px] h-[5600px] md:h-[5700px]  overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[3900px] h-[5600px] md:h-[5700px]  overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
       <svg
@@ -544,16 +544,16 @@ const CoatingsInks = ({language, setLoading}) => {
             </div>
 
             {/* Dynamic Content Section */}
-            <div className="w-full flex flex-col px-5 lg:px-10 mt-10">
+            {/* <div className="w-full flex flex-col px-5 lg:px-10 mt-10"> */}
               {/* Top buttons */}
-              <div className="hidden lg:flex justify-center flex-wrap gap:4 md:gap-4 lg:gap-4 py-5">
+              {/* <div className="hidden lg:flex justify-center flex-wrap gap:4 md:gap-4 lg:gap-4 py-5">
                 {Object.keys(categories).map((category) => (
                   <div
                     key={category}
                     className="flex flex-row items-center gap-5"
-                  >
+                  > */}
                     {/* Button for the main title */}
-                    <button
+                    {/* <button
                       onClick={() => {
                         setActiveCategory(category);
                         setShowAlternateContent(false); // Show default content
@@ -565,10 +565,10 @@ const CoatingsInks = ({language, setLoading}) => {
                       }`}
                     >
                       {categories[category].title}
-                    </button>
+                    </button> */}
 
                     {/* Button for title1 (alternate content) */}
-                    {categories[category].title1 && (
+                    {/* {categories[category].title1 && (
                       <button
                         onClick={() => {
                           setActiveCategory(category);
@@ -585,10 +585,10 @@ const CoatingsInks = ({language, setLoading}) => {
                     )}
                   </div>
                 ))}
-              </div>
+              </div> */}
 
               {/* Slider for smaller screens */}
-              <div className="lg:hidden">
+              {/* <div className="lg:hidden">
                 <ButtonSlider
                   categories={categories}
                   onCategorySelect={setActiveCategory}
@@ -596,13 +596,13 @@ const CoatingsInks = ({language, setLoading}) => {
                   showAlternateContent={showAlternateContent}
                   setShowAlternateContent={setShowAlternateContent}
                 />
-              </div>
+              </div> */}
 
               {/* Content based on active category */}
-              <div className="content-section px-5 lg:px-10">
-                <div className="flex flex-col lg:flex-row gap-10">
+              {/* <div className="content-section px-5 lg:px-10">
+                <div className="flex flex-col lg:flex-row gap-10"> */}
                   {/* Left content - Description1 */}
-                  <div className="w-full flex lg:flex-row flex-col lg:justify-between items-center lg:w-1/2">
+                  {/* <div className="w-full flex lg:flex-row flex-col lg:justify-between items-center lg:w-1/2">
                     <div className="flex flex-col text-black">
                       <h2 className="w-full font-heading text-2xl lg:text-4xl">
                         {metaFields.benefits_title}
@@ -615,10 +615,10 @@ const CoatingsInks = ({language, setLoading}) => {
                             "No description available for this category."}
                       </p>
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Right content - Images1 */}
-                  <div className="w-full flex gap-6 mt-12">
+                  {/* <div className="w-full flex gap-6 mt-12">
                     {showAlternateContent ? (
                       categories[activeCategory]?.images3 &&
                       categories[activeCategory].images3.length > 0 ? (
@@ -651,7 +651,7 @@ const CoatingsInks = ({language, setLoading}) => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Our Current offering */}
             <div className='w-full flex flex-col px-5 lg:px-10'>
