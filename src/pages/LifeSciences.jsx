@@ -463,7 +463,7 @@ const LifeSciences = ({ language, setLoading }) => {
                       maxWidth: "350px",
                       minHeight: "500px", // Increased from 500px to give breathing space
                       height: "auto", // Let height be flexible
-                      border: "2px solid black",
+                      // border: "2px solid black",
                     }}
                   >
                     <h1 className="text-[24px] sm:text-[32px] lg:text-[42px] lg:leading-[50px] font-heading mb-4 break-words">
