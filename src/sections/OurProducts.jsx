@@ -237,25 +237,25 @@ const OurProducts = ({ language }) => {
  const cardData = [
     {
       title: metaFields.our_products_card_1_title,
-      desc: metaFields.our_products_card_1_desc,
+      // desc: metaFields.our_products_card_1_desc,
       title1: metaFields.our_products_card_1_title_1,
-      desc1: metaFields.our_products_card_1_desc_1,
+      // desc1: metaFields.our_products_card_1_desc_1,
       gradient: "bg-gradient-to-tr from-blue to-green",
       link: "/product-listing3?category=CoatingsInks",
     },
     {
       title: metaFields.our_products_cards_2_title,
-      desc: metaFields.our_products_cards_2_desc,
+      // desc: metaFields.our_products_cards_2_desc,
       title1: metaFields.our_products_card_2_title_1,
-      desc1: metaFields.our_products_card_2_desc_1,
+      // desc1: metaFields.our_products_card_2_desc_1,
       gradient: "bg-gradient-to-tl from-lightOrange to-darkOrange",
       link: "/product-listing?category=HomeCareCosmetics",
     },
     {
       title: metaFields.our_products_cards_3_title,
-      desc: metaFields.our_products_cards_3_desc,
+      // desc: metaFields.our_products_cards_3_desc,
       title1: metaFields.our_products_card_3_title_1,
-      desc1: metaFields.our_products_card_3_desc_1,
+      // desc1: metaFields.our_products_card_3_desc_1,
       gradient: "bg-gradient-to-bl from-violet to-purple",
       link: "/product-listing2?category=LifeSciences",
     },
@@ -294,9 +294,9 @@ const OurProducts = ({ language }) => {
     <div className="w-full mb-5 lg:mb-10">
       <div className="w-full flex flex-col gap-8 sm:gap-12 lg:gap-16 px-4 sm:px-5 lg:px-10">
         <div className="w-full flex flex-col items-start">
-          <p className="py-3 sm:py-5 lg:py-10 font-subHeading font-medium text-sm sm:text-[14px] lg:text-[18px]">
+          {/* <p className="py-3 sm:py-5 lg:py-10 font-subHeading font-medium text-sm sm:text-[14px] lg:text-[18px]">
             {metaFields.our_products_main_title}
-          </p>
+          </p> */}
           <h1 className="font-heading text-2xl sm:text-[32px] leading-8 sm:leading-10 lg:text-[62px] lg:leading-[70px]">
             {metaFields.our_products_title}
           </h1>
