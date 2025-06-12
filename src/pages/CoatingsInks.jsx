@@ -373,7 +373,7 @@ const CoatingsInks = ({language, setLoading}) => {
         setHeight("5350");
       } else {
         setViewBox("110 0 2436 5026");
-        setWidth("2100");
+        setWidth("2200");
         setHeight("5026");
       }
     };
@@ -415,7 +415,7 @@ const CoatingsInks = ({language, setLoading}) => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[3900px] h-[5600px] md:h-[5700px]  overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[4000px] h-[5600px] md:h-[5700px]  overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
       <svg
