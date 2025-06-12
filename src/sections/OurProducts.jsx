@@ -237,25 +237,24 @@ const OurProducts = ({ language }) => {
   const cardData = [
     {
       title: metaFields.our_products_card_1_title,
-      desc: metaFields.our_products_card_1_desc,
       title1: metaFields.our_products_card_1_title_1,
-      desc1: metaFields.our_products_card_1_desc_1,
+      
       gradient: "bg-gradient-to-tr from-blue to-green",
       link: "/product-listing3?category=CoatingsInks",
     },
     {
       title: metaFields.our_products_cards_2_title,
-      desc: metaFields.our_products_cards_2_desc,
+      
       title1: metaFields.our_products_card_2_title_1,
-      desc1: metaFields.our_products_card_2_desc_1,
+      
       gradient: "bg-gradient-to-tl from-lightOrange to-darkOrange",
       link: "/product-listing?category=HomeCareCosmetics",
     },
     {
       title: metaFields.our_products_cards_3_title,
-      desc: metaFields.our_products_cards_3_desc,
+      
       title1: metaFields.our_products_card_3_title_1,
-      desc1: metaFields.our_products_card_3_desc_1,
+      
       gradient: "bg-gradient-to-bl from-violet to-purple",
       link: "/product-listing2?category=LifeSciences",
     },
