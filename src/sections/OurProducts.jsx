@@ -234,27 +234,28 @@ const OurProducts = ({ language }) => {
   }
 
   // Product cards data for easier management
-  const cardData = [
+ const cardData = [
     {
       title: metaFields.our_products_card_1_title,
+      desc: metaFields.our_products_card_1_desc,
       title1: metaFields.our_products_card_1_title_1,
-      
+      desc1: metaFields.our_products_card_1_desc_1,
       gradient: "bg-gradient-to-tr from-blue to-green",
       link: "/product-listing3?category=CoatingsInks",
     },
     {
       title: metaFields.our_products_cards_2_title,
-      
+      desc: metaFields.our_products_cards_2_desc,
       title1: metaFields.our_products_card_2_title_1,
-      
+      desc1: metaFields.our_products_card_2_desc_1,
       gradient: "bg-gradient-to-tl from-lightOrange to-darkOrange",
       link: "/product-listing?category=HomeCareCosmetics",
     },
     {
       title: metaFields.our_products_cards_3_title,
-      
+      desc: metaFields.our_products_cards_3_desc,
       title1: metaFields.our_products_card_3_title_1,
-      
+      desc1: metaFields.our_products_card_3_desc_1,
       gradient: "bg-gradient-to-bl from-violet to-purple",
       link: "/product-listing2?category=LifeSciences",
     },
@@ -270,18 +271,14 @@ const OurProducts = ({ language }) => {
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-[36px] 2xl:text-[38px] font-heading break-words leading-tight whitespace-pre-line">
             {card.title}
           </h1>
-          <p className="text-sm sm:text-base lg:text-lg xl:text-xl font-subHeading leading-relaxed break-words">
-            {card.desc}
-          </p>
+
         </div>
 
         <div className="flex flex-col gap-3 sm:gap-4 flex-grow">
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-[36px] 2xl:text-[38px] font-heading break-words leading-tight whitespace-pre-line">
+          <h1 className="text-xl sm:text-xl md:text-xl lg:text-2xl xl:text-[36px] 2xl:text-[38px] font-heading break-words leading-tight whitespace-pre-line">
             {card.title1}
           </h1>
-          <p className="text-sm sm:text-base lg:text-lg xl:text-xl font-subHeading leading-relaxed break-words">
-            {card.desc1}
-          </p>
+
         </div>
 
         <Link to={card.link} className="mt-auto">
@@ -323,18 +320,18 @@ const OurProducts = ({ language }) => {
                         <h1 className="text-3xl xl:text-[36px] 2xl:text-[38px] font-heading break-words leading-tight whitespace-pre-line">
                           {card.title}
                         </h1>
-                        <p className="text-lg xl:text-xl font-subHeading leading-relaxed break-words">
+                        {/* <p className="text-lg xl:text-xl font-subHeading leading-relaxed break-words">
                           {card.desc}
-                        </p>
+                        </p> */}
                       </div>
 
                       <div className="flex flex-col gap-4 mb-24 flex-grow">
-                        <h1 className="text-3xl xl:text-[36px] 2xl:text-[38px] font-heading break-words leading-tight whitespace-pre-line">
+                        <h1 className="text-xl xl:text-[36px] 2xl:text-[38px] font-heading break-words leading-tight whitespace-pre-line">
                           {card.title1}
                         </h1>
-                        <p className="text-lg xl:text-xl font-subHeading leading-relaxed break-words">
+                        {/* <p className="text-lg xl:text-xl font-subHeading leading-relaxed break-words">
                           {card.desc1}
-                        </p>
+                        </p> */}
                       </div>
 
                       <Link to={card.link} className="mt-auto">
