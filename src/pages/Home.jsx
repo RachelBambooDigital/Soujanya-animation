@@ -351,7 +351,7 @@ console.log('New highlights:', newHighlights); // Debug log to see processed hig
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[4900px] h-[6350px] overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full lg:h-[4900px] h-[5500px]  overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
       

@@ -375,7 +375,7 @@ const HomeCareCosmetics = ({language, setLoading}) => {
   }
 
   return (
-    <div className="scrollContainer w-full lg:h-[3900px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+    <div className="scrollContainer w-full lg:h-[3900px] h-[4000px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
       <svg width={width}
             height={height}
             viewBox={viewBox} fill="none" xmlns="http://www.w3.org/2000/svg">
