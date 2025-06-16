@@ -84,7 +84,7 @@ const LifeSciencesAPIProductsCard = ({ title, description,EmpiricalFormula,CASNu
       <hr className="border-t border-[#727272] mb-4" />
 
       {/* Product Description */}
-      <div className="flex flex-col text-[18px] lg:text-[24px] leading-[26px] font-subHeading lg:ml-6 mb-4">
+      <div className="flex flex-col text-[18px]  leading-[26px] font-subHeading lg:ml-6 mb-4">
         <div className="flex">
           <p className="font-semibold w-[160px]">{metaFields.empirical_title}</p>
           <span className="font-normal text-gray-600">{EmpiricalFormula}</span>
