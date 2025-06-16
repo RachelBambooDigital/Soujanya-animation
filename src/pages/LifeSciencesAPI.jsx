@@ -145,7 +145,7 @@ const LifeSciencesAPI = ({language, setLoading}) => {
   const product3Desc = metaFields.find(field => field.key === 'product_3_desc')?.value || '';
 
   return (
-    <div className="scrollContainer w-full lg:h-[1820px] h-[5000px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+    <div className="scrollContainer w-full lg:h-[1950px] h-[2400px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
       <div className='w-full absolute h-full top-[0] z-10'>
         <div className='w-full h-[100dvh] lg:h-screen bg-cover bg-center relative'>
           <video

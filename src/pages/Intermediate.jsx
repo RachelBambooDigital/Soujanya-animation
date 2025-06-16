@@ -248,7 +248,7 @@ const Intermediate = ({language, setLoading}) => {
   const product11Desc = additionalProducts.find(field => field.key === 'product11desc')?.value || '';
 
   return (
-    <div className="scrollContainer w-full lg:h-[3350px] h-[5000px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
+    <div className="scrollContainer w-full lg:h-[3250px] h-[5300px] overflow-hidden bg-no-repeat" ref={svgContainerRef}>
       <div className='w-full absolute h-full top-[0] z-10'>
         <div className='w-full h-[100dvh] lg:h-screen bg-cover bg-center relative'>
           <video
