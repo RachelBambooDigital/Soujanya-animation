@@ -341,7 +341,9 @@ const ProductDetail = ({ language, setLoading }) => {
   }, []);
 
   const handleButtonClick = async (buttonIndex, metafields) => {
-    console.log(`Button ${buttonIndex} clicked. Looking for related metafields.`);
+    console.log(
+      `Button ${buttonIndex} clicked. Looking for related metafields.`
+    );
 
     const titleMetafield = `benefitstitle${buttonIndex}`;
     const descMetafield = `benefitsdesc${buttonIndex}`;
@@ -351,7 +353,9 @@ const ProductDetail = ({ language, setLoading }) => {
       .value;
     const desc = metafields.find((mf) => mf.node.key === descMetafield)?.node
       .value;
-    const benefitImageMeta = metafields.find((mf) => mf.node.key === benefitImageMetafield);
+    const benefitImageMeta = metafields.find(
+      (mf) => mf.node.key === benefitImageMetafield
+    );
 
     const benefitImage = benefitImageMeta?.node.value;
     console.log(`Benefits Image ${buttonIndex}:`, benefitImage);
@@ -373,7 +377,6 @@ const ProductDetail = ({ language, setLoading }) => {
   };
 
   console.log(productData);
-  
 
   if (!productData) {
     return <Loader />;
@@ -381,10 +384,11 @@ const ProductDetail = ({ language, setLoading }) => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[2220px] h-[3550px]  overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full relative min-h-screen overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
       <svg
+        className="absolute inset-0 pointer-events-none"
         width={width}
         height={height}
         viewBox={viewBox}
@@ -421,7 +425,7 @@ const ProductDetail = ({ language, setLoading }) => {
           </radialGradient>
         </defs>
       </svg>
-      <div className="absolute w-full h-full top-[0] z-10 ">
+      <div className="w-full relative z-10">
         <div className="w-full bg-cover bg-center relative">
           <div className="w-full h-[100dvh] bg-cover bg-center relative">
             <video

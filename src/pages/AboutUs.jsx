@@ -1,19 +1,18 @@
 import OurGlobalPresence from "@/sections/OurGlobalPresence";
-import OurPurposeAboutUs from '@/sections/OurPurposeAboutUs';
-import { drivers1, drivers2 } from '../lib/contants'
-import React, { useEffect, useState, useRef } from 'react';
-import ScrollableDrivers from '@/sections/ScrollableDrivers';
+import OurPurposeAboutUs from "@/sections/OurPurposeAboutUs";
+import { drivers1, drivers2 } from "../lib/contants";
+import React, { useEffect, useState, useRef } from "react";
+import ScrollableDrivers from "@/sections/ScrollableDrivers";
 import { Link } from "react-router-dom";
-import '../index.css';
+import "../index.css";
 import Loader from "../pages/Loader";
 
-const AboutUs = ({language, setLoading}) => {
+const AboutUs = ({ language, setLoading }) => {
   const [metaFields, setMetaFields] = useState(null);
   const [scrollableDrivers, setScrollableDrivers] = useState([]);
   const [businessHighlights, setBusinessHighlights] = useState([]);
   const historyRef = useRef(null); // Create a ref
 
- 
   const svgContainerRef = useRef(null);
 
   const pathRef = useRef(null);
@@ -136,11 +135,11 @@ const AboutUs = ({language, setLoading}) => {
             body: JSON.stringify({ query: aboutUs2, targetLanguage: language }),
           }),
         ]);
-      
+
         // Parse the JSON responses
         const aboutUsResult1 = await aboutUsResponse1.json();
         const aboutUsResult2 = await aboutUsResponse2.json();
-      
+
         // Combine the results of both responses
         const combinedResult = {
           data: {
@@ -154,78 +153,101 @@ const AboutUs = ({language, setLoading}) => {
         };
 
         console.log("combinedResult", combinedResult);
-      
-        if (combinedResult && combinedResult.data && combinedResult.data.metaobjects) {
+
+        if (
+          combinedResult &&
+          combinedResult.data &&
+          combinedResult.data.metaobjects
+        ) {
           const fields = {};
           const newDrivers = [];
           const newHighlights = [];
-      
-          const imageFetchPromises = combinedResult.data.metaobjects.edges.map(async (edge) => {
-            for (const field of edge.node.fields) {
-              if (field.key === 'highlights_heading') {
-                fields[field.key] = field.value; // Extract highlights_heading
-              }
-      
-              if (field.reference?.image?.url) {
-                fields[field.key] = field.reference.image.url;
-              } else if (field.reference?.sources) {
-                fields[field.key] = field.reference.sources[0].url;
-              } else {
-                fields[field.key] = field.value;
-              }
-      
-              // Check for GIDs and handle parsing
-              if (field.key === 'who_we_are_imgs_line_1' || field.key === 'who_we_are_imgs_line_2') {
-                const gids = typeof fields[field.key] === 'string' ? JSON.parse(fields[field.key]) : fields[field.key];
-                if (Array.isArray(gids)) {
-                  const imageUrls = await Promise.all(gids.map(gid => fetchImage(gid)));
-                  fields[field.key] = imageUrls;
-                } else {
-                  console.error("who_we_are_image is not an array");
+
+          const imageFetchPromises = combinedResult.data.metaobjects.edges.map(
+            async (edge) => {
+              for (const field of edge.node.fields) {
+                if (field.key === "highlights_heading") {
+                  fields[field.key] = field.value; // Extract highlights_heading
                 }
-              }      
+
+                if (field.reference?.image?.url) {
+                  fields[field.key] = field.reference.image.url;
+                } else if (field.reference?.sources) {
+                  fields[field.key] = field.reference.sources[0].url;
+                } else {
+                  fields[field.key] = field.value;
+                }
+
+                // Check for GIDs and handle parsing
+                if (
+                  field.key === "who_we_are_imgs_line_1" ||
+                  field.key === "who_we_are_imgs_line_2"
+                ) {
+                  const gids =
+                    typeof fields[field.key] === "string"
+                      ? JSON.parse(fields[field.key])
+                      : fields[field.key];
+                  if (Array.isArray(gids)) {
+                    const imageUrls = await Promise.all(
+                      gids.map((gid) => fetchImage(gid))
+                    );
+                    fields[field.key] = imageUrls;
+                  } else {
+                    console.error("who_we_are_image is not an array");
+                  }
+                }
+              }
             }
-          });
-      
+          );
+
           await Promise.all(imageFetchPromises);
           setMetaFields(fields);
-      
-          combinedResult.data.metaobjects.edges.forEach(edge => {
-            edge.node.fields.forEach(field => {
-              if (field.key.startsWith('card_') && field.key.endsWith('_title')) {
-                const index = parseInt(field.key.split('_')[1]) - 1; // Convert to 0-based index
+
+          combinedResult.data.metaobjects.edges.forEach((edge) => {
+            edge.node.fields.forEach((field) => {
+              if (
+                field.key.startsWith("card_") &&
+                field.key.endsWith("_title")
+              ) {
+                const index = parseInt(field.key.split("_")[1]) - 1; // Convert to 0-based index
                 const descKey = `card_${index + 1}_desc`; // Build the correct desc key
-      
+
                 // Check if the description exists in fields
                 if (fields[descKey] !== undefined && fields[descKey] !== null) {
-                  newDrivers[index] = { title: field.value, desc: fields[descKey] };
-                } else {
-                  newDrivers[index] = { title: field.value, desc: 'Description not available' }; // Fallback
-                }
-              }
-      
-              if (field.key.startsWith('highlights_title_')) {
-                const index = parseInt(field.key.split('_')[2]) - 1;
-                const descKey = `highlights_desc_${index + 1}`;
-                const colorKey = `highlights_color_${index + 1}`; // Construct the corresponding color key
-          
-                if (fields[descKey] !== undefined && fields[descKey] !== null) {
-                  newHighlights[index] = { 
-                    title: field.value, 
-                    desc: fields[descKey], 
-                    color: fields[colorKey] // Add the color
+                  newDrivers[index] = {
+                    title: field.value,
+                    desc: fields[descKey],
                   };
                 } else {
-                  newHighlights[index] = { 
-                    title: field.value, 
-                    desc: 'Description not available', 
-                    color: fields[colorKey] // Add the color
+                  newDrivers[index] = {
+                    title: field.value,
+                    desc: "Description not available",
+                  }; // Fallback
+                }
+              }
+
+              if (field.key.startsWith("highlights_title_")) {
+                const index = parseInt(field.key.split("_")[2]) - 1;
+                const descKey = `highlights_desc_${index + 1}`;
+                const colorKey = `highlights_color_${index + 1}`; // Construct the corresponding color key
+
+                if (fields[descKey] !== undefined && fields[descKey] !== null) {
+                  newHighlights[index] = {
+                    title: field.value,
+                    desc: fields[descKey],
+                    color: fields[colorKey], // Add the color
+                  };
+                } else {
+                  newHighlights[index] = {
+                    title: field.value,
+                    desc: "Description not available",
+                    color: fields[colorKey], // Add the color
                   };
                 }
               }
             });
           });
-      
+
           setScrollableDrivers(newDrivers.filter(Boolean)); // Filter out any undefined values
           setBusinessHighlights(newHighlights.filter(Boolean));
           setLoading(false); // Set loading to false once data is fetched
@@ -236,12 +258,11 @@ const AboutUs = ({language, setLoading}) => {
         console.error("Error fetching homepage meta fields:", error);
         setLoading(false); // Set loading to false even if there is an error
       }
-      
     };
 
     fetchAboutUs();
   }, [language, setLoading]);
-  
+
   // setViewBox("450 0 990 6000");
   //       setWidth("900");
   //       setHeight("8600");
@@ -266,7 +287,11 @@ const AboutUs = ({language, setLoading}) => {
 
   const fetchImage = async (gid) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/shopify/media/${encodeURIComponent(gid)}`);
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/shopify/media/${encodeURIComponent(
+          gid
+        )}`
+      );
       if (!response.ok) {
         console.error(`Failed to fetch media. Status: ${response.status}`);
         return null;
@@ -290,24 +315,26 @@ const AboutUs = ({language, setLoading}) => {
 
   return (
     <div
-    className="scrollContainer w-full pt-16  h-[5000px] lg:h-[3700px] overflow-hidden bg-no-repeat"
-    ref={svgContainerRef}>
-          <svg 
-                width={width}
-                  height={height}
-                  viewBox={viewBox}
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <path 
+      className="scrollContainer w-full relative min-h-screen overflow-hidden bg-no-repeat"
+      ref={svgContainerRef}
+    >
+      <svg
+        className="absolute inset-0 pointer-events-none"
+        width={width}
+        height={height}
+        viewBox={viewBox}
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
           strokeOpacity="0.55"
-                      strokeWidth="21"
-                      speed="2"
-                      stay="0.7"
-                      className="scrollPath cls-2"
-                      style={{ strokeDasharray: "80000", zIndex: 5 }}
-                      ref={pathRef}
-                      stroke-width="80"
-
+          strokeWidth="21"
+          speed="2"
+          stay="0.7"
+          className="scrollPath cls-2"
+          style={{ strokeDasharray: "80000", zIndex: 5 }}
+          ref={pathRef}
+          stroke-width="80"
           d="M445.0  -1.82847 462.55 2.21838 
           469.367 8.13043C488.641 24.884 511.766 69.8656 532.391
           93.0475C808.928 403.971 1393.2 266.645 1760.87 255.937C1957.97
@@ -339,82 +366,90 @@ const AboutUs = ({language, setLoading}) => {
                                     2241.84C1754.18 2234.54 2212.41 2191.88 2354.27 1944.4C2472.83 1737.56 2354.01 1568.78 2170.8 1463.38C1858.02 1283.45 1393.61 1404.67 1056.55 1460.51C743.387 1512.41 315.161 1552.76 95.0933 1275.79C11.7318 1170.87 -19.9067 1071.12 64.6204 952.11C232.12 716.277 689.924 738.477 947.492 745.155C1247.69 752.932
                                     1548.2 771.701 1848.66 773.932C1986.88 774.965 2237.93 777.746 2333.07 660.488C2340.04 651.894 2366.63 610.693 2368.22 602.183C2369.54 595.139 2363.4 552.622 2361.48 543.079C2333.61 404.904 2155.25 344.001 2031.73 321.552C1547 233.504 862.644 532.338 486.985 112.232C471.884 95.3457 428.928 42.7367 430.381
                                       21.2368C430.82 14.692 439.249 2.63474 445.6 0.819495L445.634 0.836114Z"
-                                      fill="url(#paint0_angular_2834_3080)"/>
-                  <defs>
-          <radialGradient id="paint0_angular_2834_3080" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1218.59 2337.99) rotate(-90) scale(2962 3004.37)">
-          <stop stop-color="#42AC51"/>
-          <stop offset="0.05" stop-color="#B0CD1A"/>
-          <stop offset="0.13" stop-color="#019ACC"/>
-          <stop offset="0.2" stop-color="#2C2982"/>
-          <stop offset="0.295" stop-color="#B80B79"/>
-          <stop offset="0.395" stop-color="#9D2924"/>
-          <stop offset="0.445" stop-color="#EA5C50"/>
-          <stop offset="0.51" stop-color="#E4A16B"/>
-          <stop offset="0.6" stop-color="#80B2BD"/>
-          <stop offset="0.645" stop-color="#D88BD3"/>
-          <stop offset="0.715" stop-color="#595FB3"/>
-          <stop offset="0.765" stop-color="#BF278C"/>
-          <stop offset="0.825" stop-color="#74BCD3"/>
-          <stop offset="0.915" stop-color="#5B75CA"/>
-          <stop offset="1" stop-color="#948EE8"/>
+          fill="url(#paint0_angular_2834_3080)"
+        />
+        <defs>
+          <radialGradient
+            id="paint0_angular_2834_3080"
+            cx="0"
+            cy="0"
+            r="1"
+            gradientUnits="userSpaceOnUse"
+            gradientTransform="translate(1218.59 2337.99) rotate(-90) scale(2962 3004.37)"
+          >
+            <stop stop-color="#42AC51" />
+            <stop offset="0.05" stop-color="#B0CD1A" />
+            <stop offset="0.13" stop-color="#019ACC" />
+            <stop offset="0.2" stop-color="#2C2982" />
+            <stop offset="0.295" stop-color="#B80B79" />
+            <stop offset="0.395" stop-color="#9D2924" />
+            <stop offset="0.445" stop-color="#EA5C50" />
+            <stop offset="0.51" stop-color="#E4A16B" />
+            <stop offset="0.6" stop-color="#80B2BD" />
+            <stop offset="0.645" stop-color="#D88BD3" />
+            <stop offset="0.715" stop-color="#595FB3" />
+            <stop offset="0.765" stop-color="#BF278C" />
+            <stop offset="0.825" stop-color="#74BCD3" />
+            <stop offset="0.915" stop-color="#5B75CA" />
+            <stop offset="1" stop-color="#948EE8" />
           </radialGradient>
-          </defs>
-          </svg>
-
-
-      
+        </defs>
+      </svg>
 
       {/* Main cotent */}
-      <div className="absolute w-full h-full top-[0] z-10 ">
-        <div className="w-full bg-cover bg-center relative" >
+      <div className="w-full relative z-10">
+        <div className="w-full bg-cover bg-center relative">
           <div className="w-full h-[635px] lg:h-[650px] bg-cover bg-center relative">
             {/* Breadcrumbs for Large Screens */}
             <div className="hidden lg:flex inset-x-0 top-20 bg-[#FAF8F8] text-black text-sm items-center space-x-4 px-28 h-8 relative z-10">
-            <Link 
-                to="/" 
-                className={`hover:text-blue-500 ${location.pathname === "/" ? "font-bold" : ""}`}
-            >
+              <Link
+                to="/"
+                className={`hover:text-blue-500 ${
+                  location.pathname === "/" ? "font-bold" : ""
+                }`}
+              >
                 Home
-            </Link>
-            <span className="text-gray-400"> &gt; </span>
-            <Link 
-                to="/about-us" 
-                className={`hover:text-blue-500 ${location.pathname === "/about-us" ? "font-bold" : ""}`}
-            >
+              </Link>
+              <span className="text-gray-400"> &gt; </span>
+              <Link
+                to="/about-us"
+                className={`hover:text-blue-500 ${
+                  location.pathname === "/about-us" ? "font-bold" : ""
+                }`}
+              >
                 About Us
-            </Link>
+              </Link>
             </div>
-            
+
             {/* Banner */}
             <div className="w-full relative pt-28 pb-16 mb-10 lg:mb-20">
               <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 w-full items-center lg:items-start px-5 lg:px-10">
-                  {/* Text Section */}
-                  <div className="flex flex-col gap-4 lg:gap-6 text-black items-start w-full lg:w-1/2 lg:pt-20 z-10">
-                      <h1 className="font-heading leading-7 text-[24px] lg:text-[50px] lg:leading-[65px]">
-                          {metaFields.banner_title}
-                      </h1>
-                      <p className="text-[16px] lg:text-[18px] font-subHeading leading-[24px] text-[#667085]">
-                          {metaFields.banner_desc}
-                      </p>
-                  </div>
-                  {/* Images Section */}
-                  <div className="flex gap-3 lg:gap-8 justify-center lg:justify-start mt-5 lg:mt-0 w-3/4 lg:w-1/2">
-                    <div className="w-1/2 relative overflow-hidden rounded-md">
-                        <img
-                            src={metaFields.banner_img_1}
-                            className="w-full h-full object-fill"
-                            alt="Hero Image 1"
-                        />
-                    </div>
-                    <div className="w-1/2 relative overflow-hidden rounded-md">
-                        <img
-                            src={metaFields.banner_img_2}
-                            className="w-full h-full object-fill"
-                            alt="Hero Image 2"
-                        />
-                    </div>
+                {/* Text Section */}
+                <div className="flex flex-col gap-4 lg:gap-6 text-black items-start w-full lg:w-1/2 lg:pt-20 z-10">
+                  <h1 className="font-heading leading-7 text-[24px] lg:text-[50px] lg:leading-[65px]">
+                    {metaFields.banner_title}
+                  </h1>
+                  <p className="text-[16px] lg:text-[18px] font-subHeading leading-[24px] text-[#667085]">
+                    {metaFields.banner_desc}
+                  </p>
                 </div>
-
+                {/* Images Section */}
+                <div className="flex gap-3 lg:gap-8 justify-center lg:justify-start mt-5 lg:mt-0 w-3/4 lg:w-1/2">
+                  <div className="w-1/2 relative overflow-hidden rounded-md">
+                    <img
+                      src={metaFields.banner_img_1}
+                      className="w-full h-full object-fill"
+                      alt="Hero Image 1"
+                    />
+                  </div>
+                  <div className="w-1/2 relative overflow-hidden rounded-md">
+                    <img
+                      src={metaFields.banner_img_2}
+                      className="w-full h-full object-fill"
+                      alt="Hero Image 2"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -423,18 +458,22 @@ const AboutUs = ({language, setLoading}) => {
           <div className="w-full"></div>
 
           {/* Who are we */}
-          <div className='w-full flex flex-col px-5 lg:px-10 mt-16 pt-10 relative z-20 '>
-            <div className='w-[85%] flex flex-col items-start'>
-              <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.who_we_are_1_title}</p>
-              <h1 className='font-heading text-[28px] lg:text-[36px] leading-10 lg:leading-[45px]'>{metaFields.who_we_are_desc}</h1>
-              <button 
-                className='bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg mt-10 mb-10' 
+          <div className="w-full flex flex-col px-5 lg:px-10 mt-16 pt-10 relative z-20 ">
+            <div className="w-[85%] flex flex-col items-start">
+              <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
+                {metaFields.who_we_are_1_title}
+              </p>
+              <h1 className="font-heading text-[28px] lg:text-[36px] leading-10 lg:leading-[45px]">
+                {metaFields.who_we_are_desc}
+              </h1>
+              <button
+                className="bg-red text-white text-base font-subHeading h-[42px] w-[192px] rounded-lg mt-10 mb-10"
                 onClick={() => {
                   if (historyRef.current) {
                     // Use smooth scroll behavior
                     window.scrollTo({
                       top: historyRef.current.offsetTop,
-                      behavior: 'smooth'
+                      behavior: "smooth",
                     });
                   }
                 }}
@@ -465,10 +504,10 @@ const AboutUs = ({language, setLoading}) => {
                     className="flex flex-col text-white p-6 gap-6 rounded-t-[42px] rounded-l-[42px] pt-20 items-start justify-start"
                     style={{
                       backgroundColor: highlight.color,
-                      width: '100%', // Cards take up 100% width for smaller screens
-                      maxWidth: '350px', // Max width of cards for large screens
-                      minHeight: '550px', // Set a minimum height to prevent card collapse
-                      height: 'auto', // Ensure dynamic height adjustment based on content
+                      width: "100%", // Cards take up 100% width for smaller screens
+                      maxWidth: "350px", // Max width of cards for large screens
+                      minHeight: "550px", // Set a minimum height to prevent card collapse
+                      height: "auto", // Ensure dynamic height adjustment based on content
                     }}
                   >
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-[42px] font-heading break-words">
@@ -482,12 +521,15 @@ const AboutUs = ({language, setLoading}) => {
               </div>
             </div>
           </div>
-          
+
           <div ref={historyRef}>
-            <ScrollableDrivers drivers2={scrollableDrivers} language={language}/>
+            <ScrollableDrivers
+              drivers2={scrollableDrivers}
+              language={language}
+            />
           </div>
 
-          {/* Who we are about us */} 
+          {/* Who we are about us */}
           {/* <div className='hidden w-full  lg:flex flex-col px-5 lg:px-10 bg-white'>
             <div className='w-full flex flex-col items-start'>
               <p className='py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]'>{metaFields.who_we_are_2_title}</p>
@@ -570,12 +612,11 @@ const AboutUs = ({language, setLoading}) => {
             </div>
           </div> */}
 
-          <OurGlobalPresence language={language}/>
-
+          <OurGlobalPresence language={language} />
         </div>
-      </div>        
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default AboutUs
+export default AboutUs;
