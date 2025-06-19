@@ -340,13 +340,14 @@ const LifeSciences = ({ language, setLoading }) => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[4000px] overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full relative min-h-screen overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
       <svg
-        width="2436"
-        height="5026"
-        viewBox="0 0 2436 5026"
+        className="absolute inset-0 pointer-events-none"
+        width={width}
+        height={height}
+        viewBox={viewBox}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -380,7 +381,7 @@ const LifeSciences = ({ language, setLoading }) => {
         </defs>
       </svg>
 
-      <div className="absolute w-full h-full top-[0] z-10 ">
+      <div className="w-full relative z-10">
         <div className="w-full bg-cover bg-center relative">
           <div className="w-full flex items-center justify-center py-28 px-5 lg:px-10 bg-opacity-10 backdrop-blur-lg bg-white">
             <div className="max-w-[1440px] w-full flex flex-col lg:flex-row items-center gap-10 lg:gap-24">

@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import "../index.css";
 import Loader from "../pages/Loader";
 
-const CoatingsInks = ({language, setLoading}) => {
+const CoatingsInks = ({ language, setLoading }) => {
   // State to manage selected category
   const [activeCategory, setActiveCategory] = useState("Eye Makeup");
 
@@ -152,7 +152,10 @@ const CoatingsInks = ({language, setLoading}) => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ query: cosmeticsQuery, targetLanguage: language }),
+            body: JSON.stringify({
+              query: cosmeticsQuery,
+              targetLanguage: language,
+            }),
           }
         );
 
@@ -167,7 +170,10 @@ const CoatingsInks = ({language, setLoading}) => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ query: categoriesQuery, targetLanguage: language }),
+            body: JSON.stringify({
+              query: categoriesQuery,
+              targetLanguage: language,
+            }),
           }
         );
 
@@ -181,13 +187,20 @@ const CoatingsInks = ({language, setLoading}) => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ query: cosmeticsQuery1, targetLanguage: language }),
+            body: JSON.stringify({
+              query: cosmeticsQuery1,
+              targetLanguage: language,
+            }),
           }
         );
 
         const cosmeticsResult1 = await cosmeticsResponse1.json();
 
-        if (cosmeticsResult?.data && categoriesResult?.data && cosmeticsResult1?.data) {
+        if (
+          cosmeticsResult?.data &&
+          categoriesResult?.data &&
+          cosmeticsResult1?.data
+        ) {
           // Process cosmetics
           const fields = {};
           const slidesArray1 = [];
@@ -278,7 +291,7 @@ const CoatingsInks = ({language, setLoading}) => {
               images3: [],
             };
 
-            console.log("Category displayName (title):", node.displayName);  
+            console.log("Category displayName (title):", node.displayName);
 
             for (const field of node.fields) {
               if (field.key === "description_1") {
@@ -304,7 +317,7 @@ const CoatingsInks = ({language, setLoading}) => {
               }
             }
           }
-          console.log("Categories:", categories); 
+          console.log("Categories:", categories);
 
           const imageFetchPromises = cosmeticsResult.data.metaobjects.edges.map(
             async (edge) => {
@@ -415,50 +428,60 @@ const CoatingsInks = ({language, setLoading}) => {
 
   return (
     <div
-      className="scrollContainer w-full lg:h-[4000px] h-[3800px] md:h-[5300px]  overflow-hidden bg-no-repeat"
+      className="scrollContainer w-full relative min-h-screen overflow-hidden bg-no-repeat"
       ref={svgContainerRef}
     >
       <svg
+        className="absolute inset-0 pointer-events-none"
         width={width}
         height={height}
         viewBox={viewBox}
         fill="none"
-        xmlns="http://www.w3.org/2000/svg">
-          <path 
-            strokeOpacity="0.55"
-            strokeWidth="21"
-            speed="2"
-            stay=".7"
-            className="scrollPath cls-3"
-            style={{ strokeDasharray: "80000", zIndex: 5 }}
-            ref={pathRef}
-            stroke-width="80"          
-          d="M445.634 0.836114C454.975 -1.82847 462.56 2.21838 469.367 8.13043C488.641 24.884 511.766 69.8656 532.391 93.0475C808.928 403.971 1393.2 266.645 1760.87 255.937C1957.97 250.208 2318.88 285.83 2398.03 500.613C2406.61 523.911 2419.87 566.328 2410.06 589.326C2407.31 595.771 2399.84 599.652 2398.47 606.929C2397.1 614.207 2401.51 621.118 2401.51 628.562C2401.53 654.226 2360.77 702.521 2341.34 719.775C2184.33 859.232 1792.34 817.831 1592.58 812.286C1380.58 806.39 1169.45 800.978 956.952 796.565C710.279 791.435 294.654 755.18 117.475 962.668C-11.1398 1113.28 134.097 1314.31 285.465 1378.99C826.614 1610.25 1464.22 1200.98 2032.37 1356.91C2271.61 1422.56 2502.59 1627.33 2418.27 1895.62C2349.03 2115.92 2079.59 2213.46 1870.2 2250.3C1528.13 2310.47 1181.17 2264.73 837.306 2260.74C654.671 2258.61 378.337 2262.02 234.131 2385.51C78.438 2518.84 193.995 2674.38 343.86 2741.06C576.428 2844.55 976.073 2806.36 1232.76 2801.4C1489.45 2796.44 1899.47 2756.93 2141.8 2857.32C2448.08 2984.21 2356.99 3259.64 2114.91 3396.55C1545.75 3718.43 613.894 3033.77 132.205 3621.51C41.5291 3732.16 30.3467 3842.82 69.671 3977.2C141.546 4222.79 450.178 4339 679.908 4388.86C1123.1 4485.07 1685.04 4433.97 2044.71 4743.7C2104.27 4794.99 2165.43 4866.4 2185.63 4943.61C2191.21 4964.89 2204.38 5017.33 2174.44 5025.38C2143.46 5033.71 2136.19 4956.02 2129.06 4935.47C2068.27 4760.15 1824.82 4643.28 1657.34 4591.8C1240.99 4463.85 771.056 4519.94 369.789 4336.63C116.546 4220.94 -85.5317 3988.7 36.5798 3699.86C161.833 3403.65 512.729 3315.31 811.343 3325.52C1212.8 3339.23 1754.55 3559.52 2122.15 3339.78C2188.3 3300.24 2217.76 3276.09 2253.78 3207.42C2392.19 2943.5 2080.01 2861.6 1880.89 2846.06C1522.9 2818.1 1162.69 2855.54 804.84 2855.76C593.995 2855.89 254.924 2836.37 139.198 2629.57C12.8129 2403.71 302.83 2262.97 484.739 2233.04C810.347 2179.45 1163.93 2251.18 1495.31 2241.84C1754.18 2234.54 2212.41 2191.88 2354.27 1944.4C2472.83 1737.56 2354.01 1568.78 2170.8 1463.38C1858.02 1283.45 1393.61 1404.67 1056.55 1460.51C743.387 1512.41 315.161 1552.76 95.0933 1275.79C11.7318 1170.87 -19.9067 1071.12 64.6204 952.11C232.12 716.277 689.924 738.477 947.492 745.155C1247.69 752.932 1548.2 771.701 1848.66 773.932C1986.88 774.965 2237.93 777.746 2333.07 660.488C2340.04 651.894 2366.63 610.693 2368.22 602.183C2369.54 595.139 2363.4 552.622 2361.48 543.079C2333.61 404.904 2155.25 344.001 2031.73 321.552C1547 233.504 862.644 532.338 486.985 112.232C471.884 95.3457 428.928 42.7367 430.381 21.2368C430.82 14.692 439.249 2.63474 445.6 0.819495L445.634 0.836114Z" 
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeOpacity="0.55"
+          strokeWidth="21"
+          speed="2"
+          stay=".7"
+          className="scrollPath cls-3"
+          style={{ strokeDasharray: "80000", zIndex: 5 }}
+          ref={pathRef}
+          stroke-width="80"
+          d="M445.634 0.836114C454.975 -1.82847 462.56 2.21838 469.367 8.13043C488.641 24.884 511.766 69.8656 532.391 93.0475C808.928 403.971 1393.2 266.645 1760.87 255.937C1957.97 250.208 2318.88 285.83 2398.03 500.613C2406.61 523.911 2419.87 566.328 2410.06 589.326C2407.31 595.771 2399.84 599.652 2398.47 606.929C2397.1 614.207 2401.51 621.118 2401.51 628.562C2401.53 654.226 2360.77 702.521 2341.34 719.775C2184.33 859.232 1792.34 817.831 1592.58 812.286C1380.58 806.39 1169.45 800.978 956.952 796.565C710.279 791.435 294.654 755.18 117.475 962.668C-11.1398 1113.28 134.097 1314.31 285.465 1378.99C826.614 1610.25 1464.22 1200.98 2032.37 1356.91C2271.61 1422.56 2502.59 1627.33 2418.27 1895.62C2349.03 2115.92 2079.59 2213.46 1870.2 2250.3C1528.13 2310.47 1181.17 2264.73 837.306 2260.74C654.671 2258.61 378.337 2262.02 234.131 2385.51C78.438 2518.84 193.995 2674.38 343.86 2741.06C576.428 2844.55 976.073 2806.36 1232.76 2801.4C1489.45 2796.44 1899.47 2756.93 2141.8 2857.32C2448.08 2984.21 2356.99 3259.64 2114.91 3396.55C1545.75 3718.43 613.894 3033.77 132.205 3621.51C41.5291 3732.16 30.3467 3842.82 69.671 3977.2C141.546 4222.79 450.178 4339 679.908 4388.86C1123.1 4485.07 1685.04 4433.97 2044.71 4743.7C2104.27 4794.99 2165.43 4866.4 2185.63 4943.61C2191.21 4964.89 2204.38 5017.33 2174.44 5025.38C2143.46 5033.71 2136.19 4956.02 2129.06 4935.47C2068.27 4760.15 1824.82 4643.28 1657.34 4591.8C1240.99 4463.85 771.056 4519.94 369.789 4336.63C116.546 4220.94 -85.5317 3988.7 36.5798 3699.86C161.833 3403.65 512.729 3315.31 811.343 3325.52C1212.8 3339.23 1754.55 3559.52 2122.15 3339.78C2188.3 3300.24 2217.76 3276.09 2253.78 3207.42C2392.19 2943.5 2080.01 2861.6 1880.89 2846.06C1522.9 2818.1 1162.69 2855.54 804.84 2855.76C593.995 2855.89 254.924 2836.37 139.198 2629.57C12.8129 2403.71 302.83 2262.97 484.739 2233.04C810.347 2179.45 1163.93 2251.18 1495.31 2241.84C1754.18 2234.54 2212.41 2191.88 2354.27 1944.4C2472.83 1737.56 2354.01 1568.78 2170.8 1463.38C1858.02 1283.45 1393.61 1404.67 1056.55 1460.51C743.387 1512.41 315.161 1552.76 95.0933 1275.79C11.7318 1170.87 -19.9067 1071.12 64.6204 952.11C232.12 716.277 689.924 738.477 947.492 745.155C1247.69 752.932 1548.2 771.701 1848.66 773.932C1986.88 774.965 2237.93 777.746 2333.07 660.488C2340.04 651.894 2366.63 610.693 2368.22 602.183C2369.54 595.139 2363.4 552.622 2361.48 543.079C2333.61 404.904 2155.25 344.001 2031.73 321.552C1547 233.504 862.644 532.338 486.985 112.232C471.884 95.3457 428.928 42.7367 430.381 21.2368C430.82 14.692 439.249 2.63474 445.6 0.819495L445.634 0.836114Z"
           fill="url(#paint0_angular_2834_3931)
-          "/>
-      <defs>
-      <radialGradient id="paint0_angular_2834_3931" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1218.59 2337.99) rotate(-90) scale(2962 3004.37)">
-      <stop offset="0.06" stop-color="#9D2924"/>
-      <stop offset="0.265" stop-color="#EA5C50"/>
-      <stop offset="0.515" stop-color="#E4A16B"/>
-      <stop offset="0.76" stop-color="#80B2BD"/>
-      <stop offset="0.96" stop-color="#D88BD3"/>
-      </radialGradient>
-      </defs>
+          "
+        />
+        <defs>
+          <radialGradient
+            id="paint0_angular_2834_3931"
+            cx="0"
+            cy="0"
+            r="1"
+            gradientUnits="userSpaceOnUse"
+            gradientTransform="translate(1218.59 2337.99) rotate(-90) scale(2962 3004.37)"
+          >
+            <stop offset="0.06" stop-color="#9D2924" />
+            <stop offset="0.265" stop-color="#EA5C50" />
+            <stop offset="0.515" stop-color="#E4A16B" />
+            <stop offset="0.76" stop-color="#80B2BD" />
+            <stop offset="0.96" stop-color="#D88BD3" />
+          </radialGradient>
+        </defs>
       </svg>
 
-      <div className="absolute w-full h-full top-[0] z-10 ">
+      <div className="w-full relative z-10">
         <div className="w-full bg-cover bg-center relative">
           <div className="w-full flex items-center justify-center py-28 px-5 lg:px-10">
             <div className="max-w-[1440px] w-full flex flex-col lg:flex-row items-center gap-10 lg:gap-24">
-              
               {/* Left: Text Content */}
               <div className="flex flex-col gap-6 text-black font-medium lg:w-1/2 w-full">
                 <h1 className="w-full lg:text-[62px] text-[40px] lg:leading-[70px] leading-[50px] font-heading">
                   {metaFields.banner_title}
                 </h1>
                 <p className="text-[18px] font-subHeading leading-[26px]">
-                  Colorants for industrial and architectural excellence. <br /><br />
+                  Colorants for industrial and architectural excellence. <br />
+                  <br />
                   {metaFields.banner_desc}
                 </p>
                 <button
@@ -477,17 +500,15 @@ const CoatingsInks = ({language, setLoading}) => {
                   className="max-w-full max-h-[600px] w-auto h-auto object-contain"
                 />
               </div>
-
             </div>
           </div>
-
 
           <div className="w-full">
             {/* Who are we */}
             <div className="w-full flex flex-col px-5 lg:px-10 gap-20">
               <div className="w-full flex flex-col items-start">
                 <p className="py-7 lg:py-10 font-subHeading font-medium text-[18px] sm:text-[20px] md:text-[22px]">
-                {metaFields.who_we_are_title}
+                  {metaFields.who_we_are_title}
                 </p>
                 <h1 className="font-heading text-[28px] lg:text-[54px] leading-10 lg:leading-[70px]">
                   {metaFields.who_we_are_desc}
@@ -532,28 +553,30 @@ const CoatingsInks = ({language, setLoading}) => {
             </div>
 
             {/* Applications Section */}
-            <div className='p-5 lg:p-10 w-full items-start grid grid-cols-12'>
-              <h1 className='col-span-12 lg:col-span-5 py-3 sm:py-5 lg:py-10 font-heading font-medium text-2xl sm:text-3xl lg:text-4xl xl:text-[38px]'>
-                {metaFields.application_header || 'Applications'} {/* Use fetched title */}
+            <div className="p-5 lg:p-10 w-full items-start grid grid-cols-12">
+              <h1 className="col-span-12 lg:col-span-5 py-3 sm:py-5 lg:py-10 font-heading font-medium text-2xl sm:text-3xl lg:text-4xl xl:text-[38px]">
+                {metaFields.application_header || "Applications"}{" "}
+                {/* Use fetched title */}
               </h1>
-              <div className='col-span-12 lg:col-span-7 py-3 sm:py-5 lg:py-10'>
-                <p className='font-subHeading font-light text-[28px] lg:text-[20px] leading-8 sm:leading-10 md:leading-[60px] lg:leading-[30px]'>
-                  {metaFields.application_desc || 'No description available.'} {/* Use fetched description */}
+              <div className="col-span-12 lg:col-span-7 py-3 sm:py-5 lg:py-10">
+                <p className="font-subHeading font-light text-[28px] lg:text-[20px] leading-8 sm:leading-10 md:leading-[60px] lg:leading-[30px]">
+                  {metaFields.application_desc || "No description available."}{" "}
+                  {/* Use fetched description */}
                 </p>
               </div>
             </div>
 
             {/* Dynamic Content Section */}
             {/* <div className="w-full flex flex-col px-5 lg:px-10 mt-10"> */}
-              {/* Top buttons */}
-              {/* <div className="hidden lg:flex justify-center flex-wrap gap:4 md:gap-4 lg:gap-4 py-5">
+            {/* Top buttons */}
+            {/* <div className="hidden lg:flex justify-center flex-wrap gap:4 md:gap-4 lg:gap-4 py-5">
                 {Object.keys(categories).map((category) => (
                   <div
                     key={category}
                     className="flex flex-row items-center gap-5"
                   > */}
-                    {/* Button for the main title */}
-                    {/* <button
+            {/* Button for the main title */}
+            {/* <button
                       onClick={() => {
                         setActiveCategory(category);
                         setShowAlternateContent(false); // Show default content
@@ -567,8 +590,8 @@ const CoatingsInks = ({language, setLoading}) => {
                       {categories[category].title}
                     </button> */}
 
-                    {/* Button for title1 (alternate content) */}
-                    {/* {categories[category].title1 && (
+            {/* Button for title1 (alternate content) */}
+            {/* {categories[category].title1 && (
                       <button
                         onClick={() => {
                           setActiveCategory(category);
@@ -587,8 +610,8 @@ const CoatingsInks = ({language, setLoading}) => {
                 ))}
               </div> */}
 
-              {/* Slider for smaller screens */}
-              {/* <div className="lg:hidden">
+            {/* Slider for smaller screens */}
+            {/* <div className="lg:hidden">
                 <ButtonSlider
                   categories={categories}
                   onCategorySelect={setActiveCategory}
@@ -598,11 +621,11 @@ const CoatingsInks = ({language, setLoading}) => {
                 />
               </div> */}
 
-              {/* Content based on active category */}
-              {/* <div className="content-section px-5 lg:px-10">
+            {/* Content based on active category */}
+            {/* <div className="content-section px-5 lg:px-10">
                 <div className="flex flex-col lg:flex-row gap-10"> */}
-                  {/* Left content - Description1 */}
-                  {/* <div className="w-full flex lg:flex-row flex-col lg:justify-between items-center lg:w-1/2">
+            {/* Left content - Description1 */}
+            {/* <div className="w-full flex lg:flex-row flex-col lg:justify-between items-center lg:w-1/2">
                     <div className="flex flex-col text-black">
                       <h2 className="w-full font-heading text-2xl lg:text-4xl">
                         {metaFields.benefits_title}
@@ -617,8 +640,8 @@ const CoatingsInks = ({language, setLoading}) => {
                     </div>
                   </div> */}
 
-                  {/* Right content - Images1 */}
-                  {/* <div className="w-full flex gap-6 mt-12">
+            {/* Right content - Images1 */}
+            {/* <div className="w-full flex gap-6 mt-12">
                     {showAlternateContent ? (
                       categories[activeCategory]?.images3 &&
                       categories[activeCategory].images3.length > 0 ? (
@@ -654,8 +677,13 @@ const CoatingsInks = ({language, setLoading}) => {
             </div> */}
 
             {/* Our Current offering */}
-            <div className='w-full flex flex-col px-5 lg:px-10'>
-              <CustomSlider language={language} title={metaFields.our_offerings_title} subTitle={metaFields.our_offerings_desc} slides={slides} />
+            <div className="w-full flex flex-col px-5 lg:px-10">
+              <CustomSlider
+                language={language}
+                title={metaFields.our_offerings_title}
+                subTitle={metaFields.our_offerings_desc}
+                slides={slides}
+              />
             </div>
 
             {/* Our Global presence */}
