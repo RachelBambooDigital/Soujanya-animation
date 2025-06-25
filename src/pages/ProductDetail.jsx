@@ -583,97 +583,94 @@ const ProductDetail = ({ language, setLoading }) => {
             </div>
           </div>
 
-          {/* Dynamic Content Section */}
-          <div className="w-full flex flex-col px-5 lg:px-10 mt-10">
-            {/* Buttons */}
-            <div className="flex justify-center flex-wrap gap-4 py-5">
-              {buttons.map((button, index) => (
-                <button
-                  key={index}
-                  onClick={() =>
-                    handleButtonClick(index + 1, productData.metafields.edges)
-                  }
-                  className={`px-6 py-2 border rounded-md transition-all duration-300 ease-in-out w-[10rem] lg:w-[20rem] ${
-                    activeCategory === `button${index + 1}`
-                      ? "bg-red text-white shadow-lg"
-                      : "bg-white text-black border border-gray-300 hover:bg-[#d2d3d3]"
-                  }`}
-                >
-                  {button}
-                </button>
-              ))}
-            </div>
+          {/* 
+<div className="w-full flex flex-col px-5 lg:px-10 mt-10">
+  <!-- Buttons -->
+  <div className="flex justify-center flex-wrap gap-4 py-5">
+    {buttons.map((button, index) => (
+      <button
+        key={index}
+        onClick={() =>
+          handleButtonClick(index + 1, productData.metafields.edges)
+        }
+        className={`px-6 py-2 border rounded-md transition-all duration-300 ease-in-out w-[10rem] lg:w-[20rem] ${
+          activeCategory === `button${index + 1}`
+            ? "bg-red text-white shadow-lg"
+            : "bg-white text-black border border-gray-300 hover:bg-[#d2d3d3]"
+        }`}
+      >
+        {button}
+      </button>
+    ))}
+  </div>
 
-            {/* Content based on active cards */}
-            <div className="content-section px-5 lg:px-10">
-              <div className="flex flex-col lg:flex-row gap-10">
-                <div className="flex flex-col">
-                  {activeCategory &&
-                    activeCards.length > 0 &&
-                    activeCards.map((card, index) => (
-                      <div key={index}>
-                        <div className="pr-44 pl-44 mt-20">
-                          {/* Conditionally apply background for larger screens only */}
-                          <div className="hidden lg:flex flex-col lg:flex-row items-start gap-5 mb-16 border border-[#E6E6E6] bg-white bg-opacity-15 backdrop-blur-lg rounded-lg">
-                            {/* Left Side: Text */}
-                            <div className="w-full lg:w-1/2 px-5 lg:px-10">
-                              <h1 className="font-semibold text-[26px] ml-10 mt-14">
-                                {card.heading}
-                              </h1>
-                              <p className="font-subHeading font-normal ml-10 mt-5 text-[15px] leading-5">
-                                {card.description}
-                              </p>
-                            </div>
-
-                            {/* Right Side: Image */}
-                            <div className="w-full lg:w-1/2">
-                              {index === 0 ? (
-                                benefitImageUrl ? (
-                                  <img
-                                    src={benefitImageUrl}
-                                    alt="Benefit Image"
-                                    className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
-                                  />
-                                ) : (
-                                  <div className="w-full h-[340px] bg-gray-200 rounded-lg flex items-center justify-center">
-                                    <p>No benefit image available</p>
-                                  </div>
-                                )
-                              ) : null}
-                            </div>
-                          </div>
+  <!-- Content based on active cards -->
+  <div className="content-section px-5 lg:px-10">
+    <div className="flex flex-col lg:flex-row gap-10">
+      <div className="flex flex-col">
+        {activeCategory &&
+          activeCards.length > 0 &&
+          activeCards.map((card, index) => (
+            <div key={index}>
+              <div className="pr-44 pl-44 mt-20">
+                <div className="hidden lg:flex flex-col lg:flex-row items-start gap-5 mb-16 border border-[#E6E6E6] bg-white bg-opacity-15 backdrop-blur-lg rounded-lg">
+                  <div className="w-full lg:w-1/2 px-5 lg:px-10">
+                    <h1 className="font-semibold text-[26px] ml-10 mt-14">
+                      {card.heading}
+                    </h1>
+                    <p className="font-subHeading font-normal ml-10 mt-5 text-[15px] leading-5">
+                      {card.description}
+                    </p>
+                  </div>
+                  <div className="w-full lg:w-1/2">
+                    {index === 0 ? (
+                      benefitImageUrl ? (
+                        <img
+                          src={benefitImageUrl}
+                          alt="Benefit Image"
+                          className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
+                        />
+                      ) : (
+                        <div className="w-full h-[340px] bg-gray-200 rounded-lg flex items-center justify-center">
+                          <p>No benefit image available</p>
                         </div>
+                      )
+                    ) : null}
+                  </div>
+                </div>
+              </div>
 
-                        {/* For smaller screens, show image above title and description without the background */}
-                        <div className="lg:hidden">
-                          <div className="flex flex-col items-start mb-16">
-                            {index === 0 ? (
-                              benefitImageUrl ? (
-                                <img
-                                  src={benefitImageUrl}
-                                  alt="Benefit Image"
-                                  className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
-                                />
-                              ) : (
-                                <div className="w-full h-[340px] bg-gray-200 rounded-lg flex items-center justify-center">
-                                  <p>No benefit image available</p>
-                                </div>
-                              )
-                            ) : null}
-                            <h1 className="font-semibold text-[22px] mt-5 text-start">
-                              {card.heading}
-                            </h1>
-                            <p className="font-subHeading font-normal mt-3 text-[15px] text-start">
-                              {card.description}
-                            </p>
-                          </div>
-                        </div>
+              <!-- Mobile view -->
+              <div className="lg:hidden">
+                <div className="flex flex-col items-start mb-16">
+                  {index === 0 ? (
+                    benefitImageUrl ? (
+                      <img
+                        src={benefitImageUrl}
+                        alt="Benefit Image"
+                        className="w-full h-auto lg:h-[340px] object-cover rounded-lg mb-5 lg:mb-0"
+                      />
+                    ) : (
+                      <div className="w-full h-[340px] bg-gray-200 rounded-lg flex items-center justify-center">
+                        <p>No benefit image available</p>
                       </div>
-                    ))}
+                    )
+                  ) : null}
+                  <h1 className="font-semibold text-[22px] mt-5 text-start">
+                    {card.heading}
+                  </h1>
+                  <p className="font-subHeading font-normal mt-3 text-[15px] text-start">
+                    {card.description}
+                  </p>
                 </div>
               </div>
             </div>
-          </div>
+          ))}
+      </div>
+    </div>
+  </div>
+</div>
+*/}
         </div>
 
         {/* <OurGlobalPresence language={language} /> */}
