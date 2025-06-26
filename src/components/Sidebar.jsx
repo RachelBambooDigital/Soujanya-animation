@@ -7,20 +7,104 @@ import {
 } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-const Sidebar = ({ isOpen, toggleSidebar }) => {
+const Sidebar = ({ isOpen, toggleSidebar, language = "en" }) => {
   const [activeMenu, setActiveMenu] = useState(null);
   const [activeSubMenu, setActiveSubMenu] = useState(null);
+  const [products, setProducts] = useState({
+    coatings: [],
+    personalCare: [],
+    lifeSciences: [],
+  });
 
-  const sidebarRef = useRef(null); // Reference for the sidebar
+  const sidebarRef = useRef(null);
+
+  // Fetch products from API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/shopify/fetchProductCategories`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ targetLanguage: language }),
+          }
+        );
+        const data = await res.json();
+        if (!Array.isArray(data)) throw new Error("Invalid data");
+
+        const categoryProducts = {
+          coatings: [],
+          personalCare: [],
+          lifeSciences: [],
+        };
+
+        data.forEach((edge) => {
+          const fields = edge.node.fields;
+
+          // Get products for coatings (products_3)
+          const coatingsProducts =
+            fields
+              .find((f) => f.key === "products_3")
+              ?.references?.edges.map((e) => e.node) || [];
+          categoryProducts.coatings = coatingsProducts;
+
+          // Get products for personal care (products)
+          const personalCareProducts =
+            fields
+              .find((f) => f.key === "products")
+              ?.references?.edges.map((e) => e.node) || [];
+          categoryProducts.personalCare = personalCareProducts;
+
+          // Get products for life sciences (products_2)
+          const lifeSciencesProducts =
+            fields
+              .find((f) => f.key === "products_2")
+              ?.references?.edges.map((e) => e.node) || [];
+          categoryProducts.lifeSciences = lifeSciencesProducts;
+        });
+
+        setProducts(categoryProducts);
+      } catch (err) {
+        console.error("Products fetch error:", err);
+      }
+    };
+
+    if (isOpen) {
+      fetchProducts();
+    }
+  }, [language, isOpen]);
 
   const handleMenuClick = (menu) => {
-    setActiveMenu(menu === activeMenu ? null : menu); // Toggle main menu visibility
-    setActiveSubMenu(null); // Reset the submenu when switching main menus
+    setActiveMenu(menu === activeMenu ? null : menu);
+    setActiveSubMenu(null);
   };
 
   const handleSubMenuClick = (submenu, event) => {
-    event.stopPropagation(); // Prevent triggering parent click events
-    setActiveSubMenu(submenu === activeSubMenu ? null : submenu); // Toggle submenu visibility
+    event.stopPropagation();
+    setActiveSubMenu(submenu === activeSubMenu ? null : submenu);
+  };
+
+  // Generate product link based on category
+  const getProductLink = (product, category) => {
+    const productId = product.id.replace("gid://shopify/Product/", "");
+
+    switch (category) {
+      case "coatings":
+        return `/productDet2/${productId}`;
+      case "personalCare":
+        return `/productDet/${productId}`;
+      case "lifeSciences":
+        // Special handling for life sciences products
+        const urlMap = {
+          7376925884482: "/active-pharmaceutical-ingredients",
+          7377107648578: "/emollients",
+          7377107451970: "/intermediate",
+        };
+        return urlMap[productId] || `/productDet/${productId}`;
+      default:
+        return `/productDet/${productId}`;
+    }
   };
 
   // Calculate sidebar width based on active sections
@@ -31,16 +115,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-        toggleSidebar(); // Close the sidebar if the click is outside
+        toggleSidebar();
       }
     };
 
-    // Add event listener
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
-    // Cleanup the event listener
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -52,7 +134,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       className={`fixed top-0 left-0 h-full bg-white z-50 transform ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } transition-transform duration-300 ease-in-out overflow-y-scroll custom-scroll`}
-      style={{ width: `${sidebarWidth}px`, maxWidth: "90vw" }} // Max width is 90% of viewport
+      style={{ width: `${sidebarWidth}px`, maxWidth: "90vw" }}
     >
       <div className="w-full h-full flex flex-col gap-16">
         {/* Header */}
@@ -94,19 +176,18 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 onClick={() => handleMenuClick("offer")}
               >
                 <p>What we offer</p>
-                {activeMenu === "offer" ? (
-                  <MdOutlineKeyboardArrowRight className="text-2xl" />
-                ) : (
-                  <MdOutlineKeyboardArrowRight className="text-2xl" />
-                )}
+                <MdOutlineKeyboardArrowRight className="text-2xl" />
               </div>
 
-              {/* LG hidden */}
-              {/* Submenu for "What we offer" */}
+              {/* Mobile Submenu for "What we offer" */}
               {activeMenu === "offer" && (
                 <div className="lg:hidden flex flex-col gap-2 font-subHeading text-[14px] lg:text-[18px] leading-[150%] text-black pl-2">
                   <div className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
-                    <Link to="/coatings-inks" className="flex-grow" onClick={toggleSidebar}>
+                    <Link
+                      to="/coatings-inks"
+                      className="flex-grow"
+                      onClick={toggleSidebar}
+                    >
                       <p>Coatings and Inks</p>
                     </Link>
                     <div onClick={(e) => handleSubMenuClick("coatings", e)}>
@@ -119,83 +200,26 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                   </div>
                   {activeSubMenu === "coatings" && (
                     <div className="flex flex-col pl-5">
-                      <Link
-                        to="/productDet2/7377553227842"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>I-TINT</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet2/7377753079874"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Hydratint</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet2/7377753309250"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Smartint</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet2/7377753505858"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Tintol</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet2/7377753669698"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Blend</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet2/7377753866306"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Ultratint</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet2/7377754030146"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Walltint</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet2/7377754128450"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Aquaflexo</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet2/7377754488898"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Colorcomposit</p>
-                        </div>
-                      </Link>
+                      {products.coatings.map((product, index) => (
+                        <Link
+                          key={product.id || index}
+                          to={getProductLink(product, "coatings")}
+                          onClick={toggleSidebar}
+                        >
+                          <div className="py-2 px-5 border-b border-black">
+                            <p>{product.title}</p>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
                   )}
 
                   <div className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
-                    <Link to="/home-care-cosmetics" className="flex-grow" onClick={toggleSidebar}>
+                    <Link
+                      to="/home-care-cosmetics"
+                      className="flex-grow"
+                      onClick={toggleSidebar}
+                    >
                       <p>Home, Personal Care & Cosmetics</p>
                     </Link>
                     <div onClick={(e) => handleSubMenuClick("personalCare", e)}>
@@ -208,67 +232,26 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                   </div>
                   {activeSubMenu === "personalCare" && (
                     <div className="flex flex-col pl-5">
-                      <Link
-                        to="/productDet/7376135127106"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Auratint</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet/7376147021890"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Auratone</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet/7376147120194"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Aurablush 6600</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet/7376147218498"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Aurablush 6650</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet/7376147284034"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Aurablush 6670</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet/7376147382338"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Aurablush 6660</p>
-                        </div>
-                      </Link>
-                      <Link
-                        to="/productDet/7376147546178"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Aurablush 6610</p>
-                        </div>
-                      </Link>
+                      {products.personalCare.map((product, index) => (
+                        <Link
+                          key={product.id || index}
+                          to={getProductLink(product, "personalCare")}
+                          onClick={toggleSidebar}
+                        >
+                          <div className="py-2 px-5 border-b border-black">
+                            <p>{product.title}</p>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
                   )}
 
                   <div className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
-                    <Link to="/life-sciences" className="flex-grow" onClick={toggleSidebar}>
+                    <Link
+                      to="/life-sciences"
+                      className="flex-grow"
+                      onClick={toggleSidebar}
+                    >
                       <p>Life Sciences</p>
                     </Link>
                     <div onClick={(e) => handleSubMenuClick("lifeSciences", e)}>
@@ -281,24 +264,17 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                   </div>
                   {activeSubMenu === "lifeSciences" && (
                     <div className="flex flex-col pl-5">
-                      <Link
-                        to="/active-pharmaceutical-ingredients"
-                        onClick={toggleSidebar}
-                      >
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>APIs</p>
-                        </div>
-                      </Link>
-                      <Link to="/intermediate" onClick={toggleSidebar}>
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Intermediates</p>
-                        </div>
-                      </Link>
-                      <Link to="/emollients" onClick={toggleSidebar}>
-                        <div className="py-2 px-5 border-b border-black">
-                          <p>Emollients</p>
-                        </div>
-                      </Link>
+                      {products.lifeSciences.map((product, index) => (
+                        <Link
+                          key={product.id || index}
+                          to={getProductLink(product, "lifeSciences")}
+                          onClick={toggleSidebar}
+                        >
+                          <div className="py-2 px-5 border-b border-black">
+                            <p>{product.title}</p>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
                   )}
                 </div>
@@ -340,210 +316,91 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               <div className="flex flex-col gap-2 font-subHeading text-[14px] lg:text-[18px] leading-[150%] text-black">
                 {/* Coatings and Inks */}
                 <div className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
-                  <Link to="/coatings-inks" className="flex-grow" onClick={toggleSidebar}>
+                  <Link
+                    to="/coatings-inks"
+                    className="flex-grow"
+                    onClick={toggleSidebar}
+                  >
                     <p>Coatings and Inks</p>
                   </Link>
                   <div onClick={(e) => handleSubMenuClick("coatings", e)}>
-                    {activeSubMenu === "coatings" ? (
-                      <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
-                    ) : (
-                      <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
-                    )}
+                    <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
                   </div>
                 </div>
 
                 {/* Home, Personal Care & Cosmetics */}
                 <div className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
-                  <Link to="/home-care-cosmetics" className="flex-grow" onClick={toggleSidebar}>
+                  <Link
+                    to="/home-care-cosmetics"
+                    className="flex-grow"
+                    onClick={toggleSidebar}
+                  >
                     <p>Home, Personal Care & Cosmetics</p>
                   </Link>
                   <div onClick={(e) => handleSubMenuClick("personalCare", e)}>
-                    {activeSubMenu === "personalCare" ? (
-                      <MdOutlineKeyboardArrowRight className="text-2xl" />
-                    ) : (
-                      <MdOutlineKeyboardArrowRight className="text-2xl" />
-                    )}
+                    <MdOutlineKeyboardArrowRight className="text-2xl" />
                   </div>
                 </div>
 
                 {/* Life Sciences */}
                 <div className="flex items-center justify-between py-2 px-5 border-b border-black cursor-pointer">
-                  <Link to="/life-sciences" className="flex-grow" onClick={toggleSidebar}>
+                  <Link
+                    to="/life-sciences"
+                    className="flex-grow"
+                    onClick={toggleSidebar}
+                  >
                     <p>Life Sciences</p>
                   </Link>
                   <div onClick={(e) => handleSubMenuClick("lifeSciences", e)}>
-                    {activeSubMenu === "lifeSciences" ? (
-                      <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
-                    ) : (
-                      <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
-                    )}
+                    <MdOutlineKeyboardArrowRight className="text-2xl lg:text-2xl" />
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Third Column: Items in Submenus */}
+          {/* Third Column: Dynamic Products in Submenus */}
           {activeSubMenu && (
             <div className="hidden lg:flex flex-grow basis-[450px] pr-4">
               <div className="flex flex-col gap-2 font-subHeading text-[14px] lg:text-[18px] leading-[150%] text-black">
-                {activeSubMenu === "coatings" && (
-                  <>
+                {activeSubMenu === "coatings" &&
+                  products.coatings.map((product, index) => (
                     <Link
-                      to="/productDet2/7377553227842"
+                      key={product.id || index}
+                      to={getProductLink(product, "coatings")}
                       onClick={toggleSidebar}
                     >
                       <div className="py-2 px-5 border-b border-black">
-                        <p>I-TINT</p>
+                        <p>{product.title}</p>
                       </div>
                     </Link>
-                    <Link
-                      to="/productDet2/7377753079874"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Hydratint</p>
-                      </div>
-                    </Link>
-                    <Link
-                      to="/productDet2/7377753309250"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Smartint</p>
-                      </div>
-                    </Link>
-                    <Link
-                      to="/productDet2/7377753505858"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Tintol</p>
-                      </div>
-                    </Link>
-                    <Link
-                      to="/productDet2/7377753669698"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Blend</p>
-                      </div>
-                    </Link>
-                    <Link
-                      to="/productDet2/7377753866306"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Ultratint</p>
-                      </div>
-                    </Link>
-                    <Link
-                      to="/productDet2/7377754030146"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Walltint</p>
-                      </div>
-                    </Link>
-                    <Link
-                      to="/productDet2/7377754128450"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Aquaflexo</p>
-                      </div>
-                    </Link>
-                    <Link
-                      to="/productDet2/7377754488898"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Colorcomposit</p>
-                      </div>
-                    </Link>
-                  </>
-                )}
+                  ))}
 
-                {activeSubMenu === "personalCare" && (
-                  <>
+                {activeSubMenu === "personalCare" &&
+                  products.personalCare.map((product, index) => (
                     <Link
-                      to="/productDet/7376135127106"
+                      key={product.id || index}
+                      to={getProductLink(product, "personalCare")}
                       onClick={toggleSidebar}
                     >
                       <div className="py-2 px-5 border-b border-black">
-                        <p>Auratint</p>
+                        <p>{product.title}</p>
                       </div>
                     </Link>
-                    <Link
-                      to="/productDet/7376147021890"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Auratone</p>
-                      </div>
-                    </Link>
-                    <Link
-                      to="/productDet/7376147120194"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Aurablush 6600</p>
-                      </div>
-                    </Link>
-                    <Link to="productDet/7376147218498" onClick={toggleSidebar}>
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Aurablush 6650</p>
-                      </div>
-                    </Link>
-                    <Link
-                      to="/productDet/7376147284034"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Aurablush 6670</p>
-                      </div>
-                    </Link>
-                    <Link
-                      to="/productDet/7376147382338"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Aurablush 6660</p>
-                      </div>
-                    </Link>
-                    <Link
-                      to="/productDet/7376147546178"
-                      onClick={toggleSidebar}
-                    >
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Aurablush 6610</p>
-                      </div>
-                    </Link>
-                  </>
-                )}
+                  ))}
 
-                {activeSubMenu === "lifeSciences" && (
-                  <>
+                {activeSubMenu === "lifeSciences" &&
+                  products.lifeSciences.map((product, index) => (
                     <Link
-                      to="/active-pharmaceutical-ingredients"
+                      key={product.id || index}
+                      to={getProductLink(product, "lifeSciences")}
                       onClick={toggleSidebar}
                     >
                       <div className="py-2 px-5 border-b border-black">
-                        <p>APIs</p>
+                        <p>{product.title}</p>
                       </div>
                     </Link>
-                    <Link to="/intermediate" onClick={toggleSidebar}>
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Intermediates</p>
-                      </div>
-                    </Link>
-                    <Link to="/emollients" onClick={toggleSidebar}>
-                      <div className="py-2 px-5 border-b border-black">
-                        <p>Emollients</p>
-                      </div>
-                    </Link>
-                  </>
-                )}
+                  ))}
               </div>
             </div>
           )}

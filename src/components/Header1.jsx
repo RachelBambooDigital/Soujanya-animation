@@ -5,15 +5,18 @@ import Sidebar2 from "./Sidebar2";
 import ApplicationDropdown from "./ApplicationDropdown";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md"; // Import the arrow icons
+import {
+  MdOutlineKeyboardArrowDown,
+  MdOutlineKeyboardArrowUp,
+} from "react-icons/md"; // Import the arrow icons
 
-const Header1 = ({onLanguageChange}) => {
+const Header1 = ({ onLanguageChange }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Track sidebar state
   const [isSidebar2Open, setIsSidebar2Open] = useState(false);
   const [isVisible, setIsVisible] = useState(true); // Track header visibility
   const [lastScrollY, setLastScrollY] = useState(0); // Track last scroll position
   const [isHoveringTop, setIsHoveringTop] = useState(false); // Detect hover on top of page
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [selectedLanguage, setSelectedLanguage] = useState("en"); // State for short language code
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to toggle dropdown
 
@@ -29,14 +32,14 @@ const Header1 = ({onLanguageChange}) => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar visibility
   };
-  
+
   const toggleSidebar2 = () => {
     setIsSidebar2Open(!isSidebar2Open);
   };
 
   // Redirect functions
   const handleContactUs = () => {
-    navigate('/contact-us');
+    navigate("/contact-us");
   };
 
   // Set the initial language from localStorage if available
@@ -55,14 +58,16 @@ const Header1 = ({onLanguageChange}) => {
     localStorage.setItem("selectedLanguage", langShort); // Store selected language in localStorage
     setIsDropdownOpen(false); // Close dropdown
   };
-  
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown visibility
   };
 
   // Get full name of the selected language
   const getSelectedLanguageName = () => {
-    const selectedLang = languages.find(lang => lang.short === selectedLanguage);
+    const selectedLang = languages.find(
+      (lang) => lang.short === selectedLanguage
+    );
     return selectedLang ? selectedLang.name : "English"; // Default to English if not found
   };
 
@@ -125,7 +130,8 @@ const Header1 = ({onLanguageChange}) => {
             <div className="relative border border-black rounded-md">
               <button
                 className="text-xs font-semibold py-2 px-3 h-full text-black flex items-center gap-2"
-                onClick={toggleDropdown}>
+                onClick={toggleDropdown}
+              >
                 {getSelectedLanguageName()} {/* Display full language name */}
                 <span className="ml-2">
                   {isDropdownOpen ? (
@@ -143,7 +149,8 @@ const Header1 = ({onLanguageChange}) => {
                     <button
                       key={lang.short}
                       className="w-full text-left px-2 py-2 text-sm text-black hover:bg-red hover:text-white" // Red background on hover
-                      onClick={() => handleLanguageChange(lang.short)}>
+                      onClick={() => handleLanguageChange(lang.short)}
+                    >
                       {lang.name} {/* Display the full name of the language */}
                     </button>
                   ))}
@@ -151,14 +158,18 @@ const Header1 = ({onLanguageChange}) => {
               )}
             </div>
             <div className="flex relative border rounded-md">
-              <button className={`text-xs font-semibold py-2 px-4 h-full text-black`} onClick={handleContactUs}>
+              <button
+                className={`text-xs font-semibold py-2 px-4 h-full text-black`}
+                onClick={handleContactUs}
+              >
                 Contact
               </button>
             </div>
             <div className="flex relative border rounded-md">
               <button
-                className={`text-xs font-semibold py-2 px-4 h-full text-black`}  
-                onClick={toggleSidebar2}>
+                className={`text-xs font-semibold py-2 px-4 h-full text-black`}
+                onClick={toggleSidebar2}
+              >
                 <CiSearch className="text-black text-lg" />
               </button>
             </div>
@@ -167,9 +178,12 @@ const Header1 = ({onLanguageChange}) => {
           {/* For small screens */}
           <div className="lg:hidden flex gap-3 items-center">
             <div className="relative border border-black rounded-md">
-              <button 
+              <button
                 className="text-xs font-semibold py-1 px-1 h-full text-black flex items-center" // Added flex and gap
-                onClick={toggleDropdown}> {/* Open dropdown when clicked */}
+                onClick={toggleDropdown}
+              >
+                {" "}
+                {/* Open dropdown when clicked */}
                 {getSelectedLanguageName()} {/* Display full language name */}
                 <span className="ml-2">
                   {isDropdownOpen ? (
@@ -179,7 +193,7 @@ const Header1 = ({onLanguageChange}) => {
                   )}
                 </span>
               </button>
-              
+
               {/* Mobile dropdown */}
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-20 bg-white rounded-md shadow-lg">
@@ -187,7 +201,8 @@ const Header1 = ({onLanguageChange}) => {
                     <button
                       key={lang.short}
                       className="w-full text-left px-2 py-2 text-sm text-black hover:bg-red hover:text-white"
-                      onClick={() => handleLanguageChange(lang.short)}>
+                      onClick={() => handleLanguageChange(lang.short)}
+                    >
                       {lang.name}
                     </button>
                   ))}
@@ -197,8 +212,9 @@ const Header1 = ({onLanguageChange}) => {
 
             <div className="flex relative border border-black rounded-md">
               <button
-                className={`text-xs font-semibold py-1 px-2 h-full text-black`}  
-                onClick={toggleSidebar2}>
+                className={`text-xs font-semibold py-1 px-2 h-full text-black`}
+                onClick={toggleSidebar2}
+              >
                 <CiSearch className="text-black text-sm" />
               </button>
             </div>
@@ -215,7 +231,11 @@ const Header1 = ({onLanguageChange}) => {
 
       {isSidebarOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-md z-40">
-          <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+          <Sidebar
+            isOpen={isSidebarOpen}
+            toggleSidebar={toggleSidebar}
+            language={selectedLanguage}
+          />
         </div>
       )}
 

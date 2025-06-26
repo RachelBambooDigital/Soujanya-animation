@@ -533,15 +533,18 @@ const Home = ({ language, setLoading }) => {
                     style={{
                       backgroundColor: highlight.color,
                       width: "100%", // Cards take up 100% width for smaller screens
-                      maxWidth: "350px", // Max width of cards for large screens
+                      maxWidth: "full", // Max width of cards for large screens
                       minHeight: "550px", // Set a minimum height to prevent card collapse
                       height: "auto", // Ensure dynamic height adjustment based on content
                     }}
                   >
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-[42px] font-heading break-words">
+                    <h1
+                      style={{ lineHeight: 1.1 }}
+                      className="text-2xl sm:text-3xl lg:text-4xl xl:text-[48px] leading-[1.2] font-heading break-words"
+                    >
                       {highlight.title}
                     </h1>
-                    <p className="text-base sm:text-lg lg:text-xl font-subHeading leading-relaxed break-words">
+                    <p className="text-base sm:text-lg lg:text-2xl font-subHeading leading-relaxed break-words">
                       {highlight.desc}
                     </p>
                   </div>
