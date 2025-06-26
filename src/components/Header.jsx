@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
-import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
+import {
+  MdOutlineKeyboardArrowDown,
+  MdOutlineKeyboardArrowUp,
+} from "react-icons/md";
 import Sidebar from "./Sidebar";
 import Sidebar2 from "./Sidebar2";
 import { Link } from "react-router-dom";
@@ -33,7 +36,7 @@ const Header = ({ onLanguageChange }) => {
 
   // Redirect functions
   const handleContactUs = () => {
-    navigate('/contact-us');
+    navigate("/contact-us");
   };
 
   // Add scroll event listener to track scroll position
@@ -47,12 +50,12 @@ const Header = ({ onLanguageChange }) => {
         setScrolled(false);
       }
     };
-    
-    window.addEventListener('scroll', handleScroll);
-    
+
+    window.addEventListener("scroll", handleScroll);
+
     // Clean up event listener
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -71,7 +74,7 @@ const Header = ({ onLanguageChange }) => {
     onLanguageChange(langShort);
     localStorage.setItem("selectedLanguage", langShort);
     setIsDropdownOpen(false);
-    console.log('Language changed to:', langShort);
+    console.log("Language changed to:", langShort);
   };
 
   const toggleDropdown = () => {
@@ -80,7 +83,9 @@ const Header = ({ onLanguageChange }) => {
 
   // Get full name of the selected language
   const getSelectedLanguageName = () => {
-    const selectedLang = languages.find(lang => lang.short === selectedLanguage);
+    const selectedLang = languages.find(
+      (lang) => lang.short === selectedLanguage
+    );
     return selectedLang ? selectedLang.name : "English";
   };
 
@@ -92,17 +97,25 @@ const Header = ({ onLanguageChange }) => {
   return (
     <>
       <header
-        className={`fixed w-full px-5 lg:px-10 h-[62px] z-40 backdrop-blur-lg transition-all duration-300`}>
+        className={`fixed w-full px-5 lg:px-10 h-[62px] z-40 backdrop-blur-lg transition-all duration-300`}
+      >
         <div className="w-full flex items-center justify-between h-full">
           <div className={`${textColor} flex items-center gap-5`}>
             <button className="w-8" onClick={toggleSidebar}>
-              <img src={scrolled ? "/logos/menuBlack.png" : "/logos/menu.png"} alt="menu" />
+              <img
+                src={scrolled ? "/logos/menuBlack.png" : "/logos/menu.png"}
+                alt="menu"
+              />
             </button>
             <Link to="/">
-              <img 
-                src={scrolled ? "/logos/NavLogoBlack.svg" : "/logos/NavLogoWhite.svg"} 
-                className="w-36" 
-                alt="logo" 
+              <img
+                src={
+                  scrolled
+                    ? "/logos/NavLogoBlack.svg"
+                    : "/logos/NavLogoWhite.svg"
+                }
+                className="w-36"
+                alt="logo"
               />
             </Link>
           </div>
@@ -113,7 +126,8 @@ const Header = ({ onLanguageChange }) => {
             <div className={`relative border ${borderColor} rounded-md`}>
               <button
                 className={`text-xs font-semibold py-2 px-3 h-full ${textColor} flex items-center gap-2`}
-                onClick={toggleDropdown}>
+                onClick={toggleDropdown}
+              >
                 {getSelectedLanguageName()}
                 <span className="ml-2">
                   {isDropdownOpen ? (
@@ -131,7 +145,8 @@ const Header = ({ onLanguageChange }) => {
                     <button
                       key={lang.short}
                       className="w-full text-left px-2 py-2 text-sm text-black hover:bg-red hover:text-white"
-                      onClick={() => handleLanguageChange(lang.short)}>
+                      onClick={() => handleLanguageChange(lang.short)}
+                    >
                       {lang.name}
                     </button>
                   ))}
@@ -140,14 +155,18 @@ const Header = ({ onLanguageChange }) => {
             </div>
 
             <div className={`flex relative border ${borderColor} rounded-md`}>
-              <button className={`text-xs font-semibold py-2 px-4 h-full ${textColor}`} onClick={handleContactUs}>
+              <button
+                className={`text-xs font-semibold py-2 px-4 h-full ${textColor}`}
+                onClick={handleContactUs}
+              >
                 Contact
               </button>
             </div>
             <div className={`flex relative border ${borderColor} rounded-md`}>
               <button
-                className={`text-xs font-semibold py-2 px-4 h-full ${textColor}`}  
-                onClick={toggleSidebar2}>
+                className={`text-xs font-semibold py-2 px-4 h-full ${textColor}`}
+                onClick={toggleSidebar2}
+              >
                 <CiSearch className={`${iconColor} text-lg`} />
               </button>
             </div>
@@ -156,9 +175,10 @@ const Header = ({ onLanguageChange }) => {
           {/* For small screens */}
           <div className="lg:hidden flex gap-3 items-center">
             <div className={`relative border ${borderColor} rounded-md`}>
-              <button 
+              <button
                 className={`text-xs font-semibold py-1 px-1 h-full ${textColor} flex items-center`}
-                onClick={toggleDropdown}>
+                onClick={toggleDropdown}
+              >
                 {getSelectedLanguageName()}
                 <span className="ml-2">
                   {isDropdownOpen ? (
@@ -168,7 +188,7 @@ const Header = ({ onLanguageChange }) => {
                   )}
                 </span>
               </button>
-              
+
               {/* Mobile dropdown */}
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-20 bg-white rounded-md shadow-lg">
@@ -176,7 +196,8 @@ const Header = ({ onLanguageChange }) => {
                     <button
                       key={lang.short}
                       className="w-full text-left px-2 py-2 text-sm text-black hover:bg-red hover:text-white"
-                      onClick={() => handleLanguageChange(lang.short)}>
+                      onClick={() => handleLanguageChange(lang.short)}
+                    >
                       {lang.name}
                     </button>
                   ))}
@@ -186,8 +207,9 @@ const Header = ({ onLanguageChange }) => {
 
             <div className={`flex relative border ${borderColor} rounded-md`}>
               <button
-                className={`text-xs font-semibold py-1 px-2 h-full ${textColor}`}  
-                onClick={toggleSidebar2}>
+                className={`text-xs font-semibold py-1 px-2 h-full ${textColor}`}
+                onClick={toggleSidebar2}
+              >
                 <CiSearch className={`${iconColor} text-sm`} />
               </button>
             </div>
@@ -204,7 +226,11 @@ const Header = ({ onLanguageChange }) => {
 
       {isSidebarOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-md z-40">
-          <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+          <Sidebar
+            isOpen={isSidebarOpen}
+            toggleSidebar={toggleSidebar}
+            language={selectedLanguage}
+          />
         </div>
       )}
     </>
